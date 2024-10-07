@@ -1,0 +1,95 @@
+@import "../../shared/styles/variable";
+
+$bg-submenu-active: rgba(255, 255, 255, 0.3);
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    background: transparent;
+}
+.ant-menu ::ng-deep {
+    .ant-menu-inline .ant-menu-item-selected::after {
+        opacity: 0;
+    }
+    .ant-menu-item-selected, .ant-menu-item-selected a, .ant-menu-item-selected a:hover, .ant-menu-item > .ant-badge a:hover {
+        color: $primary_color;
+    }
+    .ant-menu-item .ant-menu-title-content {
+
+    }
+    .submenu-active .ant-menu-submenu-title {
+        background-color: $bg-submenu-active;
+        border-radius: 4px;
+        .ant-menu-title-content,
+        .ant-menu-submenu-arrow {
+            color: $primary_color;
+        }
+    }
+    .ant-menu-item a:hover {
+        color: $primary_color;
+    }
+
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-active,
+    .ant-menu-horizontal:not(.ant-menu-dark) .ant-menu-item-open,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-active,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-open,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-selected,
+    .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu:hover,
+    .ant-menu-submenu:hover > .ant-menu-submenu-title > .ant-menu-submenu-arrow,
+    .ant-menu-submenu:hover > .ant-menu-submenu-title > .ant-menu-submenu-expand-icon,
+    .ant-menu-vertical .ant-menu-submenu-selected,
+    .ant-menu-vertical-left .ant-menu-submenu-selected,
+    .ant-menu-vertical-right .ant-menu-submenu-selected {
+      color: $primary-color;
+    }
+
+    .ant-menu-item-active,
+    .ant-menu-item:hover,
+    .ant-menu-submenu-active,
+    .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open {
+      color: $primary-color;
+    }
+
+    .ant-menu-submenu-title:hover {
+      color: $primary-color;
+    }
+
+    .ant-menu-item:active {
+      background-color: $bg-submenu-active;
+    }
+
+    .menu-item-active {
+      background-color: $bg-submenu-active !important;
+      border-radius: 4px;
+    }
+}
+.ant-menu-inline .ant-menu-item::after {
+    border: none;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style: none;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    // transform: scale(1.05);
+  }
+
+  .title {
+    font-family: "Tiro Bangla", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .custom-li {
+    height: 30px !important;
+    padding-left: 20px !important;
+  }
+
+

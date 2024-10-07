@@ -1,0 +1,47 @@
+@import "../../shared/styles/variable";
+
+.container-fluid {
+  background-color: $primary-color !important;
+}
+
+.footer-container {
+  // -fluid flex flex-column gap-[13px] text-white h-[144px] py-[18px]
+  background-color: $primary-color;
+  height: 144px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  color: white;
+  padding: 18px 0;
+
+  .top {
+    display: flex;
+    gap: 300px;
+
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    padding-left: 110px;
+
+    }
+
+    .top-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    padding-left: 160px;
+
+
+      span.custom-span {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

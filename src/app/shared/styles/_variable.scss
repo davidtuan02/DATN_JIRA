@@ -1,0 +1,94 @@
+$primary_color: #1944A7;
+$secondary_color: #d4b6cf;
+$black: #241d1e;
+$red: #ED5564;
+
+$navbar-bg: #ffd0d1;
+$bg-submenu-active: #ffe2e3;
+
+$active-bg: #d9ffd7;
+$active-bd: #73d36b;
+$active-cl: #16b608;
+$inactive-bg: #ffe2e3;
+$inactive-bd: #fd7d7f;
+$inactive-cl: #ff3739;
+
+$shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
+
+$border-field: 1px solid #d5d5d5;
+$border-color: #d5d5d5;
+$border-focus: #777;
+$error-cl: #F44336;
+
+
+.hover-c-primary {
+    &:hover {
+        color: $primary_color;
+    }
+}
+
+.hover-border-primary {
+    &:hover {
+        border-color: $primary_color;
+    }
+}
+
+.hover-bg-primary {
+    &:hover {
+        background-color: $primary_color;
+    }
+}
+
+.bg-primary {
+    background-color: $primary_color;
+}
+
+.bg-red {
+  background-color: $red;
+}
+
+.color-primary {
+  color: $primary-color;
+}
+
+.bg-secondary {
+  background-color: $secondary_color;
+}
+
+.box-shadow {
+    box-shadow: $shadow;
+}
+
+.font-inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.font-inter-600 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.font-inter-500 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.font-inter-400 {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.font-roboto-700 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}

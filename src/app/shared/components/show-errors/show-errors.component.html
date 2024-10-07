@@ -1,0 +1,46 @@
+<div style>
+  <ng-container *ngIf="control && control.invalid && (control.dirty || control.touched)">
+    <div [ngSwitch]="getFirstKeyError">
+      <ng-container *ngSwitchCase="'pattern'">
+        <span class="text-danger" *ngIf="showErrorLng">
+          Lỗi rồi
+        </span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'pattern'">
+        <span class="text-danger" *ngIf="showErrorPattern">
+          <ng-container *ngIf="customMessagePattern; else messagePatternNormal">
+            {{ customMessagePattern }}
+          </ng-container>
+
+          <ng-template #messagePatternNormal>
+            {{ "message.pattern" }}
+          </ng-template>
+        </span>
+        <span class="text-danger" *ngIf="showErrorLng">
+          {{ "message.lng" }}
+        </span>
+        <span class="text-danger" *ngIf="showErrorLat">
+          {{ "message.lat" }}
+        </span>
+        <span class="text-danger" *ngIf="showErrorPhone">
+          {{ "message.phone" }}
+        </span>
+        <span class="text-danger" *ngIf="showErrorUsername">
+          {{ "message.username" }}
+        </span>
+        <span class="text-danger" *ngIf="showErrorHotline">
+          {{ "message.hotline" }}
+        </span>
+        <span class="text-danger" *ngIf="showErrorLandline">
+          {{
+            "message.landline"
+          }}
+        </span>
+        <span
+          class="text-danger"
+          *ngIf="showPatternErrName === 'password_invalid'"
+        >
+          {{ "message.password_invalid"}}
+        </span>
+      </ng-container>
+</div>

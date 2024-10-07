@@ -35,12 +35,11 @@ a:hover {
     height: 85px;
 
     .left {
-      border-right: 2px solid white;
+    border-right: 2px solid white;
     display: flex;
     padding: 0 44px;
     gap: 17px;
     padding-right: 50px;
-
       .logo-text {
         display: flex;
         flex-direction: column;
@@ -97,3 +96,80 @@ a:hover {
     }
   }
 }
+
+@media only screen and (max-width: 1400px) {
+  .header-container {
+    height: 144px;
+      background-color: $primary-color;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+    .header-left {
+      display: flex;
+      height: 85px;
+  
+      .left {
+      border-right: 2px solid white;
+      display: flex;
+      padding: 0 16px;
+        .logo-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          line-height: 18px;
+        }
+      }
+  
+      .right {
+        display: flex;
+        flex-direction: column;
+        padding-left: 16px !important;
+        span {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 18px;
+            justify-content: start;
+            align-items: center;
+            display: flex;
+        }
+      }
+    }
+  
+    .header-right-no-login {
+      padding-right: 23px;
+      height: 20px;
+      color: white !important;
+      display: flex;
+      gap: 8px;
+      font-size: 16px;
+      align-items: center;
+  
+      span {
+        color: white;
+        font-size: 14px;
+        line-height: 20px;
+      }
+  
+      span.custom-span {
+        padding: 0 8px;
+        border-right: 1px solid white;
+        border-left: 1px solid white;
+      }
+    }
+  
+    .header-right-login {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 20px;
+      padding-right: 118px;
+  
+      span {
+        line-height: 20px;
+      }
+    }
+  }
+}
+

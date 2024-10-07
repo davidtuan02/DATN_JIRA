@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.getAllNotiFile();
-    // this.getGuideVideoFile();
+    this.getGuideVideoFile();
   }
 
   downloadNotiFile(id: string) {
@@ -117,6 +117,9 @@ export class HomeComponent implements OnInit {
     this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
       if(res && res.message === 'OK') {
         this.videosBase64.push(res.data);
+        res.data.forEach((ele: any) => {
+          this.videosBase64.push(ele)
+        })
         this.loadVideos();
         }
       })

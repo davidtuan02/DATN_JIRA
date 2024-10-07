@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
@@ -40,7 +40,8 @@ export class HeaderVnaccsComponent implements OnInit{
   constructor(
     private router: Router,
     private breadcrumcService: BreadcrumService,
-    private headerSrv: HeaderService
+    private headerSrv: HeaderService,
+    private cdr: ChangeDetectorRef
   ) {
     this.breadcrumcService.breadcrumb$.subscribe(breadcrumbs => this.breadcrums.set(breadcrumbs));
   }
@@ -53,6 +54,7 @@ export class HeaderVnaccsComponent implements OnInit{
       this.isLogin = true;
     //   this.getUserInfo('aa');
     }
+    this.cdr.detectChanges()
   }
   getUserInfo(taxCode: string) {
     this.headerSrv.getUserInfo(taxCode).subscribe((res: any) => {

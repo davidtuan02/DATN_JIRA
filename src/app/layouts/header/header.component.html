@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <ng-container *ngIf="!isLogin; else login">
+  <ng-container *ngIf="isLogin; else login">
     <div class="header-right-no-login">
       <span href="" [routerLink]="['/vnaccs/register']">Đăng ký</span>
       <span href="" class="custom-span">Cập nhật thông tin chữ ký</span>

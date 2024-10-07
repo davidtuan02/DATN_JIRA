@@ -14,6 +14,7 @@ import { clearStore } from '../../shared/utilities/system.utils';
 import { CommonModule } from '@angular/common';
 import { STORAGE_KEYS } from '../../shared/constants/system.const';
 import { HeaderService } from './header.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-header-vnaccs',
@@ -41,7 +42,8 @@ export class HeaderVnaccsComponent implements OnInit{
     private router: Router,
     private breadcrumcService: BreadcrumService,
     private headerSrv: HeaderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {
     this.breadcrumcService.breadcrumb$.subscribe(breadcrumbs => this.breadcrums.set(breadcrumbs));
   }
@@ -51,11 +53,15 @@ export class HeaderVnaccsComponent implements OnInit{
     localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
     sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
     if(token) {
-      this.isLogin = true;
+      // this.authService.setLoginStatus(true);
     //   this.getUserInfo('aa');
     }
-    this.cdr.detectChanges()
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLogin = isLoggedIn;
+      this.cdr.detectChanges();
+    });
   }
+
   getUserInfo(taxCode: string) {
     this.headerSrv.getUserInfo(taxCode).subscribe((res: any) => {
       if(res && res.message === 'success') {
@@ -66,6 +72,7 @@ export class HeaderVnaccsComponent implements OnInit{
 
   logout() {
     clearStore();
+    this.authService.setLoginStatus(false);
     this.router.navigate(['/vnaccs/login']);
   }
 

@@ -23,47 +23,6 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 export class HomeComponent implements OnInit {
   isLogin: boolean = true;
   dataTable: any = [];
-  // dataTable: any = [
-  //   {
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },
-  //   {
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },
-  //   {
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   },{
-  //     fileName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  //     updatedTime: '31/1/2024 22:11'
-  //   }
-  // ]
   effect = 'scrollx';
   videosBase64: string[] = [];
 
@@ -73,8 +32,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getAllNotiFile();
-    this.getGuideVideoFile();
+    // this.getAllNotiFile();
+    // this.getGuideVideoFile();
   }
 
   downloadNotiFile(id: string) {

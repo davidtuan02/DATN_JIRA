@@ -1,8 +1,6 @@
 @import "../../../shared/styles/variable";
 
 .menu-container {
-  // flex justify-center items-center font-inter h-[66px]"
-  // style="color: #1944A7; font-size: 16px; margin-bottom: 15px; border-radius: 5px; background-color: #c6d0e6;"
   display: flex;
   background-color: #c6d0e6;
   justify-content: space-between;
@@ -17,39 +15,46 @@
 
     .item {
       width: 100%;
+      font-size: 16px;
 
       .item-content {
-        // flex items-center gap-1 pe-[60px]
         display: flex;
         align-items: center;
-        justify-content: center;
+        // justify-content: center;
+        padding-left: 80px;
         gap: 8px;
-        // padding-right: 60px;
       }
 
       .custom-item-1 {
         display: flex;
         align-items: center;
         gap: 8px;
-        // padding: 0 60px;
         border-left: 1px solid #1944A7;
         border-right: 1px solid #1944A7;
       }
 
+
+    }
+    .item-combobox {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      border-right: 1px solid #1944A7;
+
       .custom-item-2 {
+        padding-left: 80px;
         display: flex;
         align-items: center;
         gap: 8px;
-        // padding: 0 60px;
-        border-right: 1px solid #1944A7;
       }
     }
+
 }
 
 .content {
   display: flex;
   gap: 100px;
-  padding-top: 5px;
+  padding-top: 25px;
   padding-bottom: 70px;
   font-size: 14px;
   justify-content: space-between;
@@ -57,17 +62,22 @@
   .content-left {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     width: 42%;
 
     .title {
+      height: 35px !important;
       border-bottom: 1px solid black;
       height: 28px;
+      font-family: "Inter", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: normal;
 
       span {
         font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+        font-weight: 700;
+        font-style: normal;
       }
     }
 
@@ -95,19 +105,24 @@
   .content-right {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     width: 42%;
     height: 450px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     .title {
+      height: 35px !important;
       border-bottom: 1px solid black;
       height: 28px;
+      font-family: "Inter", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: normal;
 
       span {
         font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+        font-weight: 700;
+        font-style: normal;
       }
     }
 

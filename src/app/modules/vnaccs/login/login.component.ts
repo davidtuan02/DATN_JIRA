@@ -21,6 +21,7 @@ import { NotificationService } from '../../../shared/services/notification.servi
 import { PasswordMaskDirective } from './mask-password.directive';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { AuthService } from '../../../shared/services/auth.service';
 
 
 
@@ -80,7 +81,8 @@ export class LoginComponent implements OnInit {
     private loginSrv: LoginService,
     private router: Router,
     private notification: NotificationService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private authService: AuthService
   ) {
     this.loadForm();
   }
@@ -129,24 +131,26 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const body = {
-      taxCode: this.loginForm.value.taxCode,
-      adminPassword: this.loginForm.value.adminPassword,
-      digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.value.digitalSignature,
-      serial: this.loginForm.value.serial,
-      provider: this.loginForm.value.provider,
-      effectiveDate: this.convertDateTimestamp(this.loginForm.value.effectiveDate),
-      expiryDate:this.convertDateTimestamp(this.loginForm.value.expiryDate),
-      publicKey: this.loginForm.value.publicKey,
-    };
-    this.loginSrv.login(body).subscribe((res: any) => {
-      if(res && res.code === 200) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        this.router.navigate(['vnaccs']);
-      }
-    })
+    // const body = {
+    //   taxCode: this.loginForm.value.taxCode,
+    //   adminPassword: this.loginForm.value.adminPassword,
+    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+    //   digitalSignature: this.loginForm.value.digitalSignature,
+    //   serial: this.loginForm.value.serial,
+    //   provider: this.loginForm.value.provider,
+    //   effectiveDate: this.convertDateTimestamp(this.loginForm.value.effectiveDate),
+    //   expiryDate:this.convertDateTimestamp(this.loginForm.value.expiryDate),
+    //   publicKey: this.loginForm.value.publicKey,
+    // };
+    // this.loginSrv.login(body).subscribe((res: any) => {
+    //   if(res && res.code === 200) {
+    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
+    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
+    //     this.router.navigate(['vnaccs']);
+    //   }
+    // })
+    this.authService.setLoginStatus(true);
+    this.router.navigate(['vnaccs']);
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {

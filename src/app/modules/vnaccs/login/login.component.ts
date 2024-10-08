@@ -131,25 +131,27 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const body = {
-      taxCode: this.loginForm.value.taxCode,
-      adminPassword: this.loginForm.value.adminPassword,
-      digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.value.digitalSignature,
-      serial: this.loginForm.value.serial,
-      provider: this.loginForm.value.provider,
-      effectiveDate: this.convertDateTimestamp(this.loginForm.value.effectiveDate),
-      expiryDate:this.convertDateTimestamp(this.loginForm.value.expiryDate),
-      publicKey: this.loginForm.value.publicKey,
-    };
-    this.loginSrv.login(body).subscribe((res: any) => {
-      if(res && res.code === 200) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        this.router.navigate(['vnaccs']);
+    // const body = {
+    //   taxCode: this.loginForm.value.taxCode,
+    //   adminPassword: this.loginForm.value.adminPassword,
+    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+    //   digitalSignature: this.loginForm.value.digitalSignature,
+    //   serial: this.loginForm.value.serial,
+    //   provider: this.loginForm.value.provider,
+    //   effectiveDate: this.convertDateTimestamp(this.loginForm.value.effectiveDate),
+    //   expiryDate:this.convertDateTimestamp(this.loginForm.value.expiryDate),
+    //   publicKey: this.loginForm.value.publicKey,
+    // };
+    // this.loginSrv.login(body).subscribe((res: any) => {
+    //   if(res && res.code === 200) {
+    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
+    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
+    //     this.router.navigate(['vnaccs']);
+    //     this.authService.setLoginStatus(true);
+    //   }
+    // })
+    this.router.navigate(['vnaccs']);
         this.authService.setLoginStatus(true);
-      }
-    })
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {

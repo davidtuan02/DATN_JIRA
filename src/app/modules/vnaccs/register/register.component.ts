@@ -13,7 +13,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { RegisterService } from './register.service';
 import { STORAGE_KEYS } from '../../../shared/constants/system.const';
@@ -41,7 +41,8 @@ import { STORAGE_KEYS } from '../../../shared/constants/system.const';
     NzSelectModule,
     NzModalComponent,
     NzModalModule,
-    NzTableModule
+    NzTableModule,
+    RouterLink
 ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -102,25 +102,25 @@ input {
   border-radius: 8px !important;
 }
 
-// ::ng-deep nz-table {
-//   max-width: 100%;  /* Đảm bảo bảng không vượt quá 100% chiều rộng của container */
-//   overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung vượt quá chiều rộng */
-// }
-
-// ::ng-deep nz-table table {
-//   table-layout: fixed; /* Cố định độ rộng các cột để không làm giãn bảng */
-//   width: 100%; /* Đặt chiều rộng của bảng theo container */
-// }
-
-::ng-deep th.stt-column {
-  width: 150px !important;
+::ng-deep nz-table {
+  max-width: 100%;  /* Đảm bảo bảng không vượt quá 100% chiều rộng của container */
+  overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung vượt quá chiều rộng */
 }
+
+::ng-deep nz-table table {
+  table-layout: fixed; /* Cố định độ rộng các cột để không làm giãn bảng */
+  width: 100%; /* Đặt chiều rộng của bảng theo container */
+}
+
+// ::ng-deep th.stt-column {
+//   width: 150px !important;
+// }
 
 @media only screen and (max-width: 1400px) {
   .button {
 
     .button-content {
-      width: 97px !important;
+      width: 140px !important;
       height: 40px !important;
 
       .svg {

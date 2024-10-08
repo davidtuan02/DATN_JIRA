@@ -116,7 +116,7 @@ export class RegisterComponent implements OnInit {
       taxCode: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
       adminPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
       confirmPassword: ['', [Validators.required]],
-      email: ['', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)] ],
       digitalSignatureType: [null],
       digitalSignature: [''],
       serial: [''],
@@ -232,12 +232,12 @@ export class RegisterComponent implements OnInit {
     return undefined;
   }
   passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
-    const newPassword = group.get('adminPassword')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-      if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-        return { notmatching: true };
-      }
-      return null;
+    const pass = group.get('adminPassword')?.value;
+    const confirmPass = group.get('confirmPassword')?.value;
+    if (pass && confirmPass && pass !== confirmPass) {
+      return { notmatching: true };
+    }
+    return null;
   }
 
   copyText(): void {
@@ -259,8 +259,11 @@ export class RegisterComponent implements OnInit {
   }
 
   showModal() {
+    console.log('h')
+
     this.isVisible = true;
     this.msAcc = '';
+    this.listOfData = [];
   }
   showModalDownload() {
     this.isVisible = false;

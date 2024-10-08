@@ -38,7 +38,7 @@
 ::ng-deep .ant-input,
 ::ng-deep .ant-select-selector {
   height: 100% !important;
-  border-radius: inherit !important;
+  // border-radius: inherit !important;
 }
 
 ::ng-deep .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
@@ -57,4 +57,79 @@
 
 input {
   height: 100%;
+}
+
+::ng-deep.ant-radio-checked .ant-radio-inner{
+  border-color: $primary-color !important ;
+}
+
+::ng-deep.ant-radio-checked .ant-radio-inner:after{
+  background-color: $primary-color;
+}
+
+::ng-deep.ant-radio:hover .ant-radio-inner {
+  border-color: $primary-color ;
+}
+::ng-deep .ant-radio-checked .ant-radio-inner:focus{
+  border-color: $primary-color;
+}
+
+// ::ng-deep .ant-input {
+//   border-radius: 8px;
+// }
+
+// ::ng-deep .ant-input textarea {
+//   border-radius: 8px;
+// }
+
+::ng-deep.ant-modal-content{
+  border-radius: 8px !important;
+}
+
+::ng-deep.ant-modal-header {
+  border-radius: 8px !important;
+}
+
+::ng-deep input[type="number"] {
+  border-radius: 8px !important;
+}
+
+::ng-deep nz-input-group {
+  border-radius: 8px !important;
+}
+
+::ng-deep input[nz-input] {
+  border-radius: 8px !important;
+}
+
+::ng-deep nz-table {
+  max-width: 100%;  /* Đảm bảo bảng không vượt quá 100% chiều rộng của container */
+  overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung vượt quá chiều rộng */
+}
+
+::ng-deep nz-table table {
+  table-layout: fixed; /* Cố định độ rộng các cột để không làm giãn bảng */
+  width: 100%; /* Đặt chiều rộng của bảng theo container */
+}
+
+@media only screen and (max-width: 1400px) {
+  .button {
+
+    .button-content {
+      width: 97px !important;
+      height: 40px !important;
+
+      .svg {
+        svg {
+          width: 17px !important;
+        }
+      }
+
+      .text {
+        span {
+            font-size: 12px !important;
+        }
+      }
+    }
+  }
 }

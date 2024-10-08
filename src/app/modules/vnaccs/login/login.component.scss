@@ -112,4 +112,26 @@ input {
   width: 100%; /* Đặt chiều rộng của bảng theo container */
 }
 
+@media only screen and (max-width: 1400px) {
+  .button {
+
+    .button-content {
+      width: 97px !important;
+      height: 40px !important;
+
+      .svg {
+        svg {
+          width: 17px !important;
+        }
+      }
+
+      .text {
+        span {
+            font-size: 12px !important;
+        }
+      }
+    }
+  }
+}
+
 

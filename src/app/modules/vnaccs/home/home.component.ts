@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HomeService } from './home.service';
 import { Subject } from 'rxjs';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { AuthService } from '../../../shared/services/auth.service';
 
 
 @Component({
@@ -21,19 +22,25 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
   ]
 })
 export class HomeComponent implements OnInit {
-  isLogin: boolean = true;
+  isLogin: boolean = false;
   dataTable: any = [];
   effect = 'scrollx';
   videosBase64: string[] = [];
 
   constructor(
     private translate: TranslateService,
-    private homeSrv: HomeService
+    private homeSrv: HomeService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     // this.getAllNotiFile();
     // this.getGuideVideoFile();
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLogin = isLoggedIn;
+      this.cdr.detectChanges();
+    });
   }
 
   downloadNotiFile(id: string) {

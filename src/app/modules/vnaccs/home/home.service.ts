@@ -13,6 +13,10 @@ export class HomeService {
   PREFIX_API_USER = '/customs-gov/admin-service/api/user-id';
   constructor(private api: ApiService) {}
 
+  streamVideo(body: any) {
+    return this.api.post<any>(this.PREFIX_API + '/stream-video', body);
+  }
+
   getCertInfo(param: any) {
   const params = new HttpParams().set('account', param);
   return this.api.get<any>(this.PREFIX_API + '/certificate-info', {params});

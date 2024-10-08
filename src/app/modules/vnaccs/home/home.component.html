@@ -51,14 +51,13 @@
         <li>Tải Java về để đọc chữ kỹ số tại đường dẫn: <span (click)="downloadJDK()">JDK</span></li>
       </div>
       <nz-carousel [nzEffect]="effect">
-        <div nz-carousel-content *ngFor="let video of videosBase64; let i = index">
-          <video width="640" height="480" controls [id]="'video' + i">
-            Video hướng dẫn
+        <!-- <div nz-carousel-content *ngFor="let videoUrl of videosBase64; let i = index"> -->
+          <video width="100%" height="320" crossorigin="anonymous" controls [id]="'video'">
+            <source src="http://192.168.4.173:8081/customs-gov/admin-service/api/file/stream-video/param?fileName=%2Fftp%2Fcustom_gov%2Fupload_file%2F07102024_085705%2Fvideo_hd.mp4" type="application/octet-stream" />
+            Your browser does not support the video tag.
           </video>
-        </div>
+        <!-- </div> -->
       </nz-carousel>
-
-
     </div>
   </div>
   <div class="content-right">

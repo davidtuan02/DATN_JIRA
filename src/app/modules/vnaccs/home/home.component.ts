@@ -35,8 +35,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.getAllNotiFile();
-    // this.getGuideVideoFile();
+    this.getAllNotiFile();
+    this.getGuideVideoFile();
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLogin = isLoggedIn;
       this.cdr.detectChanges();
@@ -81,14 +81,23 @@ export class HomeComponent implements OnInit {
 
   getGuideVideoFile() {
     this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
-      if(res && res.message === 'OK') {
-        this.videosBase64.push(res.data);
-        res.data.forEach((ele: any) => {
-          this.videosBase64.push(ele)
-        })
-        this.loadVideos();
-        }
-      })
+      if (res && res.message === 'OK') {
+        const videoFiles = res.data;  // Assume res.data is the list of video file paths
+        videoFiles.forEach((filePath: string) => {
+          // Call API to stream the video
+          this.streamVideo(filePath);
+        });
+      }
+    });
+  }
+
+  streamVideo(filePath: string) {
+    const body = { fileName: filePath };  // Prepare the body for the request
+    this.homeSrv.streamVideo(body).subscribe((response: Blob) => {
+      const videoUrl = URL.createObjectURL(response);  // Create a URL for the video blob
+      this.videosBase64.push(videoUrl);  // Store it in an array to be used for rendering
+      this.loadVideos();
+    });
   }
 
   loadVideos(): void {

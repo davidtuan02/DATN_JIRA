@@ -16,6 +16,10 @@ export class RegisterService {
     private apiAdmin: ApiAdminService
   ) {}
 
+  register(body: any) {
+    return this.api.post<any>(this.PREFIX_API +'/admin-account', body);
+  }
+
   login(body: any) {
     return this.apiAdmin.post<any>(this.PREFIX_API_ADMIN, body);
   }

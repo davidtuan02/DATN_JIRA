@@ -116,7 +116,7 @@ export class RegisterComponent implements OnInit {
       taxCode: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
       adminPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
       confirmPassword: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)] ],
+      email: ['' ],
       digitalSignatureType: [null],
       digitalSignature: [''],
       serial: [''],
@@ -138,12 +138,13 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched();
-    if (this.loginForm.valid) {
-      this.login();
-    }
-    else {
-      console.log('Form is invalid!');
-    }
+    this.login()
+    // if (this.loginForm.valid) {
+    //   this.login();
+    // }
+    // else {
+    //   console.log('Form is invalid!');
+    // }
   }
   login() {
     const body = {
@@ -153,23 +154,28 @@ export class RegisterComponent implements OnInit {
       digitalSignature: this.loginForm.value.digitalSignature,
       serial: this.loginForm.value.serial,
       provider: this.loginForm.value.provider,
-      effectiveDate: this.loginForm.value.effectiveDate,
-      expiryDate: this.loginForm.value.expiryDate,
+      effectiveDate: this.convertDateTimestamp(this.loginForm.value.effectiveDate),
+      expiryDate:this.convertDateTimestamp(this.loginForm.value.expiryDate),
       publicKey: this.loginForm.value.publicKey,
+      email: this.loginForm.value.email,
+
     };
-    // this.loginSrv.login(body).subscribe((res: any) => {
-    //   if(res && res.code === 200) {
-    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-    //     this.router.navigate(['vnaccs']);
-    //   }
-    // })
+    this.registerSrv.register(body).subscribe((res: any) => {
+      if(res && res.message === 'success') {
+        this.router.navigate(['vnaccs/login']);
+        this.notification.success('Đăng ký tài khoản quản trị thành công')
+      }
+    })
+  }
+  convertDateTimestamp(date: any) {
+    const [d, m, y] = date.split(/-|\//); // splits "26-02-2012" or "26/02/2012"
+    const dateNew = new Date(y, m - 1, d);
+    return dateNew.getTime();
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
       return null;
     }
-
     const year = dateString.substring(0, 4);
     const month = dateString.substring(4, 6);
     const day = dateString.substring(6, 8);
@@ -180,7 +186,7 @@ export class RegisterComponent implements OnInit {
       return null;
     }
 
-    return `${year}-${month}-${day}`;
+    return `${day}/${month}/${year}`;
   };
 
   getTaxCodeError(): string | undefined {
@@ -200,9 +206,8 @@ export class RegisterComponent implements OnInit {
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Email không được để trống';
-      } else if (control.errors?.['pattern']) {
-        return 'Email không đúng định dạng';
       }
+
     }
     return undefined;
   }

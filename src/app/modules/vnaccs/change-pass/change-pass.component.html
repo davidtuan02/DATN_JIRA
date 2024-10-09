@@ -1,11 +1,8 @@
 <div class="login-container flex flex-col w-100 pt-[40px] px-[200px] pb-[50px]">
   <div class="flex justify-center items-center font-inter-600 color-primary" style="font-size: 24px;">
-    <span>Đăng ký tài khoản quản trị</span>
+    <span>Đổi mật khẩu</span>
   </div>
-  <div class="flex flex-col">
-    <div class="flex justify-start font-inter mb-[10px]" style="font-size: 14px;">
-      <span class="font-inter" style="font-size: 14px;">Thông tin chung</span>
-    </div>
+  <div class="flex flex-col mt-[10px]">
     <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <nz-row nzGutter="16">
         <!-- Mã số thuế -->
@@ -14,42 +11,43 @@
           <nz-input-group style="border-radius: 8px;">
             <input type="text" nz-input pattern="\d*" formControlName="taxCode" placeholder="Nhập mã số thuế" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);" />
           </nz-input-group>
-          <p style="max-height: 10px;" class="text-danger fs-14">
+          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
             {{getTaxCodeError()}}
-          </p>
+          </p> -->
         </nz-col>
 
-        <!-- Email -->
+        <!-- Mật khẩu hiện tại -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Email <span style="color: #ED5564;">*</span></label>
-          <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input pattern="\d*" formControlName="email" placeholder="Nhập email" oninput="if(this.value.length > 150) this.value = this.value.slice(0, 150);" />
-          </nz-input-group>
-          <p style="max-height: 10px;" class="text-danger fs-14">
-            {{getEmailError()}}
-          </p>
-        </nz-col>
-      </nz-row>
-
-      <nz-row nzGutter="16">
-        <!-- Mật khẩu -->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Mật khẩu <span style="color: #ED5564;">*</span></label>
+          <label for="" class="custom-label">Mật khẩu hiện tại <span style="color: #ED5564;">*</span></label>
           <nz-input-group [nzSuffix]="suffixPassword" style="border-radius: 8px;">
-            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="adminPassword"
-              placeholder="Nhập mật khẩu" oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);" minlength="8"/>
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password"
+              placeholder="Nhập mật khẩu hiện tại" oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);" minlength="8"/>
           </nz-input-group>
           <p style="max-height: 25px;" class="text-danger fs-14">
             {{getPassError()}}
           </p>
         </nz-col>
+      </nz-row>
 
-        <!-- Xác nhận lại mật khẩu -->
+      <nz-row nzGutter="16">
+        <!-- Mật khẩu mới-->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Xác nhận lại mật khẩu <span style="color: #ED5564;">*</span></label>
+          <label for="" class="custom-label">Mật khẩu mới <span style="color: #ED5564;">*</span></label>
+          <nz-input-group [nzSuffix]="suffixNewPassword" style="border-radius: 8px;">
+            <input [type]="newPasswordVisible ? 'text' : 'password'" nz-input formControlName="newPassword"
+              placeholder="Nhập mật khẩu mới" oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);" minlength="8"/>
+          </nz-input-group>
+          <p style="max-height: 25px;" class="text-danger fs-14">
+            {{getNewPassError()}}
+          </p>
+        </nz-col>
+
+        <!-- Xác nhận mật khẩu mới-->
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label">Xác nhận mật khẩu mới <span style="color: #ED5564;">*</span></label>
           <nz-input-group [nzSuffix]="suffixConfirmPassword" style="border-radius: 8px;">
             <input [type]="confirmPasswordVisible ? 'text' : 'password'" nz-input formControlName="confirmPassword"
-              placeholder="Xác nhận lại mật khẩu" oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);"/>
+              placeholder="Nhập xác nhận mật khẩu mới" oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);"/>
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getConfirmPassError()}}
@@ -193,9 +191,9 @@
       </nz-row>
 
       <nz-row nzSpan="24">
-        <div class="flex justify-center items-center gap-[10px] w-100 mt-[30px]">
+        <div class="flex justify-center items-center gap-[10px] w-100 mt-[50px]">
           <button [routerLink]="['/vnaccs']" type="button" class="font-inter-600" style="height: 40px; width: 145px; background-color: #F5F5F5; color: #1944A7 !important; font-size: 14px; border-radius: 8px;">Đóng</button>
-          <button type="submit" class="font-inter-600 text-white" style="height: 40px; width: 145px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;">Đăng ký</button>
+          <button type="submit" class="font-inter-600 text-white" style="height: 40px; width: 145px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;">Đổi mật khẩu</button>
         </div>
       </nz-row>
     </form>
@@ -474,6 +472,34 @@
   </svg>
 
   <svg *ngIf="passwordVisible" (click)="passwordVisible = !passwordVisible" width="20" height="20" viewBox="0 0 24 24"
+    fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="#B3B3B3" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" />
+    <path
+      d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+      stroke="#B3B3B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</ng-template>
+
+<ng-template #suffixNewPassword>
+  <svg *ngIf="!newPasswordVisible" (click)="newPasswordVisible = !newPasswordVisible" width="20" height="20" viewBox="0 0 20 18"
+    fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M7.76094 11.3668C7.18594 10.7928 6.83594 10.0128 6.83594 9.1378C6.83594 7.3848 8.24794 5.9718 9.99994 5.9718C10.8669 5.9718 11.6649 6.3228 12.2299 6.8968"
+      stroke="#A5A5A5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M13.1073 9.69891C12.8753 10.9889 11.8593 12.0069 10.5703 12.2409" stroke="#A5A5A5" stroke-width="1.5"
+      stroke-linecap="round" stroke-linejoin="round" />
+    <path
+      d="M4.655 14.4723C3.068 13.2263 1.724 11.4063 0.75 9.13729C1.734 6.85829 3.087 5.02829 4.684 3.77229C6.271 2.51629 8.102 1.83429 10 1.83429C11.909 1.83429 13.739 2.52629 15.336 3.79129"
+      stroke="#A5A5A5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path
+      d="M17.4487 5.99081C18.1367 6.90481 18.7417 7.95981 19.2507 9.13681C17.2837 13.6938 13.8077 16.4388 10.0008 16.4388C9.13775 16.4388 8.28675 16.2988 7.46875 16.0258"
+      stroke="#A5A5A5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M17.8912 1.2496L2.11719 17.0236" stroke="#A5A5A5" stroke-width="1.5" stroke-linecap="round"
+      stroke-linejoin="round" />
+  </svg>
+
+  <svg *ngIf="newPasswordVisible" (click)="newPasswordVisible = !newPasswordVisible" width="20" height="20" viewBox="0 0 24 24"
     fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="#B3B3B3" stroke-width="2"
       stroke-linecap="round" stroke-linejoin="round" />

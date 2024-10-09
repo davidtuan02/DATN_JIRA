@@ -1,4 +1,4 @@
-<div class="flex flex-col w-100 pt-[40px] px-[200px] pb-[50px]">
+<div class="login-container flex flex-col w-100 pt-[40px] px-[200px] pb-[50px]">
   <div class="flex justify-center items-center font-inter-600 color-primary" style="font-size: 24px;">
     <span>Đăng nhập</span>
   </div>
@@ -12,7 +12,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="number" nz-input pattern="\d*" formControlName="taxCode" placeholder="Nhập mã số thuế" maxlength="13" />
+            <input type="text" nz-input pattern="\d*" formControlName="taxCode" placeholder="Nhập mã số thuế" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);"  />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getTaxCodeError()}}
@@ -24,7 +24,7 @@
           <label for="" class="custom-label">Mật khẩu <span style="color: #ED5564;">*</span></label>
           <nz-input-group [nzSuffix]="suffixPassword" style="border-radius: 8px;">
             <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="adminPassword"
-              placeholder="Nhập mật khẩu" maxlength="50"/>
+              placeholder="Nhập mật khẩu" oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);"/>
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getPassError()}}
@@ -39,7 +39,7 @@
       <nz-row nzGutter="16">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
-          <div class="flex">
+          <div class="flex justify-between">
             <div class="flex flex-col gap-[10px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ED5564;">*</span></label>
               <nz-radio-group [(ngModel)]="radioValue" formControlName="digitalSignatureType" style="font-size: 14px;">
@@ -50,7 +50,7 @@
               </p>
             </div>
             <div *ngIf="radioValue === '2'" class="pt-[23px]">
-              <button type="button" class="text-white button" style="border-radius: 8px; background-color: #1944A7 !important;" (click)="showModal()">
+              <button type="button" class="text-white button flex justify-center" style="width: 258px; ;border-radius: 8px; background-color: #1944A7 !important;" (click)="showModal()">
                 <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px;">
                   <div class="svg">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,7 +168,7 @@
       </nz-row>
 
       <nz-row nzSpan="24">
-        <div class="flex flex-col items-center gap-3 w-100 mt-[20px]">
+        <div class="footer flex flex-col items-center gap-3 w-100 mt-[20px]">
           <button type="submit" class="text-white" style="background-color: #1944A7 !important; width: 250px; height: 40px; border-radius: 8px;">
             <div class="flex justify-center items-center gap-2">
               <div>
@@ -262,11 +262,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of listOfData; let index = index">
-            <td>{{index + 1}}</td>
+          <tr *ngFor="let data of listOfData; let i = index">
+            <td>{{i + 1}}</td>
             <td>
               <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{data.serialNumber}}</span>
+                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{data.subjectDN}}</span>
               </div>
             </td>
             <td>

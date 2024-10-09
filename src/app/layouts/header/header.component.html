@@ -38,7 +38,7 @@
 
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu nzSelectable>
-    <li nz-menu-item>
+    <li nz-menu-item (click)="handleClick('changepass')">
       <div class="flex items-center justify-between">
         <span>
           <svg style="width: 40px;" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -55,7 +55,7 @@
         </span>
       </div>
     </li>
-    <li nz-menu-item (click)="logout()">
+    <li nz-menu-item (click)="handleClick('logout')">
       <div class="flex items-center justify-between">
         <span>
           <svg style="width: 40px;" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"

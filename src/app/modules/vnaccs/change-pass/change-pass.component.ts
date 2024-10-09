@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import { FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { CommonModule } from '@angular/common';
@@ -13,15 +13,17 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { LoginService } from './login.service';
+import { ChangePassService } from './change-pass.service';
 import { Subject } from 'rxjs';
 import { STORAGE_KEYS } from '../../../shared/constants/system.const';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { PasswordMaskDirective } from './mask-password.directive';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { AuthService } from '../../../shared/services/auth.service';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component';
+import { clearStore } from '../../../shared/utilities/system.utils';
 
 
 
@@ -29,8 +31,8 @@ import { AuthService } from '../../../shared/services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './change-pass.component.html',
+  styleUrls: ['./change-pass.component.scss'],
   imports: [
     NzButtonModule,
     TranslateModule,
@@ -48,14 +50,16 @@ import { AuthService } from '../../../shared/services/auth.service';
     NzModalComponent,
     NzModalModule,
     NzTableModule,
-    PasswordMaskDirective,
-    NzToolTipModule
+    NzToolTipModule,
+    RouterLink
 ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class LoginComponent implements OnInit {
+export class ChangePassComponent implements OnInit {
   loginForm!: FormGroup;
   passwordVisible = false;
+  newPasswordVisible = false;
+  confirmPasswordVisible = false;
   radioValue = '1';
   optionFileStatus = [
     { value: 1, label: 'Đang hiển thị' },
@@ -78,10 +82,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: NonNullableFormBuilder,
-    private loginSrv: LoginService,
     private router: Router,
     private notification: NotificationService,
-    private message: NzMessageService,
+    private changepassSrv: ChangePassService,
+    private dialogService: DialogService,
     private authService: AuthService
   ) {
     this.loadForm();
@@ -90,8 +94,10 @@ export class LoginComponent implements OnInit {
   }
   loadForm() {
     this.loginForm = this.fb.group({
-      taxCode: ['', [Validators.required]],
-      adminPassword: ['', [Validators.required]],
+      taxCode: ['', [Validators.required, Validators.min(1), Validators.max(13)]],
+      password: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
+      confirmPassword: ['', [Validators.required]],
       digitalSignatureType: [null],
       digitalSignature: [''],
       serial: [''],
@@ -100,11 +106,8 @@ export class LoginComponent implements OnInit {
       expiryDate: [''],
       publicKey: [''],
       nameCert: ['']
-    });
-    this.disableForm();
-  }
+    }, {validators: this.passwordMatchValidator.bind(this)});
 
-  disableForm() {
     this.loginForm.get('digitalSignature')?.disable();
     this.loginForm.get('serial')?.disable();
     this.loginForm.get('provider')?.disable();
@@ -115,59 +118,63 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.login();
-
-    // this.loginForm.markAllAsTouched();
-    // if (this.loginForm.valid) {
-    //   this.login();
-    // }
-    // else {
-    //   console.log('Form is invalid!');
-    // }
+    this.loginForm.markAllAsTouched();
+    // this.login();
+    if (this.loginForm.valid) {
+      this.changepass();
+    }
+    else {
+      console.log('Form is invalid!');
+    }
   }
+  changepass() {
+    const dataDialog = {
+      title: 'Bạn có muốn đổi mật khẩu không?',
+    };
 
+    const dialogRef = this.dialogService.openDialog(
+      ConfirmPopupComponent,
+      '',
+      dataDialog,
+      {
+        nzClosable: false,
+        nzWidth: '400px',
+        nzCentered: true,
+        nzClassName: 'popup-radius-2',
+      }
+    );
+
+    dialogRef.afterClose.subscribe((result: boolean) => {
+      if(result) {
+        const body = {
+          taxCode: this.loginForm.value.taxCode,
+          oldPassword: this.loginForm.value.password,
+          newPassword: this.loginForm.value.newPassword,
+          confirmPassword: this.loginForm.value.confirmPassword,
+          digitalSignatureType: this.loginForm.value.digitalSignatureType,
+          digitalSignature: this.loginForm.getRawValue().taxCode,
+          serial: this.loginForm.getRawValue().serial,
+          provider: this.loginForm.getRawValue().provider,
+          effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+          expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+          publicKey: this.loginForm.getRawValue().publicKey,
+          // taxCodeCTS: this.loginForm.value.nameCert,
+        };
+        this.changepassSrv.changepass(body).subscribe((res: any) => {
+          if(res && res.message === 'success') {
+            clearStore();
+            this.authService.setLoginStatus(false);
+            this.router.navigate(['vnaccs/login']);
+            this.notification.success('Đổi mật khẩu thành công')
+          }
+        })
+      }
+    })
+  }
   convertDateTimestamp(date: any) {
     const [d, m, y] = date.split(/-|\//); // splits "26-02-2012" or "26/02/2012"
     const dateNew = new Date(y, m - 1, d);
     return dateNew.getTime();
-  }
-
-  convertComplexDateString(dateStr: string): number {
-    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
-    const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(8, 10)}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`;
-
-    // Tạo đối tượng Date từ chuỗi đã định dạng
-    const dateObj = new Date(isoFormattedDate);
-
-    // Trả về timestamp (số milliseconds từ epoch)
-    return dateObj.getTime();
-  }
-
-
-  login() {
-    // const body = {
-    //   taxCode: this.loginForm.value.taxCode,
-    //   adminPassword: this.loginForm.value.adminPassword,
-    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
-    //   digitalSignature: this.loginForm.getRawValue().nameCert,
-    //   serial: this.loginForm.getRawValue().serial,
-    //   provider: this.loginForm.getRawValue().provider,
-    //   // provider: this.loginForm.getRawValue().nameCert,
-    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-    //   expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-    //   publicKey: this.loginForm.getRawValue().publicKey,
-    //   taxCodeCTS: this.loginForm.value.taxCodeCTS
-    // };
-    // this.loginSrv.login(body).subscribe((res: any) => {
-    //   if(res && res.code === 200) {
-    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-    //     this.router.navigate(['vnaccs']);
-    //     this.authService.setLoginStatus(true);
-    //   }
-    // })
-    this.router.navigate(['vnaccs']);
-        this.authService.setLoginStatus(true);
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
@@ -186,25 +193,6 @@ export class LoginComponent implements OnInit {
     return `${day}/${month}/${year}`;
   };
 
-  // convertDateToYMD = (dateString: string): string | null => {
-  //   const parts = dateString.split('/');
-
-  //   if (parts.length !== 3) {
-  //     return null;
-  //   }
-
-  //   const day = parts[0];
-  //   const month = parts[1];
-  //   const year = parts[2];
-
-  //   if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
-  //     return null;
-  //   }
-
-  //   return `${year}-${month}-${day}`;
-  // };
-
-
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode');
     if (control?.touched && control.invalid) {
@@ -216,14 +204,50 @@ export class LoginComponent implements OnInit {
   }
 
   getPassError() {
-    const control = this.loginForm.get('adminPassword');
+    const control = this.loginForm.get('password');
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Mật khẩu không được để trống';
+        return 'Mật khẩu hiện tại không được để trống';
       }
     }
     return undefined;
   }
+  getNewPassError() {
+    const control = this.loginForm.get('newPassword');
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Mật khẩu mới không được để trống';
+      }
+      if (control.errors?.['pattern']) {
+        return 'Mật khẩu tối thiểu 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt';
+      }
+    }
+    return undefined;
+  }
+  getConfirmPassError(): string | undefined {
+    const control = this.loginForm.get('confirmPassword');
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Xác nhận lại mật khẩu mới không được để trống';
+      }
+      if (this.loginForm.errors?.['notmatching']) {
+        return 'Xác nhận lại mật khẩu mới phải giống mật khẩu đã nhập';
+      }
+    }
+    return undefined;
+  }
+
+
+
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const pass = group.get('newPassword')?.value;
+    const confirmPass = group.get('confirmPassword')?.value;
+    if (pass && confirmPass && pass !== confirmPass) {
+      return { notmatching: true };
+    }
+    return null;
+  }
+
 
   copyText(): void {
     const inputElement = document.getElementById('copyInput') as HTMLInputElement;
@@ -244,6 +268,8 @@ export class LoginComponent implements OnInit {
   }
 
   showModal() {
+    console.log('h')
+
     this.isVisible = true;
     this.msAcc = '';
     this.listOfData = [];
@@ -275,37 +301,30 @@ export class LoginComponent implements OnInit {
     if(this.msAcc === '') {
       this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
     }
-    else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if(res) {
-          if(res.message === 'success') {
-            this.listOfData = res.data;
-          }
-          else {
-            this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
-          }
-        }
-        else {
-          this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
-        }
-      })
-    }
+    this.changepassSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
+      if(res && res.message === 'success') {
+        this.listOfData = res.data;
+      }
+      else {
+        this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
+      }
+    })
   }
 
   applyData(data: any) {
-    const currentDate = new Date().getTime();
-    const validDate = this.convertComplexDateString(data.validFrom);
-    const expireDate = this.convertComplexDateString(data.validTo);
+    const currentDate = new Date();
+    const validDate = new Date(data.validFrom);
+    const expireDate = new Date(data.validTo);
+    console.log(currentDate)
+    console.log(validDate)
+    console.log(expireDate)
     if(validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực');
     }
     else if(expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     }
     else {
-      console.log('Hop le')
       this.isVisible = false;
       // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
       this.loginForm.get('serial')?.setValue(data.serialNumber);
@@ -313,7 +332,6 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom));
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo));
       this.loginForm.get('nameCert')?.setValue(data.subjectDN);
-      this.loginForm.get('publicKey')?.setValue(data.subjectDN);//check
       // this.loginForm.enable()
       // this.disableForm();
     }

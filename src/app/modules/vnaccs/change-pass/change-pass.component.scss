@@ -28,6 +28,10 @@
 
 .custom-label {
   font-size: 14px;
+  // font-family: "Inter", sans-serif;
+  // font-optical-sizing: auto;
+  // font-weight: 500;
+  // font-style: normal;
 }
 
 ::ng-deep .ant-input-group, .ant-input-affix-wrapper, .ant-select {
@@ -111,10 +115,6 @@ input {
   table-layout: fixed; /* Cố định độ rộng các cột để không làm giãn bảng */
   width: 100%; /* Đặt chiều rộng của bảng theo container */
 }
-
-// ::ng-deep th.stt-column {
-//   width: 150px !important;
-// }
 
 @media only screen and (max-width: 1700px) {
   .login-container {

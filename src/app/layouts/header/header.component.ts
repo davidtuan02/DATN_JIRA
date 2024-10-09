@@ -81,7 +81,7 @@ export class HeaderVnaccsComponent implements OnInit{
       this.logout();
     }
     else {
-      this.router.navigateByUrl('/changepass');
+      this.router.navigateByUrl('/vnaccs/change-password');
     }
   }
 }

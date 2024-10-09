@@ -28,6 +28,10 @@
 
 .custom-label {
   font-size: 14px;
+  // font-family: "Inter", sans-serif;
+  // font-optical-sizing: auto;
+  // font-weight: 500;
+  // font-style: normal;
 }
 
 ::ng-deep .ant-input-group, .ant-input-affix-wrapper, .ant-select {
@@ -112,11 +116,23 @@ input {
   width: 100%; /* Đặt chiều rộng của bảng theo container */
 }
 
-@media only screen and (max-width: 1400px) {
-  .button {
+@media only screen and (max-width: 1700px) {
+  .login-container {
+    padding-left: 150px !important;
+    padding-right: 150px !important;
+  }
+}
 
+@media only screen and (max-width: 1550px) {
+  .login-container {
+    // padding-left: 150px;
+    // padding-right: 150px;
+  }
+
+  .button {
+    width: 180px !important;
     .button-content {
-      width: 97px !important;
+      width: 140px !important;
       height: 40px !important;
 
       .svg {
@@ -131,5 +147,70 @@ input {
         }
       }
     }
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .button {
+    width: 138px !important;
+
+  .login-container {
+    padding-left: 150px !important;
+    padding-right: 150px !important;
+  }
+}
+}
+
+
+@media only screen and (max-width: 1400px) {
+  .login-container {
+    // padding-left: 150px;
+    // padding-right: 150px;
+  }
+
+  .button {
+
+    .button-content {
+      width: 140px !important;
+      height: 40px !important;
+
+      .svg {
+        svg {
+          width: 17px !important;
+        }
+      }
+
+      .text {
+        span {
+            font-size: 12px !important;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .login-container {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .login-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media only screen and (max-height: 1020px) {
+  .login-container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    gap: 40px !important;
+  }
+
+  .footer {
+    margin-bottom: 0 !important;
   }
 }

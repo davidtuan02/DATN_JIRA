@@ -36,6 +36,13 @@ export const routes: Routes = [
           import('./modules/vnaccs/register/register.component').then(
             c => c.RegisterComponent
           )
+      },
+      {
+        path: 'change-password',
+        loadComponent: () =>
+          import('./modules/vnaccs/change-pass/change-pass.component').then(
+            c => c.ChangePassComponent
+          )
       }
     ],
   },

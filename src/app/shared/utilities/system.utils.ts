@@ -7,6 +7,8 @@ export const clearStore = () => {
   sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
   localStorage.removeItem(STORAGE_KEYS.USER_DATA);
   sessionStorage.removeItem(STORAGE_KEYS.USER_DATA);
+  localStorage.removeItem('taxCode');
+  sessionStorage.removeItem('taxCode');
 };
 
 export const isEqualObj = (obj1: any, obj2: any) => {

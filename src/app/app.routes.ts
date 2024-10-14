@@ -38,10 +38,24 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'update-signature',
+        loadComponent: () =>
+          import('./modules/vnaccs/update-signature/update-signature.component').then(
+            c => c.UpdateSignatureComponent
+          )
+      },
+      {
         path: 'change-password',
         loadComponent: () =>
           import('./modules/vnaccs/change-pass/change-pass.component').then(
             c => c.ChangePassComponent
+          )
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./modules/vnaccs/forgot-password/forgot-password.component').then(
+            c => c.ForgotPasswordComponent
           )
       }
     ],

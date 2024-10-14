@@ -29,7 +29,7 @@ import { clearStore } from '../../../shared/utilities/system.utils';
 
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-change-password',
   standalone: true,
   templateUrl: './change-pass.component.html',
   styleUrls: ['./change-pass.component.scss'],
@@ -93,21 +93,28 @@ export class ChangePassComponent implements OnInit {
   ngOnInit(): void {
   }
   loadForm() {
-    this.loginForm = this.fb.group({
-      taxCode: ['', [Validators.required, Validators.min(1), Validators.max(13)]],
-      password: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
-      confirmPassword: ['', [Validators.required]],
-      digitalSignatureType: [null],
-      digitalSignature: [''],
-      serial: [''],
-      provider: [''],
-      effectiveDate: [''],
-      expiryDate: [''],
-      publicKey: [''],
-      nameCert: ['']
-    }, {validators: this.passwordMatchValidator.bind(this)});
+    this.authService.taxCode$.subscribe(taxCode => {
+      this.loginForm = this.fb.group({
+        taxCode: [taxCode, [Validators.required]],
+        password: ['', [Validators.required]],
+        newPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
+        confirmPassword: ['', [Validators.required]],
+        digitalSignatureType: [null],
+        digitalSignature: [''],
+        serial: [''],
+        provider: [''],
+        effectiveDate: [''],
+        expiryDate: [''],
+        publicKey: [''],
+        nameCert: ['']
+      }, {validators: this.passwordMatchValidator.bind(this)});
 
+      this.disableForm();
+    })
+  }
+
+  disableForm() {
+    this.loginForm.get('taxCode')?.disable();
     this.loginForm.get('digitalSignature')?.disable();
     this.loginForm.get('serial')?.disable();
     this.loginForm.get('provider')?.disable();
@@ -119,7 +126,6 @@ export class ChangePassComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched();
-    // this.login();
     if (this.loginForm.valid) {
       this.changepass();
     }
@@ -147,7 +153,7 @@ export class ChangePassComponent implements OnInit {
     dialogRef.afterClose.subscribe((result: boolean) => {
       if(result) {
         const body = {
-          taxCode: this.loginForm.value.taxCode,
+          taxCode: this.loginForm.getRawValue().taxCode,
           oldPassword: this.loginForm.value.password,
           newPassword: this.loginForm.value.newPassword,
           confirmPassword: this.loginForm.value.confirmPassword,
@@ -158,14 +164,13 @@ export class ChangePassComponent implements OnInit {
           effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
           expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
           publicKey: this.loginForm.getRawValue().publicKey,
-          // taxCodeCTS: this.loginForm.value.nameCert,
         };
         this.changepassSrv.changepass(body).subscribe((res: any) => {
-          if(res && res.message === 'success') {
+          if(res && res.success) {
             clearStore();
             this.authService.setLoginStatus(false);
             this.router.navigate(['vnaccs/login']);
-            this.notification.success('Đổi mật khẩu thành công')
+            this.notification.success(res.message);
           }
         })
       }
@@ -236,8 +241,6 @@ export class ChangePassComponent implements OnInit {
     }
     return undefined;
   }
-
-
 
   passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     const pass = group.get('newPassword')?.value;
@@ -311,17 +314,27 @@ export class ChangePassComponent implements OnInit {
     })
   }
 
+  convertComplexDateString(dateStr: string): number {
+    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
+    const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(8, 10)}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`;
+
+    // Tạo đối tượng Date từ chuỗi đã định dạng
+    const dateObj = new Date(isoFormattedDate);
+
+    // Trả về timestamp (số milliseconds từ epoch)
+    return dateObj.getTime();
+  }
+
   applyData(data: any) {
-    const currentDate = new Date();
-    const validDate = new Date(data.validFrom);
-    const expireDate = new Date(data.validTo);
-    console.log(currentDate)
-    console.log(validDate)
-    console.log(expireDate)
+    const currentDate = new Date().getTime();
+    const validDate = this.convertComplexDateString(data.validFrom);
+    const expireDate = this.convertComplexDateString(data.validTo);
     if(validDate > currentDate) {
+      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực');
     }
     else if(expireDate < currentDate) {
+      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     }
     else {
@@ -332,6 +345,7 @@ export class ChangePassComponent implements OnInit {
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom));
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo));
       this.loginForm.get('nameCert')?.setValue(data.subjectDN);
+      this.loginForm.get('publicKey')?.setValue(data.subjectDN);//check
       // this.loginForm.enable()
       // this.disableForm();
     }

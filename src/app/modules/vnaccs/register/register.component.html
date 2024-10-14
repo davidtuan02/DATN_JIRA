@@ -12,7 +12,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input pattern="\d*" formControlName="taxCode" placeholder="Nhập mã số thuế" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);" />
+            <input type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getTaxCodeError()}}
@@ -23,7 +23,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Email <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input pattern="\d*" formControlName="email" placeholder="Nhập email" oninput="if(this.value.length > 150) this.value = this.value.slice(0, 150);" />
+            <input type="text" nz-input formControlName="email" placeholder="Nhập email" oninput="if(this.value.length > 150) this.value = this.value.slice(0, 150);" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getEmailError()}}

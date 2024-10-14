@@ -8,7 +8,7 @@ import { ApiAdminService } from '../../../shared/services/api-admin.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ChangePassService {
+export class ForgotPasswordService {
   PREFIX_API = '/customs-gov/admin-service/api';
   PREFIX_API_ADMIN = '/auth-service/api/business/authenticate';
   constructor(
@@ -16,8 +16,8 @@ export class ChangePassService {
     private apiAdmin: ApiAdminService
   ) {}
 
-  changepass(body: any) {
-    return this.api.post<any>(this.PREFIX_API + '/admin-account/change-password', body);
+  forgotPassword(body: any) {
+    return this.api.post<any>(this.PREFIX_API + '/admin-account/forgot-password', body);
   }
 
   getCertInfo(param: any) {

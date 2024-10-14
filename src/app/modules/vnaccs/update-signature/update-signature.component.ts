@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import { FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { CommonModule } from '@angular/common';
@@ -13,24 +13,23 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { LoginService } from './login.service';
-import { Subject } from 'rxjs';
-import { STORAGE_KEYS } from '../../../shared/constants/system.const';
 import { Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { PasswordMaskDirective } from './mask-password.directive';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { AuthService } from '../../../shared/services/auth.service';
+import { DialogService } from '../../../shared/services/dialog.service';
+import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component';
+import { UpdateSignatureService } from './update-signature.service';
+import { clearStore } from '../../../shared/utilities/system.utils';
 
 
 
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-update-signature',
   standalone: true,
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './update-signature.component.html',
+  styleUrls: ['./update-signature.component.scss'],
   imports: [
     NzButtonModule,
     TranslateModule,
@@ -48,15 +47,16 @@ import { AuthService } from '../../../shared/services/auth.service';
     NzModalComponent,
     NzModalModule,
     NzTableModule,
-    PasswordMaskDirective,
     NzToolTipModule,
     RouterLink
 ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class LoginComponent implements OnInit {
+export class UpdateSignatureComponent implements OnInit {
   loginForm!: FormGroup;
   passwordVisible = false;
+  newPasswordVisible = false;
+  confirmPasswordVisible = false;
   radioValue = '1';
   optionFileStatus = [
     { value: 1, label: 'Đang hiển thị' },
@@ -79,30 +79,34 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: NonNullableFormBuilder,
-    private loginSrv: LoginService,
-    private router: Router,
     private notification: NotificationService,
-    private message: NzMessageService,
-    private authService: AuthService
+    private dialogService: DialogService,
+    private authService: AuthService,
+    private updateSignatureSrv: UpdateSignatureService,
+    private router: Router
   ) {
     this.loadForm();
   }
   ngOnInit(): void {
   }
   loadForm() {
-    this.loginForm = this.fb.group({
-      taxCode: ['', [Validators.required]],
-      adminPassword: ['', [Validators.required]],
-      digitalSignatureType: [null],
-      digitalSignature: [''],
-      serial: [''],
-      provider: [''],
-      effectiveDate: [''],
-      expiryDate: [''],
-      publicKey: [''],
-      nameCert: ['']
-    });
-    this.disableForm();
+    this.authService.taxCode$.subscribe(taxCode => {
+      this.loginForm = this.fb.group({
+        taxCode: ['', [Validators.required]],
+        email: ['', Validators.email],
+        password: ['', [Validators.required]],
+        digitalSignatureType: [null],
+        digitalSignature: [''],
+        serial: [''],
+        provider: [''],
+        effectiveDate: [''],
+        expiryDate: [''],
+        publicKey: [''],
+        nameCert: ['']
+      });
+
+      this.disableForm();
+    })
   }
 
   disableForm() {
@@ -118,57 +122,58 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.loginForm.markAllAsTouched();
     if (this.loginForm.valid) {
-      this.login();
+      this.updateSignature();
     }
     else {
       console.log('Form is invalid!');
     }
   }
+  updateSignature() {
+    const dataDialog = {
+      title: 'Bạn có muốn cập nhật chữ ký số cho tài khoản quản trị không?',
+    };
 
+    const dialogRef = this.dialogService.openDialog(
+      ConfirmPopupComponent,
+      '',
+      dataDialog,
+      {
+        nzClosable: false,
+        nzWidth: '400px',
+        nzCentered: true,
+        nzClassName: 'popup-radius-2',
+      }
+    );
+
+    dialogRef.afterClose.subscribe((result: boolean) => {
+      if(result) {
+        const body = {
+          taxCode: this.loginForm.value.taxCode,
+          email: this.loginForm.value.email,
+          adminPassword: this.loginForm.value.password,
+          digitalSignatureType: this.loginForm.value.digitalSignatureType,
+          digitalSignature: this.loginForm.getRawValue().taxCode,
+          serial: this.loginForm.getRawValue().serial,
+          provider: this.loginForm.getRawValue().provider,
+          effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+          expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+          publicKey: this.loginForm.getRawValue().publicKey,
+        };
+        this.updateSignatureSrv.updateSignature(body).subscribe((res: any) => {
+          if(res && res.success) {
+            clearStore();
+            this.authService.setLoginStatus(false);
+            this.router.navigate(['vnaccs/login']);
+            this.notification.success('Cập nhật chữ ký số cho tài khoản quản trị thành công')
+          }
+        })
+      }
+    })
+  }
   convertDateTimestamp(date: any) {
     const [d, m, y] = date.split(/-|\//); // splits "26-02-2012" or "26/02/2012"
     const dateNew = new Date(y, m - 1, d);
     return dateNew.getTime();
-  }
-
-  convertComplexDateString(dateStr: string): number {
-    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
-    const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(8, 10)}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`;
-
-    // Tạo đối tượng Date từ chuỗi đã định dạng
-    const dateObj = new Date(isoFormattedDate);
-
-    // Trả về timestamp (số milliseconds từ epoch)
-    return dateObj.getTime();
-  }
-
-
-  login() {
-    const body = {
-      taxCode: this.loginForm.value.taxCode,
-      adminPassword: this.loginForm.value.adminPassword,
-      digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.getRawValue().nameCert,
-      serial: this.loginForm.getRawValue().serial,
-      provider: this.loginForm.getRawValue().provider,
-      // provider: this.loginForm.getRawValue().nameCert,
-      effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-      expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-      publicKey: this.loginForm.getRawValue().publicKey,
-      taxCodeCTS: this.loginForm.value.taxCodeCTS
-    };
-    this.loginSrv.login(body).subscribe((res: any) => {
-      if(res && res.code === 200) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token);
-        this.router.navigate(['vnaccs']);
-        this.authService.setLoginStatus(true);
-        this.authService.setTaxCode(this.loginForm.value.taxCode);
-      }
-    })
-    // this.router.navigate(['vnaccs']);
-    // this.authService.setLoginStatus(true);
-    // this.authService.setTaxCode(this.loginForm.value.taxCode);
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
@@ -187,25 +192,6 @@ export class LoginComponent implements OnInit {
     return `${day}/${month}/${year}`;
   };
 
-  // convertDateToYMD = (dateString: string): string | null => {
-  //   const parts = dateString.split('/');
-
-  //   if (parts.length !== 3) {
-  //     return null;
-  //   }
-
-  //   const day = parts[0];
-  //   const month = parts[1];
-  //   const year = parts[2];
-
-  //   if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
-  //     return null;
-  //   }
-
-  //   return `${year}-${month}-${day}`;
-  // };
-
-
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode');
     if (control?.touched && control.invalid) {
@@ -216,8 +202,21 @@ export class LoginComponent implements OnInit {
     return undefined;
   }
 
+  getEmailError(): string | undefined {
+    const control = this.loginForm.get('email');
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Email không được để trống';
+      }
+      if (control.errors?.['email']) {
+        return 'Email không đúng định dạng';
+      }
+    }
+    return undefined;
+  }
+
   getPassError() {
-    const control = this.loginForm.get('adminPassword');
+    const control = this.loginForm.get('password');
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống';
@@ -245,6 +244,8 @@ export class LoginComponent implements OnInit {
   }
 
   showModal() {
+    console.log('h')
+
     this.isVisible = true;
     this.msAcc = '';
     this.listOfData = [];
@@ -276,21 +277,25 @@ export class LoginComponent implements OnInit {
     if(this.msAcc === '') {
       this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
     }
-    else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if(res) {
-          if(res.message === 'success') {
-            this.listOfData = res.data;
-          }
-          else {
-            this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
-          }
-        }
-        else {
-          this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
-        }
-      })
-    }
+    this.updateSignatureSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
+      if(res && res.message === 'success') {
+        this.listOfData = res.data;
+      }
+      else {
+        this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')
+      }
+    })
+  }
+
+  convertComplexDateString(dateStr: string): number {
+    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
+    const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(8, 10)}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`;
+
+    // Tạo đối tượng Date từ chuỗi đã định dạng
+    const dateObj = new Date(isoFormattedDate);
+
+    // Trả về timestamp (số milliseconds từ epoch)
+    return dateObj.getTime();
   }
 
   applyData(data: any) {

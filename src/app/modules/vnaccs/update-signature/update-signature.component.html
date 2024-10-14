@@ -1,6 +1,6 @@
 <div class="login-container flex flex-col w-100 pt-[40px] px-[200px] pb-[50px]">
   <div class="flex justify-center items-center font-inter-600 color-primary" style="font-size: 24px;">
-    <span>Đổi mật khẩu</span>
+    <span>Cập nhật chữ ký số của tài khoản quản trị</span>
   </div>
   <div class="flex flex-col mt-[10px]">
     <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -12,49 +12,34 @@
             <input type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế"
               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);" />
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
+          <p style="max-height: 10px;" class="text-danger fs-14">
             {{getTaxCodeError()}}
-          </p> -->
+          </p>
         </nz-col>
 
-        <!-- Mật khẩu hiện tại -->
+        <!-- Email -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Mật khẩu hiện tại <span style="color: #ED5564;">*</span></label>
-          <nz-input-group [nzSuffix]="suffixPassword" style="border-radius: 8px;">
-            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password"
-              placeholder="Nhập mật khẩu hiện tại"
-              oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);" minlength="8" />
+          <label for="" class="custom-label">Email <span style="color: #ED5564;">*</span></label>
+          <nz-input-group style="border-radius: 8px;">
+            <input type="text" nz-input formControlName="email" placeholder="Nhập email"
+              oninput="if(this.value.length > 150) this.value = this.value.slice(0, 150);" />
           </nz-input-group>
-          <p style="max-height: 25px;" class="text-danger fs-14">
-            {{getPassError()}}
+          <p style="max-height: 10px;" class="text-danger fs-14">
+            {{getEmailError()}}
           </p>
         </nz-col>
       </nz-row>
 
       <nz-row nzGutter="16">
-        <!-- Mật khẩu mới-->
+        <!-- Mật khẩu -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Mật khẩu mới <span style="color: #ED5564;">*</span></label>
-          <nz-input-group [nzSuffix]="suffixNewPassword" style="border-radius: 8px;">
-            <input [type]="newPasswordVisible ? 'text' : 'password'" nz-input formControlName="newPassword"
-              placeholder="Nhập mật khẩu mới"
-              oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);" minlength="8" />
-          </nz-input-group>
-          <p style="max-height: 25px;" class="text-danger fs-14">
-            {{getNewPassError()}}
-          </p>
-        </nz-col>
-
-        <!-- Xác nhận mật khẩu mới-->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Xác nhận mật khẩu mới <span style="color: #ED5564;">*</span></label>
-          <nz-input-group [nzSuffix]="suffixConfirmPassword" style="border-radius: 8px;">
-            <input [type]="confirmPasswordVisible ? 'text' : 'password'" nz-input formControlName="confirmPassword"
-              placeholder="Nhập xác nhận mật khẩu mới"
-              oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);" />
+          <label for="" class="custom-label">Mật khẩu <span style="color: #ED5564;">*</span></label>
+          <nz-input-group [nzSuffix]="suffixPassword" style="border-radius: 8px;">
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password"
+              placeholder="Nhập mật khẩu" oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
-            {{getConfirmPassError()}}
+            {{getPassError()}}
           </p>
         </nz-col>
       </nz-row>
@@ -204,11 +189,25 @@
 
       <nz-row nzSpan="24">
         <div class="flex justify-center items-center gap-[10px] w-100 mt-[50px]">
-          <button [routerLink]="['/vnaccs']" type="button" class="font-inter-600"
-            style="height: 40px; width: 145px; background-color: #F5F5F5; color: #1944A7 !important; font-size: 14px; border-radius: 8px;">Đóng</button>
-          <button type="submit" class="font-inter-600 text-white"
-            style="height: 40px; width: 145px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;">Đổi
-            mật khẩu</button>
+          <button [routerLink]="['/vnaccs']" type="button"
+            class="font-inter-600 flex items-center justify-center gap-[8px]"
+            style="height: 40px; width: 145px; background-color: #F5F5F5; color: #1944A7 !important; font-size: 14px; border-radius: 8px;">
+            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M1.9 14L0.5 12.6L6.1 7L0.5 1.4L1.9 0L7.5 5.6L13.1 0L14.5 1.4L8.9 7L14.5 12.6L13.1 14L7.5 8.4L1.9 14Z"
+                fill="#1944A7" />
+            </svg>
+            Đóng
+          </button>
+          <button type="submit" class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            style="height: 40px; width: 170px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;">
+            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
+                fill="white" />
+            </svg>
+            Cập nhật chữ ký số
+          </button>
         </div>
       </nz-row>
     </form>

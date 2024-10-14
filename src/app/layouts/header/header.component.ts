@@ -35,9 +35,9 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class HeaderVnaccsComponent implements OnInit{
   isLogin: boolean = false;
-  taxCode: string = '';
-
   breadcrums = signal<IBreadcrumb[]>([]);
+  taxCode: string | null = null;
+
   constructor(
     private router: Router,
     private breadcrumcService: BreadcrumService,
@@ -49,13 +49,13 @@ export class HeaderVnaccsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    const token:any =
-    localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
-    sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
-    if(token) {
-      // this.authService.setLoginStatus(true);
-    //   this.getUserInfo('aa');
-    }
+    this.authService.taxCode$.subscribe((taxCode) => {
+      this.taxCode = taxCode;
+    });
+    this.authService.taxCode$.subscribe(taxCode => {
+      this.taxCode = taxCode;
+      this.cdr.detectChanges();
+    });
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLogin = isLoggedIn;
       this.cdr.detectChanges();
@@ -73,6 +73,7 @@ export class HeaderVnaccsComponent implements OnInit{
   logout() {
     clearStore();
     this.authService.setLoginStatus(false);
+    this.authService.setTaxCode('');
     this.router.navigate(['/vnaccs/login']);
   }
 

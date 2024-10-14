@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   isLogin: boolean = false;
   dataTable: any = [];
   effect = 'scrollx';
-  videosBase64: string[] = [];
+  listUrl: string[] = [];
 
   constructor(
     private translate: TranslateService,
@@ -35,8 +35,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.getAllNotiFile();
-    // this.getGuideVideoFile();
+    this.getAllNotiFile();
+    this.getGuideVideoFile();
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLogin = isLoggedIn;
       this.cdr.detectChanges();
@@ -82,39 +82,12 @@ export class HomeComponent implements OnInit {
   getGuideVideoFile() {
     this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
       if (res && res.message === 'OK') {
-        const videoFiles = res.data;  // Assume res.data is the list of video file paths
-        videoFiles.forEach((filePath: string) => {
-          // Call API to stream the video
-          this.streamVideo(filePath);
-        });
-      }
-    });
-  }
-
-  streamVideo(filePath: string) {
-    const body = { fileName: filePath };  // Prepare the body for the request
-    this.homeSrv.streamVideo(body).subscribe((response: Blob) => {
-      const videoUrl = URL.createObjectURL(response);  // Create a URL for the video blob
-      this.videosBase64.push(videoUrl);  // Store it in an array to be used for rendering
-      this.loadVideos();
-    });
-  }
-
-  loadVideos(): void {
-    this.videosBase64.forEach((base64Data, index) => {
-      const binaryString = window.atob(base64Data.split(',')[1]);
-      const byteNumbers = new Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        byteNumbers[i] = binaryString.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'video/mp4' });
-      const videoUrl = window.URL.createObjectURL(blob);
-
-      const videoElement = document.getElementById('video' + index) as HTMLVideoElement;
-      if (videoElement) {
-        videoElement.src = videoUrl;
-        videoElement.load();
+        const prefix = 'http://192.168.0.3:8081/customs-gov/admin-service/api/file/stream-video?path=';
+        res.data.forEach((ele: any) => {
+          const url = prefix + ele;
+          // console.log(url)
+          this.listUrl.push(url);
+        })
       }
     });
   }

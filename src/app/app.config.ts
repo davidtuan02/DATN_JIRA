@@ -12,7 +12,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader'; 
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { authInterceptor } from './core/auth.interceptor';
 
@@ -20,9 +20,9 @@ registerLocaleData(vi);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
-    provideNzIcons(icons), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideNzIcons(icons),
     provideNzI18n(vi_VN),
     importProvidersFrom(
       FormsModule,
@@ -36,8 +36,8 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient]
         }
       })
-    ), 
-    provideAnimationsAsync(), 
+    ),
+    provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])),
   ]
 };

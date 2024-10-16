@@ -1,106 +1,50 @@
 <div *ngIf="isLogin" class="menu-container">
-    <div class="item">
-      <div class="item-content">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8.15722 19.8215V16.7547C8.1572 15.9747 8.79312 15.3409 9.58101 15.3356H12.4671C13.2587 15.3356 13.9005 15.971 13.9005 16.7547V16.7547V19.831C13.9003 20.4932 14.4343 21.0345 15.103 21.05H17.0271C18.9451 21.05 20.5 19.5107 20.5 17.6119V17.6119V8.88788C20.4898 8.14088 20.1355 7.4394 19.538 6.98308L12.9577 1.73535C11.8049 0.821615 10.1662 0.821615 9.01342 1.73535L2.46203 6.99261C1.86226 7.44707 1.50739 8.14972 1.5 8.89741V17.6119C1.5 19.5107 3.05488 21.05 4.97291 21.05H6.89696C7.58235 21.05 8.13797 20.5 8.13797 19.8215V19.8215" stroke="#1944A7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Xem thông tin tài khoản</span>
-    </div>
-    </div>
-    <div class="item item-2">
-      <div class="item-content custom-item-1" >
-        <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5.39959 6.24995H12.5996M5.39959 9.84995H12.5996M5.39959 13.45H8.99959M3.59931 1.44995H14.3995C15.725 1.44995 16.7996 2.5245 16.7995 3.85L16.7993 18.25C16.7992 19.5755 15.7247 20.6499 14.3993 20.6499L3.59921 20.6499C2.27372 20.6499 1.19921 19.5754 1.19922 18.2499L1.19931 3.84994C1.19932 2.52446 2.27383 1.44995 3.59931 1.44995Z" stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        <span>Đăng ký mới tài khoản</span>
-      </div>
-    </div>
-    <div class="item item-combobox">
-      <div class="custom-item-2">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.1557 17.2985L17.2468 12.2073L20.6409 15.6014L15.5498 20.6926H12.1557V17.2985Z" fill="#1944A7"/>
-          <path d="M8.55547 20.6074H3.75546C2.42997 20.6074 1.35546 19.5329 1.35547 18.2074L1.35556 3.80746C1.35557 2.48198 2.43008 1.40747 3.75556 1.40747H14.5558C15.8813 1.40747 16.9558 2.48199 16.9558 3.80747V8.60747M5.55584 6.20747H12.7558M5.55584 9.80747H12.7558M5.55584 13.4075H9.15584M12.1557 17.2985L17.2468 12.2073L20.6409 15.6014L15.5498 20.6926H12.1557V17.2985Z" stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        <span>Sửa thông tin tài khoản</span>
-      </div>
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4.0575 8.90895C4.00917 8.86187 3.8025 8.68408 3.6325 8.51847C2.56333 7.54753 0.813333 5.01465 0.279167 3.68895C0.193333 3.48762 0.0116667 2.97861 0 2.70665C0 2.44605 0.06 2.19764 0.181667 1.96059C0.351667 1.66508 0.619167 1.42803 0.935 1.29814C1.15417 1.21452 1.81 1.08463 1.82167 1.08463C2.53917 0.954741 3.705 0.883301 4.99333 0.883301C6.22083 0.883301 7.33917 0.954741 8.0675 1.06109C8.07917 1.07327 8.89417 1.20316 9.17333 1.34523C9.68333 1.60582 10 2.11483 10 2.65956V2.70665C9.9875 3.06141 9.67083 3.80748 9.65917 3.80748C9.12417 5.06174 7.46 7.53617 6.35417 8.53065C6.35417 8.53065 6.07 8.81072 5.8925 8.9325C5.6375 9.12246 5.32167 9.21663 5.00583 9.21663C4.65333 9.21663 4.325 9.11029 4.0575 8.90895Z" fill="#1944A7"/>
-        </svg>
-
-    </div>
-    <div class="item">
-      <div class="item-content">
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M11.4 21.6501H5.39999C4.0745 21.6501 2.99999 20.5756 3 19.2501L3.00009 4.85018C3.0001 3.5247 4.07462 2.4502 5.40009 2.4502H16.2004C17.5258 2.4502 18.6004 3.52471 18.6004 4.8502V9.65019M19.8 19.8502L21 21.0502M7.20037 7.2502H14.4004M7.20037 10.8502H14.4004M7.20037 14.4502H10.8004M20.4 17.4502C20.4 19.107 19.0569 20.4502 17.4 20.4502C15.7431 20.4502 14.4 19.107 14.4 17.4502C14.4 15.7933 15.7431 14.4502 17.4 14.4502C19.0569 14.4502 20.4 15.7933 20.4 17.4502Z" stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        <span>Tra cứu kết quả gửi Hải quan</span>
-      </div>
-    </div>
-</div>
-
-
-<div class="content">
-  <div class="content-left">
-    <div class="title">
-      <i>Hướng dẫn</i>
-    </div>
-    <div class="main">
-      <div class="list">
-        <li>Khuyến cáo sử dụng hệ thống trên Google Chrome Version 103.0.5060.114</li>
-        <li>Hướng dẫn đăng ký người sử dụng đặt tại đường dẫn: <span (click)="downloadGuideFile()">Hướng dẫn</span></li>
-        <li>Tải Java về để đọc chữ kỹ số tại đường dẫn: <span (click)="downloadJDK()">JDK</span></li>
-      </div>
-      <nz-carousel [nzEffect]="effect">
-        <div *ngFor="let url of listUrl; let i = index">
-          <video width="100%" height="500" crossorigin="anonymous" controls [id]="'video'">
-            <source [src]="url" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </nz-carousel>
+  <div class="item" style="cursor: pointer;">
+    <div class="item-content">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8.15722 19.8215V16.7547C8.1572 15.9747 8.79312 15.3409 9.58101 15.3356H12.4671C13.2587 15.3356 13.9005 15.971 13.9005 16.7547V16.7547V19.831C13.9003 20.4932 14.4343 21.0345 15.103 21.05H17.0271C18.9451 21.05 20.5 19.5107 20.5 17.6119V17.6119V8.88788C20.4898 8.14088 20.1355 7.4394 19.538 6.98308L12.9577 1.73535C11.8049 0.821615 10.1662 0.821615 9.01342 1.73535L2.46203 6.99261C1.86226 7.44707 1.50739 8.14972 1.5 8.89741V17.6119C1.5 19.5107 3.05488 21.05 4.97291 21.05H6.89696C7.58235 21.05 8.13797 20.5 8.13797 19.8215V19.8215"
+          stroke="#1944A7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Xem thông tin tài khoản</span>
     </div>
   </div>
-  <div class="content-right">
-    <div class="title">
-      <i>Thông báo</i>
+  <div class="item item-2" style="cursor: pointer;" (click)="registerAcc()">
+    <div class="item-content custom-item-1">
+      <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M5.39959 6.24995H12.5996M5.39959 9.84995H12.5996M5.39959 13.45H8.99959M3.59931 1.44995H14.3995C15.725 1.44995 16.7996 2.5245 16.7995 3.85L16.7993 18.25C16.7992 19.5755 15.7247 20.6499 14.3993 20.6499L3.59921 20.6499C2.27372 20.6499 1.19921 19.5754 1.19922 18.2499L1.19931 3.84994C1.19932 2.52446 2.27383 1.44995 3.59931 1.44995Z"
+          stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Đăng ký mới tài khoản</span>
     </div>
-    <div class="main">
-      <ng-container *ngIf="dataTable.length > 0; else noData">
-        <ng-container *ngFor="let item of dataTable">
-          <div class="list-data" (click)="downloadNotiFile(item.fileId)" style="cursor: pointer;">
-            <div style="padding: 10px 6px 0;">
-              <svg width="28" height="31" viewBox="0 0 28 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.5722 22.0111H8.74219" stroke="#D72717" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <path d="M19.5722 15.557H8.74219" stroke="#D72717" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <path d="M12.8747 9.11776H8.74219" stroke="#D72717" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M19.862 1.23926C19.862 1.23926 8.3465 1.24542 8.3285 1.24542C4.1885 1.27163 1.625 4.0713 1.625 8.34172V22.5189C1.625 26.8109 4.208 29.6213 8.384 29.6213C8.384 29.6213 19.898 29.6167 19.9175 29.6167C24.0575 29.5905 26.6225 26.7893 26.6225 22.5189V8.34172C26.6225 4.04972 24.038 1.23926 19.862 1.23926Z"
-                  stroke="#D72717" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </div>
-            <div class="flex flex-column">
-              <div>
-                <div>
-                  <span>
-                    {{item.fileName}}
-                  </span>
-                </div>
-                <span style="color: #948E8E;">
-                  {{item.updatedTime | date: 'dd/MM/yyyy hh:mm'}}
-                </span>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-template #noData>
-        <div class="no-data">
-          <span>Không có thông báo</span>
-        </div>
-      </ng-template>
+  </div>
+  <div class="item item-combobox" style="cursor: pointer;">
+    <div class="custom-item-2">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.1557 17.2985L17.2468 12.2073L20.6409 15.6014L15.5498 20.6926H12.1557V17.2985Z" fill="#1944A7" />
+        <path
+          d="M8.55547 20.6074H3.75546C2.42997 20.6074 1.35546 19.5329 1.35547 18.2074L1.35556 3.80746C1.35557 2.48198 2.43008 1.40747 3.75556 1.40747H14.5558C15.8813 1.40747 16.9558 2.48199 16.9558 3.80747V8.60747M5.55584 6.20747H12.7558M5.55584 9.80747H12.7558M5.55584 13.4075H9.15584M12.1557 17.2985L17.2468 12.2073L20.6409 15.6014L15.5498 20.6926H12.1557V17.2985Z"
+          stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Sửa thông tin tài khoản</span>
+    </div>
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4.0575 8.90895C4.00917 8.86187 3.8025 8.68408 3.6325 8.51847C2.56333 7.54753 0.813333 5.01465 0.279167 3.68895C0.193333 3.48762 0.0116667 2.97861 0 2.70665C0 2.44605 0.06 2.19764 0.181667 1.96059C0.351667 1.66508 0.619167 1.42803 0.935 1.29814C1.15417 1.21452 1.81 1.08463 1.82167 1.08463C2.53917 0.954741 3.705 0.883301 4.99333 0.883301C6.22083 0.883301 7.33917 0.954741 8.0675 1.06109C8.07917 1.07327 8.89417 1.20316 9.17333 1.34523C9.68333 1.60582 10 2.11483 10 2.65956V2.70665C9.9875 3.06141 9.67083 3.80748 9.65917 3.80748C9.12417 5.06174 7.46 7.53617 6.35417 8.53065C6.35417 8.53065 6.07 8.81072 5.8925 8.9325C5.6375 9.12246 5.32167 9.21663 5.00583 9.21663C4.65333 9.21663 4.325 9.11029 4.0575 8.90895Z"
+        fill="#1944A7" />
+    </svg>
+  </div>
+  <div class="item" style="cursor: pointer;">
+    <div class="item-content">
+      <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M11.4 21.6501H5.39999C4.0745 21.6501 2.99999 20.5756 3 19.2501L3.00009 4.85018C3.0001 3.5247 4.07462 2.4502 5.40009 2.4502H16.2004C17.5258 2.4502 18.6004 3.52471 18.6004 4.8502V9.65019M19.8 19.8502L21 21.0502M7.20037 7.2502H14.4004M7.20037 10.8502H14.4004M7.20037 14.4502H10.8004M20.4 17.4502C20.4 19.107 19.0569 20.4502 17.4 20.4502C15.7431 20.4502 14.4 19.107 14.4 17.4502C14.4 15.7933 15.7431 14.4502 17.4 14.4502C19.0569 14.4502 20.4 15.7933 20.4 17.4502Z"
+          stroke="#1944A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Tra cứu kết quả gửi Hải quan</span>
     </div>
   </div>
 </div>
+
+<router-outlet></router-outlet>

@@ -21,6 +21,22 @@ export const routes: Routes = [
           import('./modules/vnaccs/home/home.component').then(
             c => c.HomeComponent
           ),
+        children: [
+        {
+            path: '',
+            loadComponent: () =>
+              import('./modules/vnaccs/home/home-page/home-page.component').then(
+                c => c.HomePageComponent
+              )
+          },
+          {
+            path: 'account-register',
+            loadComponent: () =>
+              import('./modules/vnaccs/home/account-register/account-register.component').then(
+                c => c.AccountRegisterComponent
+              )
+          }
+        ]
         // canActivate: [authGuard]
       },
       {

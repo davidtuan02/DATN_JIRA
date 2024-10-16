@@ -7,6 +7,7 @@ import { HomeService } from './home.service';
 import { Subject } from 'rxjs';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { AuthService } from '../../../shared/services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
@@ -18,118 +19,35 @@ import { AuthService } from '../../../shared/services/auth.service';
     NzButtonModule,
     TranslateModule,
     CommonModule,
-    NzCarouselModule
+    NzCarouselModule,
+    CommonModule,
+    RouterModule,
   ]
 })
 export class HomeComponent implements OnInit {
   isLogin: boolean = false;
-  dataTable: any = [];
-  effect = 'scrollx';
-  listUrl: string[] = [];
 
   constructor(
-    private translate: TranslateService,
-    private homeSrv: HomeService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private homeSrv: HomeService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.getAllNotiFile();
-    this.getGuideVideoFile();
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLogin = isLoggedIn;
       this.cdr.detectChanges();
     });
   }
 
-  downloadNotiFile(id: string) {
-    this.homeSrv.downloadNotiFile(id).subscribe((res: any) => {
-      if(res && res.message === 'OK') {
-        const base64Data = res.data;
-        const binaryString = window.atob(base64Data);
-
-        const byteArray = new Uint8Array(binaryString.length);
-
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
+  registerAcc() {
+    this.homeSrv.registerAccountInfo(35, 1).subscribe((res) => {
+      if (res) {
+        if (res.success) {
+          this.router.navigate(['/vnaccs/home/account-register']);
         }
-
-        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-
-        const x = this.dataTable.find((ele: any) => ele['fileId'] === id);
-        a.download = x.filePath.split('/').pop()
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        a.remove();
       }
     })
   }
-
-  getAllNotiFile() {
-    this.homeSrv.getAllNotiFile().subscribe((res: any) => {
-      if(res && res.message === 'success') {
-        this.dataTable = res.data;
-      }
-    })
-  }
-
-  getGuideVideoFile() {
-    this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
-      if (res && res.message === 'OK') {
-        const prefix = 'http://192.168.0.3:8081/customs-gov/admin-service/api/file/stream-video?path=';
-        res.data.forEach((ele: any) => {
-          const url = prefix + ele;
-          // console.log(url)
-          this.listUrl.push(url);
-        })
-      }
-    });
-  }
-
-  downloadGuideFile() {
-    this.homeSrv.downloadGuideFile().subscribe((res: any) => {
-      if(res && res.message === 'OK') {
-      const base64Data = res.data;
-        const binaryString = window.atob(base64Data);
-
-        const byteArray = new Uint8Array(binaryString.length);
-
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
-        }
-
-        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-
-        a.download = 'Hướng dẫn sử dụng.pdf';
-        document.body.appendChild(a);
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-        a.remove();
-      }
-    })
-  }
-  downloadJDK() {
-    const link = document.createElement('a');
-    link.href = 'https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz';
-    link.target = '_blank';
-    link.download = 'JDK.zip';
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-  }
-
 }

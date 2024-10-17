@@ -12,7 +12,7 @@
           <label for="" class="custom-label">Tên người đại diện <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
             <input type="text" nz-input placeholder="Nhập tên người đại diện" maxlength="50"
-              formControlName="representative" />
+              formControlName="representativeName" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getRepresentativeError()}}
@@ -20,7 +20,7 @@
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Loại giấy tờ người đại diện <span style="color: #ED5564;">*</span></label>
-          <nz-select nzAllowClear nzSize="large" formControlName="paperType">
+          <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
             <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
               style="background-color: #1944A7;">
             </nz-option>
@@ -30,18 +30,18 @@
           <label for="" class="custom-label">Số CMND/CCCD/Hộ chiếu người đại diện <span
               style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input placeholder="Nhập số CMND/CCCD/Hộ chiếu" maxlength="15" formControlName="idNo"
-              (keypress)="allowAlphaNumeric($event)" />
+            <input type="text" nz-input placeholder="Nhập số CMND/CCCD/Hộ chiếu" maxlength="15"
+              formControlName="representativeIdNo" (keypress)="allowAlphaNumeric($event)" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getIdNoError()}}
           </p>
         </nz-col>
         <nz-col nzSpan="8">
-          <label for="" class="custom-label">Địa chỉ oanh nghiệp <span style="color: #ED5564;">*</span></label>
+          <label for="" class="custom-label">Địa chỉ doanh nghiệp <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
             <input type="text" nz-input placeholder="Nhập địa chỉ doanh nghiệp" maxlength="250"
-              formControlName="businessAddress" />
+              formControlName="address" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
             {{getBusinessAddressError()}}
@@ -50,8 +50,7 @@
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Lĩnh vực hoạt động của doanh nghiệp <span
               style="color: #ED5564;">*</span></label>
-          <nz-select [(ngModel)]="multipleValue" [nzSize]="sizeSelect" nzMode="multiple" nzPlaceHolder="-Chọn-"
-            formControlName="fieldOfActivity">
+          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
             @for (option of listOfOption; track option.value) {
             <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
             }
@@ -103,7 +102,7 @@
           <nz-input-group style="border-radius: 8px;">
             <nz-date-picker nzSize="large" [nzFormat]="dateFormat" [nzPlaceHolder]="'dd/mm/yyyy'"
               [nzDisabledDate]="disabledDate" [nzAllowClear]="true" [nzSuffixIcon]="suffixDate"
-              class="custom-date-picker" style="width: 100%;">
+              class="custom-date-picker" style="width: 100%;" formControlName="userCodeExpiryDate">
             </nz-date-picker>
           </nz-input-group>
         </nz-col>
@@ -298,7 +297,7 @@
           </svg>
           Bỏ qua
         </button>
-        <button type="submit" (click)="register()"
+        <button type="submit" (click)="submit()"
           class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
           style="height: 40px; width: 145px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;">
           <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -319,7 +318,7 @@
   <div *nzModalTitle class="font-inter-600" style="font-size: 18px;">{{modalTitle}}</div>
 
   <div *nzModalContent class="d-flex flex-column gap-3 mt-[-25px]">
-    <form nz-form class="pt-[11px]" [formGroup]="form">
+    <form nz-form class="pt-[11px]" [formGroup]="formValidateUserId">
       <div class="flex items-center justify-start mb-[3px]">
         <span class="font-inter" style="font-size: 14px;">Thông tin người khai</span>
       </div>
@@ -329,43 +328,21 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Họ tên <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input placeholder="Nhập họ tên" />
+            <input type="text" nz-input placeholder="Nhập họ tên" formControlName="fullName" maxlength="50" />
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                              {{getTaxCodeError()}}
-                            </p> -->
+          <p style="max-height: 10px;" class="text-danger fs-14">
+            {{getFullNameError()}}
+          </p>
         </nz-col>
         <!-- Email  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Email <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input placeholder="Nhập email" />
+            <input type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                              {{getTaxCodeError()}}
-                            </p> -->
-        </nz-col>
-      </nz-row>
-
-      <nz-row [nzGutter]="[16, 20]">
-        <!-- loai giay to  -->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Loại giấy tờ <span style="color: #ED5564;">*</span></label>
-          <nz-select nzPlaceHolder="-Lựa chọn-" nzAllowClear nzSize="large">
-            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
-              style="background-color: #1944A7;">
-            </nz-option>
-          </nz-select>
-        </nz-col>
-        <!-- so cmnd/cccd  -->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Số CMND/CCCD/Hộ chiếu <span style="color: #ED5564;">*</span></label>
-          <nz-input-group style="border-radius: 8px;">
-            <input type="text" nz-input placeholder="Nhập số CMND/CCCD/Hộ chiếu" />
-          </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                                      {{getTaxCodeError()}}
-                                    </p> -->
+          <p style="max-height: 10px;" class="text-danger fs-14">
+            {{getEmailError()}}
+          </p>
         </nz-col>
       </nz-row>
 
@@ -373,16 +350,41 @@
         <!-- lĩnh vực hoạt động -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ED5564;">*</span></label>
-          <nz-select [(ngModel)]="multipleValue" [ngModelOptions]="{standalone: true}" [nzSize]="sizeSelect"
-            nzMode="multiple" nzPlaceHolder="-Lựa chọn-">
-            @for (option of listOfOptionModal; track option.value) {
+          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
+            @for (option of listOfOption; track option.value) {
             <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
             }
           </nz-select>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                                                      {{getTaxCodeError()}}
-                                                    </p> -->
+          <p style="max-height: 10px;" class="text-danger fs-14">
+            {{getFieldOfActivityValidateError()}}
+          </p>
         </nz-col>
+      </nz-row>
+
+      <nz-row [nzGutter]="[16, 20]">
+        <!-- loai giay to  -->
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label">Loại giấy tờ <span style="color: #ED5564;">*</span></label>
+          <nz-select nzAllowClear nzSize="large">
+            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
+              style="background-color: #1944A7;" formControlName="idType">
+            </nz-option>
+          </nz-select>
+        </nz-col>
+        <!-- so cmnd/cccd  -->
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label">Số CMND/CCCD/Hộ chiếu <span style="color: #ED5564;">*</span></label>
+          <nz-input-group style="border-radius: 8px;">
+            <input type="text" nz-input placeholder="Nhập số CMND/CCCD/Hộ chiếu" maxlength="15" formControlName="idNo"
+              (keypress)="allowAlphaNumeric($event)" />
+          </nz-input-group>
+          <p style="max-height: 10px;" class="text-danger fs-14">
+            {{getIdNoValidateError()}}
+          </p>
+        </nz-col>
+      </nz-row>
+
+      <nz-row [nzGutter]="[16,20]">
         <!-- thời gian hiệu lực khai hải quan  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Thời gian hiệu lực khai báo hải quan <span
@@ -390,28 +392,20 @@
           <nz-input-group style="border-radius: 8px;">
             <nz-date-picker nzSize="large" [nzFormat]="dateFormat" [nzPlaceHolder]="'dd/mm/yyyy'"
               [nzDisabledDate]="disabledDate" [nzAllowClear]="true" [nzSuffixIcon]="suffixDate"
-              class="custom-date-picker" style="width: 100%;">
+              class="custom-date-picker" style="width: 100%;" formControlName="customsEffectiveDate">
             </nz-date-picker>
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                                                                              {{getTaxCodeError()}}
-                                                                            </p> -->
         </nz-col>
-      </nz-row>
 
-      <nz-row [nzGutter]="[16,20]">
+        <!-- thòi gian hét hiệu lực  -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Thời gian hết hiệu lực khai báo hải quan <span
-              style="color: #ED5564;">*</span></label>
+          <label for="" class="custom-label">Thời gian hết hiệu lực khai báo hải quan</label>
           <nz-input-group style="border-radius: 8px;">
             <nz-date-picker nzSize="large" [nzFormat]="dateFormat" [nzPlaceHolder]="'dd/mm/yyyy'"
               [nzDisabledDate]="disabledDate" [nzAllowClear]="true" [nzSuffixIcon]="suffixDate"
-              class="custom-date-picker" style="width: 100%;">
+              class="custom-date-picker" style="width: 100%;" formControlName="customsExpiryDate">
             </nz-date-picker>
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-                                                                                      {{getTaxCodeError()}}
-                                                                                    </p> -->
         </nz-col>
       </nz-row>
 

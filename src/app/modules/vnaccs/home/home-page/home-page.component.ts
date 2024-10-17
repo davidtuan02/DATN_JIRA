@@ -34,8 +34,8 @@ export class HomePageComponent {
   ) { }
 
   ngOnInit() {
-    this.getGuideVideoFile();
-    this.getAllNotiFile();
+    // this.getGuideVideoFile();
+    // this.getAllNotiFile();
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLogin = isLoggedIn;
       this.cdr.detectChanges();

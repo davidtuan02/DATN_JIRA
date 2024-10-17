@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from "ng-zorro-antd/input";
 import { NzSelectModule } from "ng-zorro-antd/select";
@@ -65,6 +65,7 @@ export class AccountRegisterComponent {
   dateFormat = DATE_FORMAT.COMMON;
   size: NzButtonSize = 'large';
   form!: FormGroup;
+  formValidateUserId!: FormGroup;
 
   selectedValue = null;
   optionFileStatus = FILE_STATUS;
@@ -99,11 +100,6 @@ export class AccountRegisterComponent {
       value: 2
     }
   ];
-  listOfOptionModal: Array<{ label: string; value: string }> = [];
-  sizeSelect: NzSelectSizeType = 'large';
-  singleValue = 'a10';
-  multipleValue = ['a10', 'c12'];
-  tagValue = ['a10', 'c12', 'tag'];
 
   isVisible = false;
   isVisibleModalCTS = false;
@@ -138,6 +134,7 @@ export class AccountRegisterComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.loadForm();
+    this.loadFormValidateUserId();
   }
 
   ngOnInit(): void {
@@ -155,16 +152,20 @@ export class AccountRegisterComponent {
 
   loadForm() {
     this.form = this.fb.group({
-      representative: ['', [Validators.required]],
-      paperType: [2],
-      idNo: ['', [Validators.required]],
-      businessAddress: ['', [Validators.required]],
+      representativeName: ['', [Validators.required]],
+      representativeIdType: [2],
+      representativeIdNo: ['', [Validators.required]],
+      address: ['', [Validators.required]],
       fieldOfActivity: [null, [Validators.required]],
       proposal: [''],
-      freeSoftware: ['0'],
+      freeSoftware: ['0', [Validators.required]],
       ediSoftware: ['0'],
-      numberComputer: [this.calculateTotal()]
+      numberComputer: [''],
+      userCodeExpiryDate: ['']
     });
+
+    this.form.get('numberComputer')?.disable();
+
 
     this.form.get('freeSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal();
@@ -172,6 +173,97 @@ export class AccountRegisterComponent {
     this.form.get('ediSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal();
     });
+  }
+
+  loadFormValidateUserId() {
+    const body = {
+          "userId": "",
+          "fullName": "sdfsdf",
+          "email": "a@gmail.com",
+          "idType": 1,
+          "idNo": "123432",
+          "fieldOfActivity": 1,
+          "customsEffectiveDate": "2022-04-05",
+          "customsExpiryDate": "2033-04-05",
+
+          "digitalSignatureType": 1,
+          "digitalSignature": "123432",
+          "serial": "sdfsdf",
+          "provider": "sdfsdf",
+          "effectiveDate": "2023-04-05",
+          "expiryDate": "2033-04-05",
+          "publicKey": "Sdfsdf"
+        };
+    this.formValidateUserId = this.fb.group({
+      fullName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      fieldOfActivity: [null, [Validators.required]],
+      idType: [2],
+      idNo: ['', [Validators.required]],
+      customsEffectiveDate: [''],
+      customsExpiryDate: ['']
+    }, {validator: this.validateDate.bind(this)})
+  }
+
+  validateDate(control: AbstractControl){
+
+  }
+
+  getIdNoValidateError(): string | undefined {
+    const control = this.form.get('idNo');
+      if (control?.touched) {
+        if (control.errors?.['required']) {
+          return 'Số CMND/CCCD/ Hộ chiếu không được để trống';
+        }
+      }
+
+    return undefined;
+  }
+
+  getFieldOfActivityValidateError(): string | undefined {
+    const control = this.form.get('fieldOfActivity');
+      if (control?.touched) {
+        if (control.errors?.['required']) {
+          return 'Lĩnh vực hoạt động không được để trống';
+        }
+      }
+
+    return undefined;
+  }
+
+  getEmailError(): string | undefined {
+    const control = this.form.get('email');
+      if (control?.touched) {
+        if (control.errors?.['required']) {
+          return 'Email không được để trống';
+        }
+        if (control.errors?.['email']) {
+          return 'Email không đúng định dạng';
+        }
+      }
+
+    return undefined;
+  }
+
+  getFullNameError(): string | undefined {
+    const control = this.form.get('fullName');
+      if (control?.touched) {
+        if (control.errors?.['required']) {
+          return 'Họ tên không được để trống';
+        }
+      }
+
+    return undefined;
+  }
+
+  submit() {
+    this.form.markAllAsTouched();
+    if (!this.form.invalid) {
+      this.register();
+    }
+    else {
+      console.log('Form invalid')
+    }
   }
 
   onSearch(searchText: string) {
@@ -184,15 +276,11 @@ export class AccountRegisterComponent {
   }
 
   calculateTotal(): void {
-    // const freeSoftwareValue = +this.form.value.freeSoftware || 0;
-    // const ediSoftwareValue = +this.form.value.ediSoftware || 0;
-
-    // const total = freeSoftwareValue + ediSoftwareValue;
-
-    // this.form.get('numberComputer')?.setValue(total);
+    const freeSoftwareValue = +this.form.value?.freeSoftware || 0;
+    const ediSoftwareValue = +this.form.value?.ediSoftware || 0;
+    const total = freeSoftwareValue + ediSoftwareValue;
+    this.form.get('numberComputer')?.setValue(total);
   }
-
-
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
@@ -231,7 +319,7 @@ export class AccountRegisterComponent {
   }
 
   getRepresentativeError(): string | undefined {
-    const control = this.form.get('representative');
+    const control = this.form.get('representativeName');
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Tên người đại diện không được để trống';
@@ -242,7 +330,7 @@ export class AccountRegisterComponent {
   }
 
   getIdNoError(): string | undefined {
-    const control = this.form.get('idNo');
+    const control = this.form.get('representativeIdNo');
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Số CMND/CCCD/ Hộ chiếu không được để trống';
@@ -266,7 +354,7 @@ export class AccountRegisterComponent {
   }
 
   getBusinessAddressError():string | undefined {
-    const control = this.form.get('businessAddress');
+    const control = this.form.get('address');
       if (control?.touched) {
         if (control.errors?.['required']) {
           return 'Địa chỉ doanh  nghiệp không được để trống';
@@ -400,6 +488,19 @@ export class AccountRegisterComponent {
     return dateObj.getTime();
   }
 
+  convertDateTimestamp(date: any) {
+  if (typeof date === 'string') {
+    const [d, m, y] = date.split(/-|\//); // splits "26-02-2012" or "26/02/2012"
+    const dateNew = new Date(Number(y), Number(m) - 1, Number(d));
+    return dateNew.getTime();
+  } else if (date instanceof Date) {
+    return date.getTime();
+  } else {
+    throw new Error('Invalid date format');
+  }
+}
+
+
    navigateToDownload(store: string): void {
     if(store === 'appstore') {
       window.open('https://apps.apple.com/vn/app/mysign/id1633019232', '_blank');
@@ -497,37 +598,55 @@ export class AccountRegisterComponent {
 
     dialogRef.afterClose.subscribe((result: boolean) => {
       if(result) {
+        // const body = {
+        //   "taxCode": "123456789", -----
+        //   "representativeName": "Nguyen Van A",
+        //   "representativeIdType": 1,
+        //   "representativeIdNo": "0123456789",
+        //   "address": "123 Đường ABC, Quận 1, TP.HCM",
+        //   "fieldOfActivity": 101,
+        //   "proposal": "Đề nghị sử dụng phần mềm",
+        //   "freeSoftware": 1,
+        //   "ediSoftware": 1,
+        //   "edifactSoftware": 0,--------
+        //   "userCodeExpiryDate": "2025-12-31T00:00:00",
+        //   "userIdRequestList": [--------
+        //     {
+        //       "fullName": "Tran Van e",
+        //       "email": "tranvanb@example.com",
+        //       "idType": 1,
+        //       "idNo": "987654321",
+        //       "fieldOfActivity": 101,
+        //       "customsEffectiveDate": "2024-01-01T00:00:00",
+        //       "customsExpiryDate": "2025-12-31T00:00:00",
+        //       "digitalSignatureType": 2,
+        //       "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu...",
+        //       "serial": "1234567890",
+        //       "provider": "VNPT",
+        //       "effectiveDate": "2024-01-01T00:00:00",
+        //       "expiryDate": "2025-12-31T00:00:00",
+        //       "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr..."
+        //     }
+        //   ]
+        // };
+
+
+
         const body = {
-          "taxCode": "123456789",
-          "representativeName": "Nguyen Van A",
-          "representativeIdType": 1,
-          "representativeIdNo": "0123456789",
-          "address": "123 Đường ABC, Quận 1, TP.HCM",
-          "fieldOfActivity": 101,
-          "proposal": "Đề nghị sử dụng phần mềm",
-          "freeSoftware": 1,
-          "ediSoftware": 1,
-          "edifactSoftware": 0,
-          "userCodeExpiryDate": "2025-12-31T00:00:00",
-          "userIdRequestList": [
-            {
-              "fullName": "Tran Van e",
-              "email": "tranvanb@example.com",
-              "idType": 1,
-              "idNo": "987654321",
-              "fieldOfActivity": 101,
-              "customsEffectiveDate": "2024-01-01T00:00:00",
-              "customsExpiryDate": "2025-12-31T00:00:00",
-              "digitalSignatureType": 2,
-              "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu...",
-              "serial": "1234567890",
-              "provider": "VNPT",
-              "effectiveDate": "2024-01-01T00:00:00",
-              "expiryDate": "2025-12-31T00:00:00",
-              "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr..."
-            }
-          ]
-        };
+          taxCode: this.taxCode,
+          representativeName: this.form.value.representativeName,
+          representativeIdType: this.form.value.representativeIdType,
+          representativeIdNo: this.form.value.representativeIdNo,
+          address: this.form.value.address,
+          fieldOfActivity: this.form.value.fieldOfActivity,
+          proposal: this.form.value.proposal,
+          freeSoftware: this.form.value.freeSoftware,
+          ediSoftware: this.form.value.ediSoftware,
+          // edifactSoftware: this.form.value.edifactSoftware,
+          userCodeExpiryDate: this.convertDateTimestamp(this.form.value.userCodeExpiryDate),
+          userIdRequestList: this.listOfData
+        }
+        console.log(body)
 
         //get ID from token
         const token:any =
@@ -537,15 +656,15 @@ export class AccountRegisterComponent {
 
         }
 
-        this.accReSrv.register(35, body).subscribe((res: any) => {
-          if (res) {
-            // console.log(res)
-            if (res.success) {
-              this.notification.success(res.message);
-              this.router.navigate(['/vnaccs/home'])
-            }
-          }
-        })
+        // this.accReSrv.register(35, body).subscribe((res: any) => {
+        //   if (res) {
+        //     // console.log(res)
+        //     if (res.success) {
+        //       this.notification.success(res.message);
+        //       this.router.navigate(['/vnaccs/home'])
+        //     }
+        //   }
+        // })
       }
     })
   }

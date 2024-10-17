@@ -267,8 +267,6 @@ export class RegisterComponent implements OnInit {
     return undefined;
   }
 
-
-
   passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     const pass = group.get('adminPassword')?.value;
     const confirmPass = group.get('confirmPassword')?.value;

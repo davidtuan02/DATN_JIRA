@@ -61,7 +61,6 @@ export class AccountRegisterComponent {
       label: 'Hộ chiếu'
     }
   ]
-  selectedRepresentative = 2;
   dateFormat = DATE_FORMAT.COMMON;
   size: NzButtonSize = 'large';
   form!: FormGroup;
@@ -123,6 +122,7 @@ export class AccountRegisterComponent {
   taxCode: string | null = null;
   searchKey: string = '';
   searchSubject: Subject<string> = new Subject<string>();
+  backupDataTable: any[] = [];
 
   constructor(
     private accReSrv: AccountRegisterService,
@@ -176,41 +176,67 @@ export class AccountRegisterComponent {
   }
 
   loadFormValidateUserId() {
-    const body = {
-          "userId": "",
-          "fullName": "sdfsdf",
-          "email": "a@gmail.com",
-          "idType": 1,
-          "idNo": "123432",
-          "fieldOfActivity": 1,
-          "customsEffectiveDate": "2022-04-05",
-          "customsExpiryDate": "2033-04-05",
-
-          "digitalSignatureType": 1,
-          "digitalSignature": "123432",
-          "serial": "sdfsdf",
-          "provider": "sdfsdf",
-          "effectiveDate": "2023-04-05",
-          "expiryDate": "2033-04-05",
-          "publicKey": "Sdfsdf"
-        };
     this.formValidateUserId = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       fieldOfActivity: [null, [Validators.required]],
-      idType: [2],
+      idType: [1],
       idNo: ['', [Validators.required]],
       customsEffectiveDate: [''],
-      customsExpiryDate: ['']
-    }, {validator: this.validateDate.bind(this)})
+      customsExpiryDate: [''],
+      digitalSignatureType: [this.radioValue],
+      digitalSignature: [''],
+      nameCert: [''],
+      serial: [''],
+      provider: [''],
+      effectiveDate: [''],
+      expiryDate: [''],
+      publicKey: ['']
+    })
+
+    this.disableForm();
   }
 
   validateDate(control: AbstractControl){
 
   }
 
+  applyData(data: any) {
+    const currentDate = new Date().getTime();
+    const validDate = this.convertComplexDateString(data.validFrom);
+    const expireDate = this.convertComplexDateString(data.validTo);
+    if(validDate > currentDate) {
+      console.log('Chữ ký số chưa có hiệu lực')
+      this.notification.error('Chữ ký số chưa có hiệu lực');
+    }
+    else if(expireDate < currentDate) {
+      console.log('Chữ ký số đã hết hiệu lực')
+      this.notification.error('Chữ ký số đã hết hiệu lực')
+    }
+    else {
+      this.isVisibleModalCTS = false;
+      this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN);
+      this.formValidateUserId.get('serial')?.setValue(data.serialNumber);
+      this.formValidateUserId.get('provider')?.setValue(data.issuerDN);
+      this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom));
+      this.formValidateUserId.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo));
+      // this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN);
+      this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN);//check
+    }
+  }
+
+  disableForm() {
+    this.formValidateUserId.get('digitalSignature')?.disable();
+    this.formValidateUserId.get('serial')?.disable();
+    this.formValidateUserId.get('provider')?.disable();
+    this.formValidateUserId.get('effectiveDate')?.disable();
+    this.formValidateUserId.get('expiryDate')?.disable();
+    this.formValidateUserId.get('nameCert')?.disable();
+    this.formValidateUserId.get('publicKey')?.disable();
+  }
+
   getIdNoValidateError(): string | undefined {
-    const control = this.form.get('idNo');
+    const control = this.formValidateUserId.get('idNo');
       if (control?.touched) {
         if (control.errors?.['required']) {
           return 'Số CMND/CCCD/ Hộ chiếu không được để trống';
@@ -221,7 +247,7 @@ export class AccountRegisterComponent {
   }
 
   getFieldOfActivityValidateError(): string | undefined {
-    const control = this.form.get('fieldOfActivity');
+    const control = this.formValidateUserId.get('fieldOfActivity');
       if (control?.touched) {
         if (control.errors?.['required']) {
           return 'Lĩnh vực hoạt động không được để trống';
@@ -232,7 +258,7 @@ export class AccountRegisterComponent {
   }
 
   getEmailError(): string | undefined {
-    const control = this.form.get('email');
+    const control = this.formValidateUserId.get('email');
       if (control?.touched) {
         if (control.errors?.['required']) {
           return 'Email không được để trống';
@@ -246,7 +272,7 @@ export class AccountRegisterComponent {
   }
 
   getFullNameError(): string | undefined {
-    const control = this.form.get('fullName');
+    const control = this.formValidateUserId.get('fullName');
       if (control?.touched) {
         if (control.errors?.['required']) {
           return 'Họ tên không được để trống';
@@ -271,9 +297,18 @@ export class AccountRegisterComponent {
   }
 
   filterList(searchText: string) {
-    console.log('Lọc danh sách với từ khóa:', searchText);
-    //search
-  }
+    if (!searchText.toLowerCase().trim()) {
+      this.dataTable = this.backupDataTable;
+    }
+    else {
+      this.dataTable = this.dataTable.filter(data =>
+        data.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+        data.idNo.toLowerCase().includes(searchText.toLowerCase()) ||
+        data.email.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    }
+
 
   calculateTotal(): void {
     const freeSoftwareValue = +this.form.value?.freeSoftware || 0;
@@ -366,6 +401,7 @@ export class AccountRegisterComponent {
 
   add() {
     this.isVisible = true;
+    this.formValidateUserId.reset()
   }
 
   handleCancel() {
@@ -374,6 +410,8 @@ export class AccountRegisterComponent {
 
   showModalCTS() {
     this.isVisibleModalCTS = true;
+    this.msAcc = '';
+    this.listOfData = [];
   }
 
   handleCancelCTS() {
@@ -389,35 +427,48 @@ export class AccountRegisterComponent {
     this.isVisibleDownload = false;
   }
 
+  submitValidateUserId() {
+    this.formValidateUserId.markAllAsTouched();
+    if (!this.formValidateUserId.invalid) {
+      this.validateUserId();
+    }
+    else {
+      console.log('Form invalid');
+    }
+  }
+
   validateUserId() {
     const body = {
-          "userId": "",
-          "fullName": "sdfsdf",
-          "email": "a@gmail.com",
-          "idType": 1,
-          "idNo": "123432",
-          "fieldOfActivity": 1,
-          "customsEffectiveDate": "2022-04-05",
-          "customsExpiryDate": "2033-04-05",
+      userId: this.formValidateUserId.value.userId,
+      fullName: this.formValidateUserId.value.fullName,
+      email: this.formValidateUserId.value.email,
+      idType: this.formValidateUserId.value.idType,
+      idNo: this.formValidateUserId.value.idNo,
+      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.[0],
+      customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.value.customsEffectiveDate),
+      customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
 
-          "digitalSignatureType": 1,
-          "digitalSignature": "123432",
-          "serial": "sdfsdf",
-          "provider": "sdfsdf",
-          "effectiveDate": "2023-04-05",
-          "expiryDate": "2033-04-05",
-          "publicKey": "Sdfsdf"
-        };
-        this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
-          if (res) {
-            if (res.success) {
-              this.isVisible = false;
-              //add data to table
-              this.dataTable = [...this.dataTable, body];
-              this.cdr.detectChanges();
-            }
+      digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
+      digitalSignature: this.formValidateUserId.getRawValue().digitalSignature,
+      serial: this.formValidateUserId.getRawValue().serial,
+      provider: this.formValidateUserId.getRawValue().provider,
+      effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
+      expiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().expiryDate),
+      publicKey: this.formValidateUserId.getRawValue().publicKey,
+    }
+
+    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
+      if (res) {
+        if (res.success) {
+          this.isVisible = false;
+          //add data to table
+          this.dataTable = [...this.dataTable, body];
+          console.log(this.dataTable)
+          this.backupDataTable = this.dataTable;
+          this.cdr.detectChanges();
         }
-    })
+    }
+})
   }
 
   getCTS() {
@@ -451,32 +502,6 @@ export class AccountRegisterComponent {
     return `${day}/${month}/${year}`;
   };
 
-  applyData(data: any) {
-    const currentDate = new Date().getTime();
-    const validDate = this.convertComplexDateString(data.validFrom);
-    const expireDate = this.convertComplexDateString(data.validTo);
-    if(validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
-      this.notification.error('Chữ ký số chưa có hiệu lực');
-    }
-    else if(expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
-      this.notification.error('Chữ ký số đã hết hiệu lực')
-    }
-    else {
-      this.isVisible = false;
-      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
-      this.form.get('serial')?.setValue(data.serialNumber);
-      this.form.get('provider')?.setValue(data.issuerDN);
-      this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom));
-      this.form.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo));
-      this.form.get('nameCert')?.setValue(data.subjectDN);
-      this.form.get('publicKey')?.setValue(data.subjectDN);//check
-      // this.loginForm.enable()
-      // this.disableForm();
-    }
-  }
-
   convertComplexDateString(dateStr: string): number {
     // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
     const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(8, 10)}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`;
@@ -490,7 +515,7 @@ export class AccountRegisterComponent {
 
   convertDateTimestamp(date: any) {
   if (typeof date === 'string') {
-    const [d, m, y] = date.split(/-|\//); // splits "26-02-2012" or "26/02/2012"
+    const [d, m, y] = date.split(/-|\//);
     const dateNew = new Date(Number(y), Number(m) - 1, Number(d));
     return dateNew.getTime();
   } else if (date instanceof Date) {
@@ -499,7 +524,6 @@ export class AccountRegisterComponent {
     throw new Error('Invalid date format');
   }
 }
-
 
    navigateToDownload(store: string): void {
     if(store === 'appstore') {
@@ -598,53 +622,19 @@ export class AccountRegisterComponent {
 
     dialogRef.afterClose.subscribe((result: boolean) => {
       if(result) {
-        // const body = {
-        //   "taxCode": "123456789", -----
-        //   "representativeName": "Nguyen Van A",
-        //   "representativeIdType": 1,
-        //   "representativeIdNo": "0123456789",
-        //   "address": "123 Đường ABC, Quận 1, TP.HCM",
-        //   "fieldOfActivity": 101,
-        //   "proposal": "Đề nghị sử dụng phần mềm",
-        //   "freeSoftware": 1,
-        //   "ediSoftware": 1,
-        //   "edifactSoftware": 0,--------
-        //   "userCodeExpiryDate": "2025-12-31T00:00:00",
-        //   "userIdRequestList": [--------
-        //     {
-        //       "fullName": "Tran Van e",
-        //       "email": "tranvanb@example.com",
-        //       "idType": 1,
-        //       "idNo": "987654321",
-        //       "fieldOfActivity": 101,
-        //       "customsEffectiveDate": "2024-01-01T00:00:00",
-        //       "customsExpiryDate": "2025-12-31T00:00:00",
-        //       "digitalSignatureType": 2,
-        //       "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu...",
-        //       "serial": "1234567890",
-        //       "provider": "VNPT",
-        //       "effectiveDate": "2024-01-01T00:00:00",
-        //       "expiryDate": "2025-12-31T00:00:00",
-        //       "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr..."
-        //     }
-        //   ]
-        // };
-
-
-
         const body = {
           taxCode: this.taxCode,
           representativeName: this.form.value.representativeName,
           representativeIdType: this.form.value.representativeIdType,
           representativeIdNo: this.form.value.representativeIdNo,
           address: this.form.value.address,
-          fieldOfActivity: this.form.value.fieldOfActivity,
+          fieldOfActivity: this.form.value.fieldOfActivity?.[0],
           proposal: this.form.value.proposal,
           freeSoftware: this.form.value.freeSoftware,
           ediSoftware: this.form.value.ediSoftware,
-          // edifactSoftware: this.form.value.edifactSoftware,
+          edifactSoftware: this.form.value.ediSoftware,
           userCodeExpiryDate: this.convertDateTimestamp(this.form.value.userCodeExpiryDate),
-          userIdRequestList: this.listOfData
+          userIdRequestList: this.dataTable
         }
         console.log(body)
 
@@ -656,15 +646,14 @@ export class AccountRegisterComponent {
 
         }
 
-        // this.accReSrv.register(35, body).subscribe((res: any) => {
-        //   if (res) {
-        //     // console.log(res)
-        //     if (res.success) {
-        //       this.notification.success(res.message);
-        //       this.router.navigate(['/vnaccs/home'])
-        //     }
-        //   }
-        // })
+        this.accReSrv.register(35, body).subscribe((res: any) => {
+          if (res) {
+            if (res.success) {
+              this.notification.success(res.message);
+              this.router.navigate(['/vnaccs/home'])
+            }
+          }
+        })
       }
     })
   }

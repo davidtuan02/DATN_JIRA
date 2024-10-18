@@ -42,14 +42,14 @@ export class HomeComponent implements OnInit {
   }
 
   registerAcc() {
-          this.router.navigate(['/vnaccs/home/account-register']);
+          // this.router.navigate(['/vnaccs/home/account-register']);
 
-    // this.homeSrv.registerAccountInfo(35, 1).subscribe((res) => {
-    //   if (res) {
-    //     if (res.message === 'success') {
-    //       this.router.navigate(['/vnaccs/home/account-register']);
-    //     }
-    //   }
-    // })
+    this.homeSrv.registerAccountInfo(35, 1).subscribe((res) => {
+      if (res) {
+        if (res.message === 'success') {
+          this.router.navigate(['/vnaccs/home/account-register']);
+        }
+      }
+    })
   }
 }

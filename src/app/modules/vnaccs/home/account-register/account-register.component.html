@@ -4,10 +4,10 @@
   </div>
   <form nz-form [formGroup]="form">
     <div class="flex flex-start">
-      <span class="font-inter" style="font-size: 18px;">Thông tin chung</span>
+      <span class="font-inter" style="font-size: 18px; color: #000000">Thông tin chung</span>
     </div>
     <div class="mt-[18px]">
-      <nz-row [nzGutter]="[16,20]">
+      <nz-row [nzGutter]="[20,20]">
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Tên người đại diện <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
@@ -100,9 +100,9 @@
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Ngày hết hiệu lực User code</label>
           <nz-input-group style="border-radius: 8px;">
-            <nz-date-picker nzSize="large" [nzFormat]="dateFormat" [nzPlaceHolder]="'dd/mm/yyyy'"
-              [nzDisabledDate]="disabledDate" [nzAllowClear]="true" [nzSuffixIcon]="suffixDate"
-              class="custom-date-picker" style="width: 100%;" formControlName="userCodeExpiryDate">
+            <nz-date-picker nzSize="large" [nzFormat]="dateFormat" [nzPlaceHolder]="'dd/mm/yyyy'" [nzAllowClear]="true"
+              [nzSuffixIcon]="suffixDate" class="custom-date-picker" style="width: 100%;"
+              formControlName="userCodeExpiryDate">
             </nz-date-picker>
           </nz-input-group>
         </nz-col>
@@ -232,7 +232,7 @@
               <!-- <div class="flex items-center"> -->
               <span class="cell-table" nz-tooltip
                 [nzTooltipTitle]="data.effectiveDate | date: 'dd/MM/yyyy hh:mm:ss'">{{data.effectiveDate | date:
-                'dd/MM/yyyy hh:mm:ss'}}</span>
+                'dd/MM/yyyy'}}</span>
               <!-- </div> -->
             </td>
             <!-- ngay  he hieu luc  -->
@@ -240,7 +240,7 @@
               <!-- <div class="flex items-center"> -->
               <span class="cell-table" nz-tooltip
                 [nzTooltipTitle]="data.expiryDate | date: 'dd/MM/yyyy hh:mm:ss'">{{data.expiryDate | date:
-                'dd/MM/yyyy hh:mm:ss'}}</span>
+                'dd/MM/yyyy'}}</span>
               <!-- </div> -->
             </td>
             <!-- trang thai   -->
@@ -365,11 +365,18 @@
         <!-- loai giay to  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Loại giấy tờ <span style="color: #ED5564;">*</span></label>
-          <nz-select nzAllowClear nzSize="large">
+          <nz-select nzAllowClear nzSize="large" formControlName="idType">
             <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
-              style="background-color: #1944A7;" formControlName="idType">
+              style="background-color: #1944A7;">
             </nz-option>
           </nz-select>
+
+          <!-- <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
+            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
+              style="background-color: #1944A7;">
+            </nz-option>
+          </nz-select> -->
+
         </nz-col>
         <!-- so cmnd/cccd  -->
         <nz-col nzSpan="12">
@@ -419,7 +426,7 @@
           <div class="flex justify-between">
             <div class="flex flex-col gap-[10px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ED5564;">*</span></label>
-              <nz-radio-group [(ngModel)]="radioValue" [ngModelOptions]="{standalone: true}" style="font-size: 14px;">
+              <nz-radio-group style="font-size: 14px;" [(ngModel)]="radioValue" formControlName="digitalSignatureType">
                 <label nz-radio nzValue='1'>Usb token</label>
                 <label nz-radio nzValue='2'>Viettel - Mysign</label>
               </nz-radio-group>
@@ -451,7 +458,7 @@
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
             <label for="" class="custom-label">Chữ ký số <span style="color: #ED5564;">*</span></label>
-            <nz-select nzPlaceHolder="-Chọn-" nzSize="large">
+            <nz-select nzPlaceHolder="-Chọn-" nzSize="large" formControlName="nameCert">
               <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">
               </nz-option>
             </nz-select>
@@ -465,7 +472,7 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Tên chứng thư số <span style="color: #ED5564;">*</span></label>
             <nz-input-group style="border-radius: 8px;">
-              <input text nz-input maxlength="13" />
+              <input text nz-input maxlength="13" formControlName="digitalSignature" />
             </nz-input-group>
             <p style="max-height: 10px;" class="text-danger fs-14">
             </p>
@@ -479,7 +486,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input text nz-input />
+            <input text nz-input formControlName="serial" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
           </p>
@@ -489,7 +496,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;">
-            <input text nz-input />
+            <input text nz-input formControlName="provider" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
           </p>
@@ -501,7 +508,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ED5564;">*</span></label>
           <nz-input-group [nzSuffix]="suffixDate" nzSize="large" style="border-radius: 8px;">
-            <input text nz-input />
+            <input text nz-input formControlName="effectiveDate" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
           </p>
@@ -537,7 +544,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hết hiệu lực <span style="color: #ED5564;">*</span></label>
           <nz-input-group style="border-radius: 8px;" [nzSuffix]="suffixDate" nzSize="large">
-            <input text nz-input />
+            <input text nz-input formControlName="expiryDate" />
           </nz-input-group>
           <p style="max-height: 10px;" class="text-danger fs-14">
           </p>
@@ -547,7 +554,7 @@
       <!-- Khóa công khai -->
       <nz-row nzSpan="24">
         <label for="" class="custom-label">Khóa công khai <span style="color: #ED5564;">*</span></label>
-        <textarea style="min-height: 100px; border-radius: 8px;" nz-input>
+        <textarea style="min-height: 100px; border-radius: 8px;" nz-input formControlName="publicKey">
             </textarea>
         <p style="max-height: 10px;" class="text-danger fs-14">
         </p>
@@ -863,7 +870,7 @@
       (click)="handleCancel()">Đóng</button>
     <button type="submit" class="font-inter-600 text-white"
       style="height: 40px; width: 145px; background-color: #1944A7 !important; font-size: 14px; border-radius: 8px;"
-      (click)="validateUserId()">Lưu</button>
+      (click)="submitValidateUserId()">Lưu</button>
   </div>
 </ng-template>
 

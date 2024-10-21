@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
+import { STORAGE_KEYS } from '../../../shared/constants/system.const';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 
 @Component({
@@ -22,6 +24,7 @@ import { Router, RouterModule } from '@angular/router';
     NzCarouselModule,
     CommonModule,
     RouterModule,
+    NzDropDownModule
   ]
 })
 export class HomeComponent implements OnInit {
@@ -41,15 +44,53 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  registerAcc() {
-          this.router.navigate(['/vnaccs/home/account-register']);
+  decodeToken(token: string): any {
+    if (!token) {
+      return null;
+    }
 
-    // this.homeSrv.registerAccountInfo(35, 1).subscribe((res) => {
-    //   if (res) {
-    //     if (res.message === 'success') {
-    //       this.router.navigate(['/vnaccs/home/account-register']);
-    //     }
-    //   }
-    // })
+    try {
+      // Tách phần payload (phần thứ 2 của JWT)
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(window.atob(base64));
+
+      return decodedPayload;
+    } catch (error) {
+      console.error('Lỗi khi giải mã token:', error);
+      return null;
+    }
+  }
+
+  registerAcc() {
+    // this.router.navigate(['/vnaccs/home/account-register']);
+    const token:any =
+      localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
+      sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
+      if (token) {
+        const decoded = this.decodeToken(token);
+        if (decoded && decoded.sub) {
+          // console.log(decoded)
+          this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res) => {
+          if (res) {
+            if (res.message === 'success') {
+              this.router.navigate(['/vnaccs/home/account-register']);
+            }
+          }
+        })
+        }
+        else {
+          //
+      }
+    }
+  }
+
+  handleNavigate(mode: 'editAcc' | 'editAdminAcc') {
+    if (mode === 'editAcc') {
+
+    }
+    else if (mode === 'editAdminAcc') {
+
+    }
   }
 }

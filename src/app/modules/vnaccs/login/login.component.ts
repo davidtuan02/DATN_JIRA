@@ -100,7 +100,8 @@ export class LoginComponent implements OnInit {
       effectiveDate: [''],
       expiryDate: [''],
       publicKey: [''],
-      nameCert: ['']
+      nameCert: [''],
+      credentialId: ['']
     });
     this.disableForm();
   }
@@ -142,7 +143,6 @@ export class LoginComponent implements OnInit {
     return dateObj.getTime();
   }
 
-
   login() {
     // const body = {
     //   taxCode: this.loginForm.value.taxCode,
@@ -155,7 +155,8 @@ export class LoginComponent implements OnInit {
     //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
     //   expiryDate:this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
     //   publicKey: this.loginForm.getRawValue().publicKey,
-    //   taxCodeCTS: this.loginForm.value.taxCodeCTS
+    //   taxCodeCTS: this.loginForm.value.taxCodeCTS,
+    //   // credentialId: this.loginForm.value.credentialId
     // };
     // this.loginSrv.login(body).subscribe((res: any) => {
     //   if(res && res.code === 200) {
@@ -314,6 +315,7 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo));
       this.loginForm.get('nameCert')?.setValue(data.subjectDN);
       this.loginForm.get('publicKey')?.setValue(data.subjectDN);//check
+      this.loginForm.get('credentialId')?.setValue(data.credentialId);//check
       // this.loginForm.enable()
       // this.disableForm();
     }

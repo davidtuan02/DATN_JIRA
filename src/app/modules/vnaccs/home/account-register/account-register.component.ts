@@ -70,88 +70,7 @@ export class AccountRegisterComponent {
   optionFileStatus = FILE_STATUS;
   optionFileType = FILE_TYPE;
 
-  dataTable: any[] = [
-    {
-      "fullName": "Tran Van B",
-      "email": "tranvanb@example.com",
-      "idType": 1,
-      "idNo": "987654321",
-      "fieldOfActivity": 101,
-      "customsEffectiveDate": "2024-01-01T00:00:00",
-      "customsExpiryDate": "2025-12-31T00:00:00",
-      "digitalSignatureType": 2,
-      "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu...",
-      "serial": "1234567890",
-      "provider": "VNPT",
-      "effectiveDate": "2024-01-01T00:00:00",
-      "expiryDate": "2025-12-31T00:00:00",
-      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr..."
-    },
-    {
-      "fullName": "Nguyen Thi C",
-      "email": "nguyenthic@example.com",
-      "idType": 1,
-      "idNo": "123456789",
-      "fieldOfActivity": 102,
-      "customsEffectiveDate": "2024-02-01T00:00:00",
-      "customsExpiryDate": "2026-01-31T00:00:00",
-      "digitalSignatureType": 1,
-      "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp...",
-      "serial": "0987654321",
-      "provider": "FPT",
-      "effectiveDate": "2024-02-01T00:00:00",
-      "expiryDate": "2026-01-31T00:00:00",
-      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy..."
-    },
-    {
-      "fullName": "Le Van D",
-      "email": "levand@example.com",
-      "idType": 2,
-      "idNo": "192837465",
-      "fieldOfActivity": 103,
-      "customsEffectiveDate": "2024-03-01T00:00:00",
-      "customsExpiryDate": "2026-03-01T00:00:00",
-      "digitalSignatureType": 2,
-      "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx...",
-      "serial": "5678901234",
-      "provider": "Viettel",
-      "effectiveDate": "2024-03-01T00:00:00",
-      "expiryDate": "2026-03-01T00:00:00",
-      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk..."
-    },
-    {
-      "fullName": "Pham Van E",
-      "email": "phamvane@example.com",
-      "idType": 1,
-      "idNo": "564738291",
-      "fieldOfActivity": 104,
-      "customsEffectiveDate": "2024-04-01T00:00:00",
-      "customsExpiryDate": "2026-03-31T00:00:00",
-      "digitalSignatureType": 1,
-      "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...",
-      "serial": "2345678901",
-      "provider": "VNPT",
-      "effectiveDate": "2024-04-01T00:00:00",
-      "expiryDate": "2026-03-31T00:00:00",
-      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm..."
-    },
-    {
-      "fullName": "Bui Thi F",
-      "email": "buithif@example.com",
-      "idType": 2,
-      "idNo": "918273645",
-      "fieldOfActivity": 105,
-      "customsEffectiveDate": "2024-05-01T00:00:00",
-      "customsExpiryDate": "2026-04-30T00:00:00",
-      "digitalSignatureType": 2,
-      "digitalSignature": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAf...",
-      "serial": "3456789012",
-      "provider": "FPT",
-      "effectiveDate": "2024-05-01T00:00:00",
-      "expiryDate": "2026-04-30T00:00:00",
-      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAe..."
-    }
-  ];
+  dataTable: any[] = [];
   modalTitle: string = 'Thêm mới người khai hải quan';
   total: number = 0;
   paginate = {
@@ -207,6 +126,7 @@ export class AccountRegisterComponent {
   listDataSelected: any[] = [];
 
   mode: 'view' | 'add' | 'edit' = 'add';
+  indexToEdit!: any;
 
   constructor(
     private accReSrv: AccountRegisterService,
@@ -502,7 +422,7 @@ export class AccountRegisterComponent {
     return undefined;
   }
 
-  showModalUserId(mode: 'add' | 'view' | 'edit', data: any) {
+  showModalUserId(mode: 'add' | 'view' | 'edit', data: any, index: any) {
     this.isVisible = true;
     this.formValidateUserId.enable();
     if (mode === 'add') {
@@ -516,9 +436,11 @@ export class AccountRegisterComponent {
       this.modalTitle = 'Chỉnh sửa người khai hải quan';
       this.mode = 'edit';
       this.formValidateUserId.reset();
+      this.indexToEdit = index;
       //apply data
       this.setValueForm(data);
       this.disableForm();
+      this.formValidateUserId.get('userId')?.disable()
     }
     if (mode === 'view') {
       this.modalTitle = 'Xem chi tiết người khai hải quan';
@@ -534,7 +456,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('UserId')?.setValue('hehe')
       this.formValidateUserId.get('email')?.setValue(data?.email)
-      this.formValidateUserId.get('fieldOfActivity')?.setValue(1)
+      this.formValidateUserId.get('fieldOfActivity')?.setValue([data?.fieldOfActivity])
       this.formValidateUserId.get('idType')?.setValue(data?.idType)
       this.formValidateUserId.get('idNo')?.setValue(data?.idNo)
       this.formValidateUserId.get('customsEffectiveDate')?.setValue(data?.customsEffectiveDate)
@@ -544,8 +466,8 @@ export class AccountRegisterComponent {
       this.formValidateUserId.get('nameCert')?.setValue(data?.nameCert)
       this.formValidateUserId.get('serial')?.setValue(data?.serial)
       this.formValidateUserId.get('provider')?.setValue(data?.provider)
-      this.formValidateUserId.get('effectiveDate')?.setValue(data?.effectiveDate)
-      this.formValidateUserId.get('expiryDate')?.setValue(data?.expiryDate)
+      this.formValidateUserId.get('effectiveDate')?.setValue(this.convertTimestampToDate(data?.effectiveDate))
+      this.formValidateUserId.get('expiryDate')?.setValue(this.convertTimestampToDate(data?.expiryDate))
       this.formValidateUserId.get('publicKey')?.setValue(data?.publicKey)
   }
 
@@ -596,8 +518,8 @@ export class AccountRegisterComponent {
       idType: this.formValidateUserId.value.idType,
       idNo: this.formValidateUserId.value.idNo,
       fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.[0],
-      customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.value.customsEffectiveDate),
-      customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
+      customsEffectiveDate: this.formValidateUserId.value.customsEffectiveDate,
+      customsExpiryDate: this.formValidateUserId.value.customsExpiryDate,
 
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
       digitalSignature: this.formValidateUserId.getRawValue().digitalSignature,
@@ -608,6 +530,17 @@ export class AccountRegisterComponent {
       publicKey: this.formValidateUserId.getRawValue().publicKey,
     }
     console.log(body)
+    this.dataTable = this.dataTable.map((ele: any, index: any) => {
+      if (index !== this.indexToEdit) {
+        return ele;
+      }
+      else {
+        return body
+      }
+    })
+
+    this.isVisible = false;
+    this.cdr.detectChanges()
   }
 
   validateUserId() {
@@ -631,18 +564,18 @@ export class AccountRegisterComponent {
     }
     // console.log(this.formValidateUserId.value.fullName)
 
-//     this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
-//       if (res) {
-//         if (res.success) {
-//           this.isVisible = false;
-//           //add data to table
-//           this.dataTable = [...this.dataTable, body];
-//           console.log(this.dataTable)
-//           this.backupDataTable = this.dataTable;
-//           this.cdr.detectChanges();
-//         }
-//     }
-// })
+    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
+      if (res) {
+        if (res.success) {
+          this.isVisible = false;
+          //add data to table
+          this.dataTable = [...this.dataTable, body];
+          // console.log(this.dataTable)
+          this.backupDataTable = this.dataTable;
+          this.cdr.detectChanges();
+        }
+    }
+})
   }
 
   getCTS() {
@@ -697,7 +630,28 @@ export class AccountRegisterComponent {
   } else {
     throw new Error('Invalid date format');
   }
-}
+  }
+
+  convertTimestampToDate = (timestamp: number): string => {
+  const date = new Date(timestamp);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+  };
+
+  convertDateToTimestamp = (dateString: string): number => {
+  // Split the string into day, month, and year
+  const [day, month, year] = dateString.split('/').map(Number);
+
+  // Create a new Date object (months are 0-based, so subtract 1 from the month)
+  const date = new Date(year, month - 1, day);
+
+  // Return the timestamp (milliseconds since epoch)
+  return date.getTime();
+};
 
    navigateToDownload(store: string): void {
     if(store === 'appstore') {
@@ -864,25 +818,45 @@ export class AccountRegisterComponent {
           userCodeExpiryDate: this.convertDateTimestamp(this.form.value.userCodeExpiryDate),
           userIdRequestList: this.dataTable
         }
-        console.log(body)
+        // console.log(body)
 
         //get ID from token
         const token:any =
         localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
         sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
         if (token) {
-
-        }
-
-        this.accReSrv.register(35, body).subscribe((res: any) => {
-          if (res) {
-            if (res.success) {
-              this.notification.success(res.message);
-              this.router.navigate(['/vnaccs/home'])
+          const decoded = this.decodeToken(token);
+          if (decoded && decoded.sub) {
+            // console.log(decoded)
+            this.accReSrv.register(decoded.sub, body).subscribe((res: any) => {
+            if (res) {
+              if (res.success) {
+                this.notification.success(res.message);
+                this.router.navigate(['/vnaccs/home'])
+              }
             }
-          }
         })
+          }
+        }
       }
     })
+  }
+
+  decodeToken(token: string): any {
+    if (!token) {
+      return null;
+    }
+
+    try {
+      // Tách phần payload (phần thứ 2 của JWT)
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(window.atob(base64));
+
+      return decodedPayload;
+    } catch (error) {
+      console.error('Lỗi khi giải mã token:', error);
+      return null;
+    }
   }
 }

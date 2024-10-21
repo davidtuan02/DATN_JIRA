@@ -332,6 +332,7 @@ export class RegisterComponent implements OnInit {
     this.registerSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
       if(res && res.message === 'success') {
         this.listOfData = res.data;
+        // console.log(res)
       }
       else {
         this.notification.error('Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên')

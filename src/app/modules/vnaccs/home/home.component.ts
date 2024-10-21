@@ -33,7 +33,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private homeSrv: HomeService,
     private router: Router
   ) { }
 
@@ -63,34 +62,31 @@ export class HomeComponent implements OnInit {
   }
 
   registerAcc() {
-    // this.router.navigate(['/vnaccs/home/account-register']);
-    const token:any =
-      localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
-      sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
-      if (token) {
-        const decoded = this.decodeToken(token);
-        if (decoded && decoded.sub) {
-          // console.log(decoded)
-          this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res) => {
-          if (res) {
-            if (res.message === 'success') {
-              this.router.navigate(['/vnaccs/home/account-register']);
-            }
-          }
-        })
-        }
-        else {
-          //
-      }
-    }
+    this.router.navigate(['/vnaccs/home/account-register']);
+    // const token:any =
+    //   localStorage?.getItem(STORAGE_KEYS.TOKEN) ||
+    //   sessionStorage?.getItem(STORAGE_KEYS.TOKEN);
+    //   if (token) {
+    //     const decoded = this.decodeToken(token);
+    //     if (decoded && decoded.sub) {
+    //       // console.log(decoded)
+    //       this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res) => {
+    //       if (res) {
+    //         if (res.message === 'success') {
+    //           this.router.navigate(['/vnaccs/home/account-register']);
+    //         }
+    //       }
+    //     })
+    //     }
+    // }
   }
 
   handleNavigate(mode: 'editAcc' | 'editAdminAcc') {
     if (mode === 'editAcc') {
-
+      this.router.navigate(['/vnaccs/home/account-update']);
     }
     else if (mode === 'editAdminAcc') {
-
+      this.router.navigate(['/vnaccs/home/account-admin-update']);
     }
   }
 }

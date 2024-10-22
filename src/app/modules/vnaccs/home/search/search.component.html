@@ -1,0 +1,236 @@
+<div class="flex flex-column">
+  <div class="flex justify-center">
+    <span class="font-inter color-primary" style="font-size: 20px">Tra cứu thông tin đăng ký</span>
+  </div>
+  <div>
+    <form action="" nz-form>
+      <nz-row [nzGutter]="[20, 20]">
+        <!-- Loại đăng ký  -->
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Loại đăng ký</label>
+          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-">
+            @for (option of listOfOptionRegisterType; track option.value) {
+            <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+            }
+          </nz-select>
+          <!-- <p style="max-height: 10px" class="text-danger fs-14">
+            {{ getRepresentativeError() }}
+          </p> -->
+        </nz-col>
+
+        <!-- Trạng thái  -->
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Trạng thái</label>
+          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-">
+            @for (option of listOfOptionStatus; track option.value) {
+            <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+            }
+          </nz-select>
+          <!-- <p style="max-height: 10px" class="text-danger fs-14">
+              {{ getRepresentativeError() }}
+            </p> -->
+        </nz-col>
+
+        <!-- Số tiếp nhận  -->
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Số tiếp nhận</label>
+          <nz-input-group style="border-radius: 8px">
+            <input type="text" nz-input placeholder="Nhập số tiếp nhận" maxlength="250" />
+          </nz-input-group>
+          <!-- <p style="max-height: 10px" class="text-danger fs-14">
+            {{ getBusinessAddressError() }}
+          </p> -->
+        </nz-col>
+      </nz-row>
+
+      <nz-row [nzGutter]="[20, 20]">
+        <!-- Ngày gửi  -->
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Ngày gửi</label>
+          <nz-form-control class="mt-[-10px] flex flex-column gap-1">
+            <div class="custom-range-picker">
+              <nz-date-picker
+                [nzFormat]="dateFormat"
+                [nzPlaceHolder]="'DD/MM/YYYY'"
+                [nzDisabledDate]="disabledDate"
+                [nzAllowClear]="true"
+                [nzSuffixIcon]="suffixDate"
+                class="custom-date-picker"
+                style="width: 100%"
+              >
+              </nz-date-picker>
+
+              <div class="mb-[10px]">
+                <svg width="28" height="8" viewBox="0 0 28 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M27.7547 4.35355C27.9499 4.15829 27.9499 3.84171 27.7547 3.64645L24.5727 0.464466C24.3774 0.269204 24.0609 0.269204 23.8656 0.464466C23.6703 0.659728 23.6703 0.976311 23.8656 1.17157L26.694 4L23.8656 6.82843C23.6703 7.02369 23.6703 7.34027 23.8656 7.53553C24.0609 7.7308 24.3774 7.7308 24.5727 7.53553L27.7547 4.35355ZM0.578125 4.5H27.4011V3.5H0.578125V4.5Z"
+                    fill="#BFBFBF"
+                  />
+                </svg>
+              </div>
+
+              <nz-date-picker
+                [nzFormat]="dateFormat"
+                [nzPlaceHolder]="'DD/MM/YYYY'"
+                [nzDisabledDate]="disabledDate"
+                [nzAllowClear]="true"
+                [nzSuffixIcon]="suffixDate"
+                style="width: 100%"
+              >
+              </nz-date-picker>
+              <!-- <span *ngIf="form.controls['endDate'].touched && (form.controls['endDate'].hasError('invalidDateRange'))"
+                class="text-danger fs-14" style="position: absolute; bottom: -8px; left: 0;">
+                Từ ngày phải nhỏ hơn hoặc bằng đến ngày
+              </span> -->
+            </div>
+          </nz-form-control>
+        </nz-col>
+
+        <!-- Ngày phê duyệt  -->
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Ngày gửi</label>
+          <nz-form-control class="mt-[-10px] flex flex-column gap-1">
+            <div class="custom-range-picker">
+              <nz-date-picker
+                [nzFormat]="dateFormat"
+                [nzPlaceHolder]="'DD/MM/YYYY'"
+                [nzDisabledDate]="disabledDate"
+                [nzAllowClear]="true"
+                [nzSuffixIcon]="suffixDate"
+                class="custom-date-picker"
+                style="width: 100%"
+              >
+              </nz-date-picker>
+
+              <div class="mb-[10px]">
+                <svg width="28" height="8" viewBox="0 0 28 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M27.7547 4.35355C27.9499 4.15829 27.9499 3.84171 27.7547 3.64645L24.5727 0.464466C24.3774 0.269204 24.0609 0.269204 23.8656 0.464466C23.6703 0.659728 23.6703 0.976311 23.8656 1.17157L26.694 4L23.8656 6.82843C23.6703 7.02369 23.6703 7.34027 23.8656 7.53553C24.0609 7.7308 24.3774 7.7308 24.5727 7.53553L27.7547 4.35355ZM0.578125 4.5H27.4011V3.5H0.578125V4.5Z"
+                    fill="#BFBFBF"
+                  />
+                </svg>
+              </div>
+
+              <nz-date-picker
+                [nzFormat]="dateFormat"
+                [nzPlaceHolder]="'DD/MM/YYYY'"
+                [nzDisabledDate]="disabledDate"
+                [nzAllowClear]="true"
+                [nzSuffixIcon]="suffixDate"
+                style="width: 100%"
+              >
+              </nz-date-picker>
+              <!-- <span *ngIf="form.controls['endDate'].touched && (form.controls['endDate'].hasError('invalidDateRange'))"
+                class="text-danger fs-14" style="position: absolute; bottom: -8px; left: 0;">
+                Từ ngày phải nhỏ hơn hoặc bằng đến ngày
+              </span> -->
+            </div>
+          </nz-form-control>
+        </nz-col>
+      </nz-row>
+
+      <div class="flex justify-center">
+        <button nz-button type="submit" size="large" class="custom-button text-white">
+          <div>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="9.80297"
+                cy="9.80541"
+                r="7.49047"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M15.0156 15.4043L17.9523 18.3334"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <span class="font-inter-600" style="font-size: 14px">Tìm kiếm</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #suffixDate>
+  <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M2.625 7.83688H17.4783"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.7493 11.0915H13.757"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M10.054 11.0915H10.0617"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.34308 11.0915H6.3508"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.7493 14.3303H13.757"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M10.054 14.3303H10.0617"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.34308 14.3303H6.3508"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.4173 1.66675V4.40906"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.68288 1.66675V4.40906"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M13.5788 2.98267H6.52268C4.07544 2.98267 2.54688 4.34594 2.54688 6.85185V14.3932C2.54688 16.9385 4.07544 18.3333 6.52268 18.3333H13.571C16.026 18.3333 17.5468 16.9622 17.5468 14.4563V6.85185C17.5546 4.34594 16.0337 2.98267 13.5788 2.98267Z"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</ng-template>

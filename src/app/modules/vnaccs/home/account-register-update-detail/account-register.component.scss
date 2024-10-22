@@ -1,7 +1,7 @@
-@import "../../../../shared/styles/variable";
+@import '../../../../shared/styles/variable';
 
 .custom-label {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
@@ -30,7 +30,8 @@
   // font-style: normal;
 }
 
-nz-select, nz-date-picker {
+nz-select,
+nz-date-picker {
   width: 100%;
 }
 
@@ -41,4 +42,19 @@ nz-date-picker {
 ::ng-deep .ant-select-selector {
   border-radius: 8px !important;
   padding: 8px 12px;
+}
+
+.effective {
+  background-color: #3bb54a;
+  color: white;
+}
+
+.expiry {
+  background-color: #d72717;
+  color: white;
+}
+
+.no-effective {
+  background-color: #fec107;
+  color: black;
 }

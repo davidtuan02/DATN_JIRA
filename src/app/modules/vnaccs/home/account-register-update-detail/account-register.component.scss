@@ -1,19 +1,5 @@
 @import '../../../../shared/styles/variable';
 
-.custom-label {
-  font-family: 'Inter', sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-size: 14px;
-  margin-top: 1px;
-}
-
-::ng-deep .ant-input {
-  border-radius: 8px !important;
-  padding: 8px 12px;
-}
-
 ::ng-deep .ant-input::placeholder {
   font-size: 14px !important;
   // font-family: "Inter", sans-serif;
@@ -33,15 +19,6 @@
 nz-select,
 nz-date-picker {
   width: 100%;
-}
-
-nz-date-picker {
-  border-radius: 8px;
-}
-
-::ng-deep .ant-select-selector {
-  border-radius: 8px !important;
-  padding: 8px 12px;
 }
 
 .effective {

@@ -887,57 +887,53 @@ export class AccountRegisterComponent {
           userCodeExpiryDate: new Date(this.form.value.userCodeExpiryDate).getTime(),
           userIdRequestList: this.dataTable
         }
-        // console.log(body)
 
-        if (this.modeScreen === 'register') {
-          this.accReSrv.register(39, body).subscribe((res: any) => {
-            if (res) {
-              if (res.success) {
-                this.notification.success(res.message)
-                this.router.navigate(['/vnaccs/home'])
-              }
-            }
-          })
-        } else if (this.modeScreen === 'update') {
-          this.accReSrv.edit(39, body).subscribe((res: any) => {
-            if (res) {
-              if (res.success) {
-                this.notification.success(res.message)
-                this.router.navigate(['/vnaccs/home'])
-              }
-            }
-          })
-        }
+        // if (this.modeScreen === 'register') {
+        //   this.accReSrv.register(39, body).subscribe((res: any) => {
+        //     if (res) {
+        //       if (res.success) {
+        //         this.notification.success(res.message)
+        //         this.router.navigate(['/vnaccs/home'])
+        //       }
+        //     }
+        //   })
+        // } else if (this.modeScreen === 'update') {
+        //   this.accReSrv.edit(39, body).subscribe((res: any) => {
+        //     if (res) {
+        //       if (res.success) {
+        //         this.notification.success(res.message)
+        //         this.router.navigate(['/vnaccs/home'])
+        //       }
+        //     }
+        //   })
+        // }
 
         //get ID from token
-        // const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
-        // if (token) {
-        // const decoded = this.decodeToken(token)
-        // if (decoded && decoded.sub) {
-        //   // console.log(decoded)
-        //   if (this.modeScreen === 'register') {
-        //     this.accReSrv.register(decoded.sub, body).subscribe((res: any) => {
-        //       if (res) {
-        //         if (res.success) {
-        //           this.notification.success(res.message)
-        //           this.router.navigate(['/vnaccs/home'])
-        //         }
-        //       }
-        //     })
-        //   } else if (this.modeScreen === 'update') {
-        //     this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
-        //       if (res) {
-        //         if (res.success) {
-        //           this.notification.success(res.message)
-        //           this.router.navigate(['/vnaccs/home'])
-        //         }
-        //       }
-        //     })
-        //   } else {
-        //     console.log('hehe')
-        //   }
-        // }
-        // }
+        const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+        if (token) {
+          const decoded = this.decodeToken(token)
+          if (decoded && decoded.sub) {
+            if (this.modeScreen === 'register') {
+              this.accReSrv.register(decoded.sub, body).subscribe((res: any) => {
+                if (res) {
+                  if (res.success) {
+                    this.notification.success(res.message)
+                    this.router.navigate(['/vnaccs/home'])
+                  }
+                }
+              })
+            } else if (this.modeScreen === 'update') {
+              this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
+                if (res) {
+                  if (res.success) {
+                    this.notification.success(res.message)
+                    this.router.navigate(['/vnaccs/home'])
+                  }
+                }
+              })
+            }
+          }
+        }
       }
     })
   }

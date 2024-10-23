@@ -1,1 +1,59 @@
 @import '../../../../shared/styles/variable';
+
+nz-select {
+  width: 100%;
+}
+
+nz-date-picker,
+nz-range-picker {
+  margin: 0 0px 12px 0;
+}
+
+.custom-range-picker {
+  display: flex;
+  align-items: center;
+}
+
+.custom-range-picker .arrow {
+  margin: 0 10px;
+  font-size: 20px;
+  color: #000; /* You can customize the arrow color */
+}
+
+.status-1 {
+  background-color: #a5a5a5;
+  color: white;
+}
+
+.status-2 {
+  background-color: #fec107;
+  color: black;
+}
+
+.status-3 {
+  background-color: #3bb54a;
+  color: white;
+}
+
+.status-0 {
+  background-color: #f22a2a;
+  color: white;
+}
+
+::ng-deep .ant-pagination-item-active {
+  border-radius: 50%;
+  background-color: $primary-color !important;
+  border: 1px solid $primary-color;
+
+  a {
+    color: white !important;
+  }
+}
+
+::ng-deep .ant-pagination-item:not(.ant-pagination-item-active) {
+  background-color: red; /* Màu nền mặc định */
+  border: 1px solid #b5a3a3; /* Viền màu xám nhạt */
+  color: black; /* Màu chữ mặc định */
+  border-radius: 50%; /* Bo tròn các item */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}

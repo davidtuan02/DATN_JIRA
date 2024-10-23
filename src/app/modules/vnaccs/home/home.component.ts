@@ -62,32 +62,47 @@ export class HomeComponent implements OnInit {
   }
 
   handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search') {
-    // if (mode === 'editAcc') {
-    //   if (this.check(2)) {
-    //     this.router.navigate(['/vnaccs/home/account-update'])
-    //   }
-    // } else if (mode === 'editAdminAcc') {
-    //   if (this.check(3)) {
-    //     this.router.navigate(['/vnaccs/home/account-admin-update'])
-    //   }
-    // } else if (mode === 'registerAcc') {
-    //   // this.router.navigate(['/vnaccs/home/account-register']);
-
-    //   if (this.check(1)) {
-    //     this.router.navigate(['/vnaccs/home/account-register'])
-    //   }
-    // }
-
-    // this.homeSrv.registerAccountInfo(39, 2).subscribe((res) => {
-    //   if (res) {
-    //     if (res.message === 'success') {
-    //       this.router.navigate(['/vnaccs/home/account-update'], {
-    //         state: { data: res.data }
-    //       })
-    //     }
-    //   }
-    // })
-
-    this.router.navigate(['/vnaccs/home/search-custom'])
+    const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+    let decoded: any
+    if (token) {
+      decoded = this.decodeToken(token)
+      // console.log(decoded)
+    }
+    if (decoded && decoded.sub) {
+      switch (mode) {
+        case 'editAcc': {
+          this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
+            if (res && res.message === 'success') {
+              this.router.navigate(['/vnaccs/home/account-update'], {
+                state: {
+                  data: res.data
+                }
+              })
+            }
+          })
+          break
+        }
+        case 'editAdminAcc': {
+          this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
+            if (res && res.message === 'success') {
+              this.router.navigate(['/vnaccs/home/account-admin-update'])
+            }
+          })
+          break
+        }
+        case 'registerAcc': {
+          this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res: any) => {
+            if (res && res.message === 'success') {
+              this.router.navigate(['/vnaccs/home/account-register'])
+            }
+          })
+          break
+        }
+        case 'search': {
+          this.router.navigate(['/vnaccs/home/search-custom'])
+          break
+        }
+      }
+    }
   }
 }

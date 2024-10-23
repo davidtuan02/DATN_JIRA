@@ -97,3 +97,38 @@ $error-cl: #f44336;
   font-weight: 400;
   font-style: normal;
 }
+
+.custom-label {
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 14px;
+  margin-top: 1px;
+}
+
+::ng-deep .ant-input {
+  border-radius: 8px !important;
+  padding: 8px 12px;
+}
+
+nz-date-picker {
+  border-radius: 8px;
+}
+
+::ng-deep .ant-select-selector {
+  border-radius: 8px !important;
+  padding: 8px 12px;
+}
+
+.btn-search {
+  background-color: $primary-color !important;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  height: 40px;
+  width: 115px;
+  padding: 0 12px;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -6,6 +6,9 @@
     <span *ngIf="modeScreen === 'update'" class="font-inter color-primary" style="font-size: 20px"
       >Sửa thông tin tài khoản: MST {{ taxCode }}</span
     >
+    <span *ngIf="modeScreen === 'detail'" class="font-inter color-primary" style="font-size: 20px"
+      >Thông tin đăng ký tài khoản: MST {{ taxCode }}</span
+    >
   </div>
   <form nz-form [formGroup]="form">
     <div class="flex flex-start">
@@ -454,6 +457,7 @@
                 </span>
 
                 <span
+                  *ngIf="modeScreen !== 'detail'"
                   nz-tooltip
                   [nzTooltipTitle]="'Chỉnh sửa'"
                   style="cursor: pointer"
@@ -469,7 +473,7 @@
                   </svg>
                 </span>
 
-                <span nz-tooltip [nzTooltipTitle]="'Xóa'" (click)="deleteItem(index)">
+                <span *ngIf="modeScreen !== 'detail'" nz-tooltip [nzTooltipTitle]="'Xóa'" (click)="deleteItem(index)">
                   <svg
                     width="20"
                     height="20"
@@ -541,6 +545,23 @@
           Quay lại
         </button>
         <button
+          *ngIf="modeScreen === 'detail'"
+          [routerLink]="['/vnaccs/home/search-custom']"
+          type="button"
+          class="font-inter-600 flex items-center justify-center gap-[8px]"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: #f5f5f5;
+            color: #1944a7 !important;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          Đóng
+        </button>
+        <button
+          *ngIf="modeScreen !== 'detail'"
           type="submit"
           (click)="submit()"
           class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
@@ -554,7 +575,101 @@
           </svg>
           Đăng ký
         </button>
+        <!-- <button
+          *ngIf="dataFromRouter.requestStatus === '1'"
+          [routerLink]="['/vnaccs/home/account-update']"
+          type="submit"
+          (click)="submit()"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
+        >
+          <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
+              fill="white"
+            />
+          </svg>
+          Chỉnh sửa
+        </button>
+        <button
+          *ngIf="dataFromRouter.requestStatus === '1'"
+          [routerLink]="['/vnaccs/home/send-custom']"
+          type="submit"
+          (click)="submit()"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: white !important;
+            color: #3bb54a;
+            border: 0.5px solid #3bb54a;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
+              fill="white"
+            />
+          </svg>
+          Gửi hải quan
+        </button> -->
+        <button
+          [routerLink]="['/vnaccs/home/send-custom']"
+          type="submit"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: white !important;
+            color: #3bb54a !important;
+            border: 0.5px solid #3bb54a;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          Gửi hải quan
+        </button>
       </div>
+    </nz-row>
+  </div>
+
+  <!-- response info from custom  -->
+  <div class="flex flex-column">
+    <span class="font-inter" style="font-size: 18px">Thông tin phản hồi của Hải quan</span>
+    <nz-row nzGutter="20">
+      <nz-col nzSpan="8">
+        <span class="me-[14px] font-inter-400" style="font-size: 14px">Kết quả:</span
+        ><span
+          class="font-roboto-400"
+          style="
+            padding: 4px;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 4px;
+            line-height: 24px;
+            background-color: #3bb54a;
+          "
+          >Hải quan chấp nhận</span
+        >
+      </nz-col>
+      <nz-col nzSpan="8">
+        <span class="me-[14px] font-inter-400" style="font-size: 14px">Ngày phản hồi:</span
+        ><span class="font-inter" style="font-size: 14px">10/10/2024</span>
+      </nz-col>
+    </nz-row>
+
+    <nz-row nzGutter="20">
+      <nz-col nzSpan="8">
+        <span class="me-[14px] font-inter-400" style="font-size: 14px">Đơn vị Hải quan phản hồi:</span
+        ><span class="font-inter" style="font-size: 14px">00P001 - Văn phòng tổng cục (Tổng cục Hải quan)</span>
+      </nz-col>
+      <nz-col nzSpan="8">
+        <span class="me-[14px] font-inter-400" style="font-size: 14px">Ghi nhận Hải quan:</span
+        ><span class="font-inter" style="font-size: 14px"></span>
+      </nz-col>
     </nz-row>
   </div>
 </div>

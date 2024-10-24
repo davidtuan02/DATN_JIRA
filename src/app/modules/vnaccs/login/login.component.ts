@@ -149,32 +149,32 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const body = {
-      taxCode: this.loginForm.value.taxCode,
-      adminPassword: this.loginForm.value.adminPassword,
-      digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.getRawValue().nameCert,
-      serial: this.loginForm.getRawValue().serial,
-      provider: this.loginForm.getRawValue().provider,
-      // provider: this.loginForm.getRawValue().nameCert,
-      effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-      expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-      publicKey: this.loginForm.getRawValue().publicKey,
-      taxCodeCTS: this.loginForm.value.taxCodeCTS
-      // credentialId: this.loginForm.value.credentialId
-    }
-    this.loginSrv.login(body).subscribe((res: any) => {
-      if (res && res.code === 200) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        this.router.navigate(['vnaccs'])
-        this.authService.setLoginStatus(true)
-        this.authService.setTaxCode(this.loginForm.value.taxCode)
-      }
-    })
-    // this.router.navigate(['vnaccs'])
-    // this.authService.setLoginStatus(true)
-    // this.authService.setTaxCode(this.loginForm.value.taxCode)
+    // const body = {
+    //   taxCode: this.loginForm.value.taxCode,
+    //   adminPassword: this.loginForm.value.adminPassword,
+    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+    //   digitalSignature: this.loginForm.getRawValue().nameCert,
+    //   serial: this.loginForm.getRawValue().serial,
+    //   provider: this.loginForm.getRawValue().provider,
+    //   // provider: this.loginForm.getRawValue().nameCert,
+    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+    //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+    //   publicKey: this.loginForm.getRawValue().publicKey,
+    //   taxCodeCTS: this.loginForm.value.taxCodeCTS
+    //   // credentialId: this.loginForm.value.credentialId
+    // }
+    // this.loginSrv.login(body).subscribe((res: any) => {
+    //   if (res && res.code === 200) {
+    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     this.router.navigate(['vnaccs'])
+    //     this.authService.setLoginStatus(true)
+    //     this.authService.setTaxCode(this.loginForm.value.taxCode)
+    //   }
+    // })
+    this.router.navigate(['vnaccs'])
+    this.authService.setLoginStatus(true)
+    this.authService.setTaxCode(this.loginForm.value.taxCode)
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {

@@ -56,6 +56,11 @@ export const routes: Routes = [
           {
             path: 'search-custom',
             loadComponent: () => import('./modules/vnaccs/home/search/search.component').then((c) => c.SearchComponent)
+          },
+          {
+            path: 'send-custom',
+            loadComponent: () =>
+              import('./modules/vnaccs/home/send-custom/send-custom.component').then((c) => c.SendCustomComponent)
           }
         ]
         // canActivate: [authGuard]

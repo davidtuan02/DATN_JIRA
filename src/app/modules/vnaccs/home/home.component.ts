@@ -80,6 +80,7 @@ export class HomeComponent implements OnInit {
               })
             }
           })
+          // this.router.navigate(['/vnaccs/home/account-update'])
           break
         }
         case 'editAdminAcc': {

@@ -135,6 +135,8 @@ export class AccountRegisterComponent {
   mode: 'view' | 'add' | 'edit' = 'add'
   indexToEdit!: any
 
+  dataFromRouter: any
+
   constructor(
     private accReSrv: AccountRegisterService,
     private fb: FormBuilder,
@@ -193,11 +195,14 @@ export class AccountRegisterComponent {
         }
       }
     }
+    console.log(this.modeScreen)
   }
 
   getDataToEditAcc() {
     const state = history.state
     if (state && state.data) {
+      this.dataFromRouter = state.data
+      console.log(this.dataFromRouter)
       const data = state.data
       this.form.get('userCode')?.setValue(data?.userCode)
       this.form.get('representativeName')?.setValue(data?.representativeName)
@@ -234,6 +239,7 @@ export class AccountRegisterComponent {
 
     this.form.get('numberComputer')?.disable()
     this.form.get('userCode')?.disable()
+    // this.form.get('userCodeExpiryDate')?.setValue(new Date())
 
     this.form.get('freeSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal()

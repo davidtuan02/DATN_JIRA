@@ -17,3 +17,93 @@
 button {
   margin-right: 8px;
 }
+
+::ng-deep .ant-steps {
+  padding: 0 245px !important;
+}
+
+::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #2362f6;
+  border: #2362f6 !important;
+}
+
+::ng-deep .ant-steps-item-icon {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border: #bfbfbf40 !important;
+}
+
+::ng-deep .ant-steps-item-icon .ant-steps-icon {
+  top: 17px !important;
+}
+
+::ng-deep .ant-steps-item-wait .ant-steps-item-icon {
+  background-color: #bfbfbf40 !important;
+}
+
+::ng-deep .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+  color: #a5a5a5 !important;
+}
+
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #2362f6;
+}
+
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: white !important;
+  content: '1';
+}
+
+::ng-deep .anticon {
+  display: none;
+}
+
+::ng-deep .ant-steps-item-finish .ant-steps-item-icon::before {
+  content: '1' !important;
+  position: absolute;
+  top: 33px;
+  left: 77px;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: white;
+}
+
+::ng-deep .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after,
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: #2362f6 !important;
+  top: 35px;
+  left: 10px;
+}
+
+::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after,
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after {
+  top: 35px;
+  left: 10px;
+}
+
+::ng-deep .ant-steps-item-tail::after {
+  position: absolute !important;
+  top: 22px;
+  left: 82px;
+  width: 88%;
+}
+
+::ng-deep .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: #2362f6 !important;
+}
+
+::ng-deep .ant-steps-label-vertical .ant-steps-item-content {
+  display: flex !important;
+  justify-content: flex-end;
+  margin-top: 0px !important;
+}
+
+nz-select,
+nz-date-picker {
+  width: 100%;
+}

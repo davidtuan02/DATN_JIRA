@@ -179,6 +179,7 @@ export class AccountRegisterComponent {
         case 'account-update': {
           this.modeScreen = 'update'
           this.getDataToEditAcc()
+          this.form.enable()
           break
         }
         case 'account-admin-update': {
@@ -187,6 +188,8 @@ export class AccountRegisterComponent {
         }
         case 'account-detail': {
           this.modeScreen = 'detail'
+          this.getDataToEditAcc()
+          this.form.disable()
           break
         }
         default: {
@@ -198,28 +201,51 @@ export class AccountRegisterComponent {
     console.log(this.modeScreen)
   }
 
+  responseFromCustom: any
+
   getDataToEditAcc() {
     const state = history.state
     if (state && state.data) {
-      this.dataFromRouter = state.data
-      console.log(this.dataFromRouter)
-      const data = state.data
-      this.form.get('userCode')?.setValue(data?.userCode)
-      this.form.get('representativeName')?.setValue(data?.representativeName)
-      this.form.get('representativeIdType')?.setValue(data?.representativeIdType)
-      this.form.get('representativeIdNo')?.setValue(data?.representativeIdNo)
-      this.form.get('address')?.setValue(data?.address)
-      this.form.get('fieldOfActivity')?.setValue([data?.fieldOfActivity])
-      this.form.get('proposal')?.setValue(data?.proposal)
-      this.form.get('freeSoftware')?.setValue(data?.freeSoftware)
-      this.form.get('ediSoftware')?.setValue(data?.ediSoftware)
-      this.form.get('numberComputer')?.setValue(data?.numberComputer)
-      this.form.get('userCodeExpiryDate')?.setValue(data?.userCodeExpiryDate)
-      this.calculateTotal()
-      this.dataTable = data?.userIdResponses
+      this.accReSrv.getInfoByAdmin(state.data.id).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.responseFromCustom = state.data.requestStatus
+          // console.log(this.responseFromCustom)
+          this.form.get('userCode')?.setValue(res?.data?.userCode)
+          this.form.get('representativeName')?.setValue(res?.data?.representativeName)
+          this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
+          this.form.get('representativeIdNo')?.setValue(res?.data?.representativeIdNo)
+          this.form.get('address')?.setValue(res?.data?.address)
+          this.form.get('fieldOfActivity')?.setValue([parseInt(res.data.fieldOfActivity)])
+          this.form.get('proposal')?.setValue(res?.data?.proposal)
+          this.form.get('freeSoftware')?.setValue(res?.data?.freeSoftware)
+          this.form.get('ediSoftware')?.setValue(res?.data?.ediSoftware)
+          this.form.get('numberComputer')?.setValue(res?.data?.numberComputer)
+          this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
+          this.calculateTotal()
+          this.dataTable = res?.data?.userIdResponses
+        }
+      })
     } else {
       console.log('Không có dữ liệu trong state')
     }
+  }
+
+  fromDetailToUpdate() {
+    this.router.navigate(['/vnaccs/home/account-update']) //state + button
+    this.modeScreen = 'update'
+  }
+
+  getResultResponseFromCustom() {
+    if (this.responseFromCustom === 2) {
+      return 'Chờ phê duyệt'
+    }
+    if (this.responseFromCustom === 3) {
+      return 'Hải quan chấp nhận'
+    }
+    if (this.responseFromCustom === 0) {
+      return 'Hải quan từ chối'
+    }
+    return ''
   }
 
   loadForm() {
@@ -239,7 +265,6 @@ export class AccountRegisterComponent {
 
     this.form.get('numberComputer')?.disable()
     this.form.get('userCode')?.disable()
-    // this.form.get('userCodeExpiryDate')?.setValue(new Date())
 
     this.form.get('freeSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal()
@@ -344,6 +369,17 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('expiryDate')?.disable()
     // this.formValidateUserId.get('nameCert')?.disable();
     this.formValidateUserId.get('publicKey')?.disable()
+  }
+
+  getRepresentativeNameError(): string | undefined {
+    const control = this.formValidateUserId.get('representativeName')
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Loại giấy tờ người đại diện không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   getIdNoValidateError(): string | undefined {

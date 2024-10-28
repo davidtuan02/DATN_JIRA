@@ -39,12 +39,8 @@ export const routes: Routes = [
               )
           },
           {
-            // need to change to update admin acc update
             path: 'account-admin-update',
-            loadComponent: () =>
-              import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
-                (c) => c.AccountRegisterComponent
-              )
+            loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
           },
           {
             path: 'account-detail',

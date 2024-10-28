@@ -125,7 +125,10 @@ export class RegisterComponent implements OnInit {
   ) {
     this.loadForm()
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.router.params.subscribe((p: any) => {
+    // })
+  }
   loadForm() {
     this.loginForm = this.fb.group(
       {

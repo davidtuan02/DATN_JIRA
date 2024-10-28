@@ -6,7 +6,8 @@ import { environment } from '../../../environments/environment.prod'
 
 @Injectable({ providedIn: 'root' })
 export class ApiAdminService {
-  readonly SERVER: string = environment.server
+  readonly SERVER: string = environment.adminServer
+  // readonly SERVER: string = environment.server
   constructor(private http: HttpClient) {}
 
   get<T>(path: string, option?: IApiOption): Observable<T> {

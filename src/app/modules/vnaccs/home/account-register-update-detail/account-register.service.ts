@@ -9,6 +9,10 @@ export class AccountRegisterService {
   PREFIX_API = '/customs-gov/admin-service/api'
   constructor(private api: ApiService) {}
 
+  getInfoByAdmin(id: any) {
+    return this.api.get<any>(this.PREFIX_API + `/customs/get-general-info-by-admin-account-id/${id}`)
+  }
+
   edit(id: any, body: any) {
     return this.api.put<any>(this.PREFIX_API + `/admin-account/update-business-info/${id}`, body)
   }

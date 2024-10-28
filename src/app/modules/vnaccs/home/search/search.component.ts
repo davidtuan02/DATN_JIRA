@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectorRef, Component } from '@angular/core'
 import {
   AbstractControl,
   FormBuilder,
@@ -25,6 +25,8 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { SearchService } from './search.service'
+import { DialogService } from '../../../../shared/services/dialog.service'
+import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 
 @Component({
   selector: 'app-search',
@@ -162,7 +164,13 @@ export class SearchComponent {
   listDataSelected: any[] = []
   form!: FormGroup
 
-  constructor(private searchSrv: SearchService, private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private searchSrv: SearchService,
+    private fb: FormBuilder,
+    private router: Router,
+    private dialogSrv: DialogService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadForm()
@@ -230,54 +238,50 @@ export class SearchComponent {
     return undefined
   }
 
-  handleNavigate(mode: 'detail' | 'custom' | 'edit' | 'delete') {
+  handleNavigate(mode: 'detail' | 'custom' | 'edit' | 'delete', data: any) {
     switch (mode) {
       case 'detail': {
-        this.router.navigate(['/vnaccs/home/account-detail'], {
-          state: {
-            taxCode: '123456789',
-            representativeName: 'Nguyen Van A',
-            representativeIdType: 1,
-            representativeIdNo: '0123456789',
-            address: '123 Đường ABC, Quận 1, TP.HCM',
-            fieldOfActivity: 101,
-            proposal: 'Đề nghị sử dụng phần mềm',
-            freeSoftware: 1,
-            ediSoftware: 1,
-            edifactSoftware: 0,
-            userCodeExpiryDate: '2025-12-31T00:00:00',
-            userIdRequestList: [
-              {
-                fullName: 'Tran Van B',
-                email: 'tranvanb@example.com',
-                idType: 1,
-                idNo: '987654321',
-                fieldOfActivity: 101,
-                customsEffectiveDate: '2024-01-01T00:00:00',
-                customsExpiryDate: '2025-12-31T00:00:00',
-                digitalSignatureType: 2,
-                digitalSignature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu...',
-                serial: '1234567890',
-                provider: 'VNPT',
-                effectiveDate: '2024-01-01T00:00:00',
-                expiryDate: '2025-12-31T00:00:00',
-                publicKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr...'
-              }
-            ]
-          }
-        })
+        //dang fake k co dang ky tk quan tri
+        if (data?.requestType === 1 || data?.requestType === 2) {
+          this.router.navigate(['/vnaccs/home/account-detail'], {
+            state: {
+              data: data
+            }
+          })
+        }
+        if (data?.requestType === 3) {
+          this.router.navigate(['/vnaccs/home/account-admin-update'], {
+            state: {
+              data: data
+            }
+          })
+        }
         break
       }
       case 'custom': {
-        this.router.navigate(['/vnaccs/home/account-detail'])
+        this.router.navigate(['/vnaccs/home/send-custom'])
         break
       }
       case 'edit': {
-        this.router.navigate(['/vnaccs/home/account-detail'])
+        this.router.navigate(['/vnaccs/home/account-update'])
         break
       }
       case 'delete': {
-        this.router.navigate(['/vnaccs/home/account-detail'])
+        const dialogData = {
+          title: 'Bạn có muốn xóa đề xuất không?'
+        }
+        const dialogRef = this.dialogSrv.openDialog(ConfirmPopupComponent, '', dialogData, {
+          nzClosable: false,
+          nzWidth: '400px',
+          nzCentered: true,
+          nzClassName: 'popup-radius-2'
+        })
+        dialogRef.afterClose.subscribe((res: any) => {
+          if (res) {
+            console.log('xoa ok')
+            this.cdr.detectChanges()
+          }
+        })
         break
       }
     }
@@ -286,9 +290,9 @@ export class SearchComponent {
   search() {
     const body = {
       requestType: '',
-      requestStatus: 1,
+      requestStatus: '',
       requestNo: '',
-      startDateSubmit: '2025-03-04',
+      startDateSubmit: '',
       endDateSubmit: '',
       approvalFromDate: '',
       approvalToDate: '',

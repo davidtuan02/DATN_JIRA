@@ -71,16 +71,16 @@ export class HomeComponent implements OnInit {
     if (decoded && decoded.sub) {
       switch (mode) {
         case 'editAcc': {
-          this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
-            if (res && res.message === 'success') {
-              this.router.navigate(['/vnaccs/home/account-update'], {
-                state: {
-                  data: res.data
-                }
-              })
-            }
-          })
-          // this.router.navigate(['/vnaccs/home/account-update'])
+          // this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
+          //   if (res && res.message === 'success') {
+          //     this.router.navigate(['/vnaccs/home/account-update'], {
+          //       state: {
+          //         data: res.data
+          //       }
+          //     })
+          //   }
+          // })
+          this.router.navigate(['/vnaccs/home/account-update'])
           break
         }
         case 'editAdminAcc': {
@@ -92,11 +92,12 @@ export class HomeComponent implements OnInit {
           break
         }
         case 'registerAcc': {
-          this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res: any) => {
-            if (res && res.message === 'success') {
-              this.router.navigate(['/vnaccs/home/account-register'])
-            }
-          })
+          // this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res: any) => {
+          //   if (res && res.message === 'success') {
+          //     this.router.navigate(['/vnaccs/home/account-register'])
+          //   }
+          // })
+          this.router.navigate(['/vnaccs/home/account-register'])
           break
         }
         case 'search': {

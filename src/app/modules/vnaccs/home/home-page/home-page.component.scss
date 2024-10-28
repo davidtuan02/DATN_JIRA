@@ -1,4 +1,4 @@
-@import "../../../../shared/styles/variable";
+@import '../../../../shared/styles/variable';
 
 .content {
   display: flex;
@@ -13,18 +13,19 @@
     flex-direction: column;
     gap: 20px;
     width: 42%;
+    height: 550px;
 
     .title {
       height: 35px !important;
-      border-bottom: 1px solid black;
+      border-bottom: 1px solid #bdb5b5;
       height: 28px;
-      font-family: "Inter", sans-serif;
+      font-family: 'Inter', sans-serif;
       font-optical-sizing: auto;
       font-weight: 700;
       font-style: normal;
 
       span {
-        font-family: "Roboto", sans-serif;
+        font-family: 'Roboto', sans-serif;
         font-weight: 700;
         font-style: normal;
       }
@@ -43,7 +44,7 @@
 
         li {
           span {
-            color: #2362F6;
+            color: #2362f6;
             cursor: pointer;
           }
         }
@@ -56,20 +57,21 @@
     flex-direction: column;
     gap: 20px;
     width: 42%;
-    height: 450px;
+    height: 550px;
     overflow-y: auto;
 
     .title {
       height: 35px !important;
-      border-bottom: 1px solid black;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #bdb5b5;
       height: 28px;
-      font-family: "Inter", sans-serif;
+      font-family: 'Inter', sans-serif;
       font-optical-sizing: auto;
       font-weight: 700;
       font-style: normal;
 
       span {
-        font-family: "Roboto", sans-serif;
+        font-family: 'Roboto', sans-serif;
         font-weight: 700;
         font-style: normal;
       }
@@ -92,8 +94,6 @@
   }
 }
 
-
-
 @media only screen and (max-width: 1650px) {
   .content {
     display: flex;
@@ -113,13 +113,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -138,7 +138,7 @@
 
           li {
             span {
-              color: #2362F6;
+              color: #2362f6;
               cursor: pointer;
             }
           }
@@ -158,13 +158,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -207,13 +207,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -232,7 +232,7 @@
 
           li {
             span {
-              color: #2362F6;
+              color: #2362f6;
               cursor: pointer;
             }
           }
@@ -252,13 +252,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -301,13 +301,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -326,7 +326,7 @@
 
           li {
             span {
-              color: #2362F6;
+              color: #2362f6;
               cursor: pointer;
             }
           }
@@ -346,13 +346,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -395,13 +395,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -420,7 +420,7 @@
 
           li {
             span {
-              color: #2362F6;
+              color: #2362f6;
               cursor: pointer;
             }
           }
@@ -440,13 +440,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -489,13 +489,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -514,7 +514,7 @@
 
           li {
             span {
-              color: #2362F6;
+              color: #2362f6;
               cursor: pointer;
             }
           }
@@ -534,13 +534,13 @@
         height: 35px !important;
         border-bottom: 1px solid black;
         height: 28px;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         font-optical-sizing: auto;
         font-weight: 700;
         font-style: normal;
 
         span {
-          font-family: "Roboto", sans-serif;
+          font-family: 'Roboto', sans-serif;
           font-weight: 700;
           font-style: normal;
         }
@@ -563,4 +563,3 @@
     }
   }
 }
-

@@ -59,21 +59,6 @@ input {
   height: 100%;
 }
 
-::ng-deep.ant-radio-checked .ant-radio-inner{
-  border-color: $primary-color !important ;
-}
-
-::ng-deep.ant-radio-checked .ant-radio-inner:after{
-  background-color: $primary-color;
-}
-
-::ng-deep.ant-radio:hover .ant-radio-inner {
-  border-color: $primary-color ;
-}
-::ng-deep .ant-radio-checked .ant-radio-inner:focus{
-  border-color: $primary-color;
-}
-
 // ::ng-deep .ant-input {
 //   border-radius: 8px;
 // }

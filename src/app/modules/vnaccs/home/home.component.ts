@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
         case 'editAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              console.log(res.data)
+              console.log('acc infoo' + res.data)
               this.router.navigate(['/vnaccs/home/account-update'], {
                 state: {
                   data: res.data

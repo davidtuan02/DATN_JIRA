@@ -2,10 +2,34 @@
 
 .carousel-container {
   position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .custom-carousel {
-  height: 500px; /* Chiều cao carousel */
+  width: 100%;
+  height: 500px; /* Đặt chiều cao cố định cho carousel */
+  display: flex;
+  align-items: center;
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.responsive-video {
+  max-width: 100%;     /* Đảm bảo video chiếm đủ chiều rộng mà không vượt quá vùng chứa */
+  max-height: 100%;    /* Giữ video trong chiều cao của carousel */
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Đảm bảo video luôn hiển thị đầy đủ mà không bị cắt */
 }
 
 .arrow-button {
@@ -32,6 +56,7 @@
 .arrow-button:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
+
 
 .content {
   display: flex;

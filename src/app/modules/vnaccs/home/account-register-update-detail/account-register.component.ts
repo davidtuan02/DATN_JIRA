@@ -206,8 +206,8 @@ export class AccountRegisterComponent {
 
   getDataToEditAcc() {
     const state = history.state
-    if (state && state.data) {
-      // console.log(state.data)
+    if (state && state.data && state.data.id) {
+      console.log('state rêcive' + state.data)
       this.accReSrv.getInfoByAdmin(state.data.id).subscribe((res: any) => {
         if (res && res.message === 'success') {
           console.log(res)

@@ -82,7 +82,7 @@ export class HomePageComponent {
     this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
       if (res) {
         if (res.success) {
-          const prefix = 'http://192.168.0.3:8191/customs-gov/admin-service/api/file/stream-video?path='
+          const prefix = 'https://api-service.techasians.com/customs-gov/admin-service/api/file/stream-video?path='
           res.data.forEach((ele: any) => {
             const url = prefix + ele
             this.listUrl.push(url)

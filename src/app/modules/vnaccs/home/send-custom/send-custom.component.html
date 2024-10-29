@@ -4,13 +4,17 @@
   </div>
   <div>
     <nz-steps [nzCurrent]="current" [nzLabelPlacement]="'vertical'">
-      <nz-step nzTitle="Ký chữ ký số"></nz-step>
+      <nz-step nzTitle="Ký chữ ký số" class="no-active"></nz-step>
+      <div class="step-connector">
+        <div [ngClass]="isSent ? 'connector-line-sent' : 'connector-line'"></div>
+      </div>
       <nz-step nzTitle="Gửi hải quan"></nz-step>
     </nz-steps>
 
     <form action="" nz-form [formGroup]="form" *ngIf="current < 1" class="mt-[10px]">
       <div class="flex justify-end">
-        <!-- <button
+        <button
+          *ngIf="isSigned"
           type="button"
           class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
           style="height: 32px; width: 102px; background-color: #4cbb7f !important; font-size: 14px; border-radius: 8px"
@@ -35,8 +39,9 @@
             />
           </svg>
           Đã ký số
-        </button> -->
+        </button>
         <button
+          *ngIf="!isSigned"
           type="button"
           class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
           style="height: 32px; width: 134px; background-color: #948e8e !important; font-size: 14px; border-radius: 8px"
@@ -70,7 +75,7 @@
             </p> -->
         </nz-col>
 
-        <nz-col nzSpan="12">
+        <!-- <nz-col nzSpan="12">
           <label for="" class="custom-label">Gửi tới Hải quan nơi đăng ký <span style="color: #ed5564">*</span></label>
           <nz-select nzAllowClear nzSize="large" nzPlaceHolder="-Lựa chọn" formControlName="registerPlace">
             <nz-option
@@ -81,7 +86,7 @@
             >
             </nz-option>
           </nz-select>
-        </nz-col>
+        </nz-col> -->
       </nz-row>
 
       <div class="flex items-center justify-start font-inter my-[15px]" style="font-size: 14px">
@@ -239,12 +244,22 @@
             Ký chữ ký số
           </button> -->
           <button
+            *ngIf="isSigned"
             type="button"
             (click)="sendCustom()"
             class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
             style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
           >
             Gửi Hải quan
+          </button>
+          <button
+            *ngIf="!isSigned"
+            type="button"
+            (click)="sign()"
+            class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
+            style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
+          >
+            Ký chữ ký số
           </button>
           <!-- <button
             *ngIf="!isAbleBtnSign"
@@ -259,7 +274,7 @@
       </nz-row>
     </form>
 
-    <div *ngIf="current === 1" class="flex flex-column items-center mt-[22px] gap-[30px]">
+    <div *ngIf="current === 1" class="flex flex-column items-center mt-[22px] gap-[30px] pb-[250px]">
       <img src="../../../../../assets/images/success icon component.png" alt="success" />
       <span class="font-inter-500" style="font-size: 24px; text-align: center">Đăng ký tới Hải quan thành công</span>
       <span class="font-inter-400" style="font-size: 24px; text-align: center"

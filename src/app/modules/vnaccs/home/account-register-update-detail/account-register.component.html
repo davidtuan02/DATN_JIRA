@@ -1,6 +1,11 @@
 <div class="accre-container flex flex-column py-[60px]">
   <div class="title flex justify-center">
-    <span class="font-inter color-primary" style="font-size: 20px">Đăng ký mới tài khoản: MST {{ taxCode }}</span>
+    <span *ngIf="modeScreen === 'register'" class="font-inter color-primary" style="font-size: 20px"
+      >Đăng ký mới tài khoản: MST {{ taxCode }}</span
+    >
+    <span *ngIf="modeScreen === 'update'" class="font-inter color-primary" style="font-size: 20px"
+      >Sửa thông tin tài khoản: MST {{ taxCode }}</span
+    >
   </div>
   <form nz-form [formGroup]="form">
     <div class="flex flex-start">
@@ -509,15 +514,8 @@
           <span class="me-[14px] font-inter-400" style="font-size: 14px">Kết quả:</span
           ><span
             class="font-roboto-400"
-            style="
-              padding: 4px;
-              color: white;
-              font-size: 14px;
-              text-align: center;
-              border-radius: 4px;
-              line-height: 24px;
-              background-color: #3bb54a;
-            "
+            [ngClass]="responseFromCustom === 2 ? 'status-2' : responseFromCustom === 3 ? 'status-3' : 'status-0'"
+            style="padding: 4px; font-size: 14px; text-align: center; border-radius: 4px; line-height: 24px"
             >{{ getResultResponseFromCustom() }}</span
           >
         </nz-col>
@@ -528,10 +526,10 @@
       </nz-row>
 
       <nz-row nzGutter="20">
-        <nz-col nzSpan="8">
+        <!-- <nz-col nzSpan="8">
           <span class="me-[14px] font-inter-400" style="font-size: 14px">Đơn vị Hải quan phản hồi:</span
           ><span class="font-inter" style="font-size: 14px">00P001 - Văn phòng tổng cục (Tổng cục Hải quan)</span>
-        </nz-col>
+        </nz-col> -->
         <nz-col nzSpan="8">
           <span class="me-[14px] font-inter-400" style="font-size: 14px">Ghi nhận Hải quan:</span
           ><span class="font-inter" style="font-size: 14px"></span>
@@ -572,7 +570,7 @@
           </svg>
           Bỏ qua
         </button>
-        <button
+        <!-- <button
           *ngIf="modeScreen === 'update'"
           type="button"
           class="font-inter-600 flex items-center justify-center gap-[8px]"
@@ -585,10 +583,10 @@
             border-radius: 8px;
           "
         >
-          Quay lại
-        </button>
+          Đóng
+        </button> -->
         <button
-          *ngIf="modeScreen === 'detail'"
+          *ngIf="modeScreen === 'detail' || modeScreen === 'update'"
           [routerLink]="['/vnaccs/home/search-custom']"
           type="button"
           class="font-inter-600 flex items-center justify-center gap-[8px]"

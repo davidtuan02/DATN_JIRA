@@ -12,17 +12,18 @@ import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 export class HomeService {
   PREFIX_API = '/customs-gov/admin-service/api/file'
   PREFIX_API_USER = '/customs-gov/admin-service/api'
-  token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
-  headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json'
-  })
 
   constructor(private api: ApiService) {}
 
   registerAccountInfo(id: any, type: any) {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    })
     return this.api.get<any>(
-      this.PREFIX_API_USER + `/admin-account/register-business-info/exist-check/${id}?type=${type}`
+      this.PREFIX_API_USER + `/admin-account/register-business-info/exist-check/${id}?type=${type}`,
+      { headers }
     )
   }
 

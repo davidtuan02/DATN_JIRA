@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectorRef, Component } from '@angular/core'
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NzButtonModule } from 'ng-zorro-antd/button'
-import { NzCarouselModule } from 'ng-zorro-antd/carousel'
+import { NzCarouselComponent, NzCarouselModule } from 'ng-zorro-antd/carousel'
 import { HomeService } from '../home.service'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { NotificationService } from '../../../../shared/services/notification.service'
@@ -15,6 +15,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
   imports: [NzButtonModule, TranslateModule, CommonModule, NzCarouselModule]
 })
 export class HomePageComponent {
+  @ViewChild('carousel') carousel!: NzCarouselComponent
   isLogin: boolean = false
   dataTable: any = []
   effect = 'scrollx'
@@ -35,6 +36,10 @@ export class HomePageComponent {
       this.isLogin = isLoggedIn
       this.cdr.detectChanges()
     })
+  }
+
+  onVideoEnded(carousel: NzCarouselComponent) {
+    carousel.next()
   }
 
   downloadNotiFile(id: string) {
@@ -77,8 +82,7 @@ export class HomePageComponent {
     this.homeSrv.getGuideVideoFile().subscribe((res: any) => {
       if (res) {
         if (res.success) {
-          const prefix =
-            'http://192.168.0.3:8081/customs-gov/admin-service/api/file/stream-video?path='
+          const prefix = 'http://192.168.0.3:8191/customs-gov/admin-service/api/file/stream-video?path='
           res.data.forEach((ele: any) => {
             const url = prefix + ele
             this.listUrl.push(url)
@@ -117,8 +121,7 @@ export class HomePageComponent {
   }
   downloadJDK() {
     const link = document.createElement('a')
-    link.href =
-      'https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz'
+    link.href = 'https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz'
     link.target = '_blank'
     link.download = 'JDK.zip'
 

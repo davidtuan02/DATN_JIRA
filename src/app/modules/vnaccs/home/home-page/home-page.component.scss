@@ -1,5 +1,38 @@
 @import '../../../../shared/styles/variable';
 
+.carousel-container {
+  position: relative;
+}
+
+.custom-carousel {
+  height: 500px; /* Chiều cao carousel */
+}
+
+.arrow-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 10;
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+.arrow-button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
 .content {
   display: flex;
   gap: 100px;

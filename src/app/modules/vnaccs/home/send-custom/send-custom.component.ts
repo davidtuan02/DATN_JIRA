@@ -14,6 +14,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { RouterLink } from '@angular/router'
 import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import { SendCustomService } from './send-custom.service'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 
 @Component({
   selector: 'app-send-custom',
@@ -72,12 +74,15 @@ export class SendCustomComponent {
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
   modalTitle: string = 'Lấy chứng thư số'
   isAbleBtnSign: boolean = false
+  isSigned: boolean = false
+  isSent: boolean = false
 
   constructor(
     private notification: NotificationService,
     private loginSrv: LoginService,
     private fb: FormBuilder,
-    private dialogSrv: DialogService
+    private dialogSrv: DialogService,
+    private sendSrv: SendCustomService
   ) {}
 
   ngOnInit() {
@@ -127,9 +132,97 @@ export class SendCustomComponent {
     })
     dialogRef.afterClose.subscribe((result: any) => {
       if (result) {
-        this.current += 1
+        let id: any
+        const state = history.state
+        if (state && state.data) {
+          console.log(state.data)
+          id = state.data.id
+        }
+        const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+        let decoded: any
+        if (token) {
+          decoded = this.decodeToken(token)
+        }
+
+        const body = {
+          objectId: decoded.sub,
+          nameSender: this.form.get('fullName')?.value,
+          digitalSignatureType: this.form.get('digitalSignatureType')?.value,
+          nameCert: this.form.get('nameCert')?.value,
+          digitalSignature: this.form.get('digitalSignature')?.getRawValue(),
+          serial: this.form.get('serial')?.getRawValue(),
+          provider: this.form.get('provider')?.getRawValue(),
+          effectiveDate: this.convertDateTimestamp(this.form.getRawValue().effectiveDate),
+          expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
+          publicKey: this.form.get('publicKey')?.getRawValue()
+        }
+
+        this.sendSrv.sendCustom(id, body).subscribe((res: any) => {
+          if (res && res.success) {
+            // console.log(res)
+            this.current += 1
+            this.isSent = true
+          }
+        })
       }
     })
+  }
+
+  sign() {
+    let id: any
+    const state = history.state
+    if (state && state.data) {
+      id = state.data.id
+    }
+    const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+    let decoded: any
+    if (token) {
+      decoded = this.decodeToken(token)
+    }
+
+    const body = {
+      objectId: decoded.sub,
+      nameSender: this.form.get('fullName')?.value,
+      digitalSignatureType: this.form.get('digitalSignatureType')?.value,
+      nameCert: this.form.get('nameCert')?.value,
+      digitalSignature: this.form.get('digitalSignature')?.getRawValue(),
+      serial: this.form.get('serial')?.getRawValue(),
+      provider: this.form.get('provider')?.getRawValue(),
+      effectiveDate: this.convertDateTimestamp(this.form.getRawValue().effectiveDate),
+      expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
+      publicKey: this.form.get('publicKey')?.getRawValue()
+    }
+
+    this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
+      if (res && res.success) {
+        // console.log(res)
+        this.isSigned = true
+      }
+    })
+  }
+
+  decodeToken(token: string): any {
+    if (!token) {
+      return null
+    }
+
+    try {
+      // Tách phần payload (phần thứ 2 của JWT)
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const decodedPayload = JSON.parse(window.atob(base64))
+
+      return decodedPayload
+    } catch (error) {
+      console.error('Lỗi khi giải mã token:', error)
+      return null
+    }
+  }
+
+  convertDateTimestamp(date: any) {
+    const [d, m, y] = date.split(/-|\//) // splits "26-02-2012" or "26/02/2012"
+    const dateNew = new Date(y, m - 1, d)
+    return dateNew.getTime()
   }
 
   copyText(): void {
@@ -243,14 +336,14 @@ export class SendCustomComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
+      this.form.get('digitalSignature')?.setValue(data.subjectDN)
       this.form.get('serial')?.setValue(data.serialNumber)
       this.form.get('provider')?.setValue(data.issuerDN)
       this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.form.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.form.get('nameCert')?.setValue(data.subjectDN)
       this.form.get('publicKey')?.setValue(data.subjectDN) //check
-      this.form.get('credentialId')?.setValue(data.credentialId) //check
+      // this.form.get('credentialId')?.setValue(data.credentialId) //check
       // this.loginForm.enable()
       // this.disableForm();
     }

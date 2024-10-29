@@ -22,7 +22,7 @@ button {
   padding: 0 245px !important;
 }
 
-::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon .no-active {
   width: 70px;
   height: 70px;
   background-color: #2362f6;
@@ -87,6 +87,7 @@ button {
 }
 
 ::ng-deep .ant-steps-item-tail::after {
+  display: none !important;
   position: absolute !important;
   top: 22px;
   left: 82px;
@@ -106,4 +107,29 @@ button {
 nz-select,
 nz-date-picker {
   width: 100%;
+}
+
+::ng-deep .ant-steps-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-connector {
+  display: flex;
+  justify-content: center;
+  flex-grow: 3;
+  margin-top: -35px;
+}
+
+.connector-line {
+  height: 1px;
+  background-color: rgba(191, 191, 191, 0.25);
+  width: 100% !important;
+}
+
+.connector-line-sent {
+  height: 1px;
+  background-color: #2362f6;
+  width: 100% !important;
 }

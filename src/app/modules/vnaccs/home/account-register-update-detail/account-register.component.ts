@@ -202,14 +202,19 @@ export class AccountRegisterComponent {
   }
 
   responseFromCustom: any
+  dataFromSearch: any
 
   getDataToEditAcc() {
     const state = history.state
     if (state && state.data) {
+      // console.log(state.data)
       this.accReSrv.getInfoByAdmin(state.data.id).subscribe((res: any) => {
         if (res && res.message === 'success') {
+          console.log(res)
           this.responseFromCustom = state.data.requestStatus
           // console.log(this.responseFromCustom)
+          this.dataFromSearch = state.data
+          this.dataFromSearch = res.data
           this.form.get('userCode')?.setValue(res?.data?.userCode)
           this.form.get('representativeName')?.setValue(res?.data?.representativeName)
           this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
@@ -231,7 +236,11 @@ export class AccountRegisterComponent {
   }
 
   fromDetailToUpdate() {
-    this.router.navigate(['/vnaccs/home/account-update']) //state + button
+    this.router.navigate(['/vnaccs/home/account-update'], {
+      state: {
+        data: this.dataFromSearch
+      }
+    })
     this.modeScreen = 'update'
   }
 
@@ -432,7 +441,7 @@ export class AccountRegisterComponent {
   submit() {
     this.form.markAllAsTouched()
     if (!this.form.invalid) {
-      this.register()
+      this.registerOrUpdate()
     } else {
       console.log('Form invalid')
     }
@@ -898,7 +907,7 @@ export class AccountRegisterComponent {
     })
   }
 
-  register() {
+  registerOrUpdate() {
     const dataDialog = {
       title:
         this.modeScreen === 'register'
@@ -929,26 +938,6 @@ export class AccountRegisterComponent {
           userCodeExpiryDate: new Date(this.form.value.userCodeExpiryDate).getTime(),
           userIdRequestList: this.dataTable
         }
-
-        // if (this.modeScreen === 'register') {
-        //   this.accReSrv.register(39, body).subscribe((res: any) => {
-        //     if (res) {
-        //       if (res.success) {
-        //         this.notification.success(res.message)
-        //         this.router.navigate(['/vnaccs/home'])
-        //       }
-        //     }
-        //   })
-        // } else if (this.modeScreen === 'update') {
-        //   this.accReSrv.edit(39, body).subscribe((res: any) => {
-        //     if (res) {
-        //       if (res.success) {
-        //         this.notification.success(res.message)
-        //         this.router.navigate(['/vnaccs/home'])
-        //       }
-        //     }
-        //   })
-        // }
 
         //get ID from token
         const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)

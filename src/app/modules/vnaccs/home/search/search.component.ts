@@ -27,6 +27,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { SearchService } from './search.service'
 import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 
 @Component({
   selector: 'app-search',
@@ -90,58 +91,7 @@ export class SearchComponent {
   dateFormat = DATE_FORMAT.COMMON
 
   // table
-  dataTable: any[] = [
-    {
-      status: 1,
-      requestType: '1',
-      requestNo: 'REQ001',
-      receiptTime: '2024-10-01 12:00',
-      requestStatus: '1',
-      requestUser: 'Nguyen Van A',
-      approvalTime: '2024-10-05 10:00',
-      customsDepartmentNote: 'All documents are in order.'
-    },
-    {
-      status: 2,
-      requestType: '2',
-      requestNo: 'REQ002',
-      receiptTime: '2024-10-02 15:30',
-      requestStatus: '2',
-      requestUser: 'Tran Thi B',
-      approvalTime: '2024-10-06 14:30',
-      customsDepartmentNote: 'Pending approval from management.'
-    },
-    {
-      status: 3,
-      requestType: '3',
-      requestNo: 'REQ003',
-      receiptTime: '2024-10-03 09:15',
-      requestStatus: '3',
-      requestUser: 'Le Van C',
-      approvalTime: '2024-10-07 11:00',
-      customsDepartmentNote: 'Approved and processed.'
-    },
-    {
-      status: 1,
-      requestType: '1',
-      requestNo: 'REQ004',
-      receiptTime: '2024-10-04 11:45',
-      requestStatus: '0',
-      requestUser: 'Pham Minh D',
-      approvalTime: '',
-      customsDepartmentNote: 'Request rejected due to missing documents.'
-    },
-    {
-      status: 2,
-      requestType: '2',
-      requestNo: 'REQ005',
-      receiptTime: '2024-10-05 13:00',
-      requestStatus: '3',
-      requestUser: 'Vu Thi E',
-      approvalTime: '2024-10-08 09:00',
-      customsDepartmentNote: 'All required approvals obtained.'
-    }
-  ]
+  dataTable: any[] = []
   total: number = 5
   paginate = {
     page: INIT_PAGE, //1
@@ -242,6 +192,7 @@ export class SearchComponent {
     switch (mode) {
       case 'detail': {
         //dang fake k co dang ky tk quan tri
+        // console.log(data) //13, reuesttype:1...
         if (data?.requestType === 1 || data?.requestType === 2) {
           this.router.navigate(['/vnaccs/home/account-detail'], {
             state: {
@@ -259,11 +210,19 @@ export class SearchComponent {
         break
       }
       case 'custom': {
-        this.router.navigate(['/vnaccs/home/send-custom'])
+        this.router.navigate(['/vnaccs/home/send-custom'], {
+          state: {
+            data: data
+          }
+        })
         break
       }
       case 'edit': {
-        this.router.navigate(['/vnaccs/home/account-update'])
+        this.router.navigate(['/vnaccs/home/account-update'], {
+          state: {
+            data: data
+          }
+        })
         break
       }
       case 'delete': {
@@ -299,13 +258,36 @@ export class SearchComponent {
       pageSize: 10,
       pageNo: 0
     }
-    this.searchSrv.search(39, body).subscribe((res: any) => {
+    const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+    let decoded: any
+    if (token) {
+      decoded = this.decodeToken(token)
+    }
+    this.searchSrv.search(decoded.sub, body).subscribe((res: any) => {
       if (res && res.message === 'success') {
         this.dataTable = res.data.content
         this.total = res.data.totalElements
         console.log(this.dataTable)
       }
     })
+  }
+
+  decodeToken(token: string): any {
+    if (!token) {
+      return null
+    }
+
+    try {
+      // Tách phần payload (phần thứ 2 của JWT)
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const decodedPayload = JSON.parse(window.atob(base64))
+
+      return decodedPayload
+    } catch (error) {
+      console.error('Lỗi khi giải mã token:', error)
+      return null
+    }
   }
 
   //only for int > 0

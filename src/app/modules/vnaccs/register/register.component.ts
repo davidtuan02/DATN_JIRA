@@ -116,6 +116,10 @@ export class RegisterComponent implements OnInit {
 
   credentialId!: any
 
+  dataToEdit: any
+
+  isEdit: boolean = false
+
   constructor(
     private fb: NonNullableFormBuilder,
     private router: Router,
@@ -126,8 +130,15 @@ export class RegisterComponent implements OnInit {
     this.loadForm()
   }
   ngOnInit(): void {
-    // this.router.params.subscribe((p: any) => {
-    // })
+    const state = history.state
+    if (state && state.data) {
+      this.dataToEdit = state.data
+      // console.log(this.dataToEdit)
+      if (this.dataToEdit) {
+        this.isEdit = true
+        this.applyDataToEdit(this.dataToEdit)
+      }
+    }
   }
   loadForm() {
     this.loginForm = this.fb.group(
@@ -139,7 +150,7 @@ export class RegisterComponent implements OnInit {
         ],
         confirmPassword: ['', [Validators.required]],
         email: ['', [Validators.email, Validators.required]],
-        digitalSignatureType: [null],
+        digitalSignatureType: [this.radioValue],
         digitalSignature: [''],
         serial: [''],
         provider: [''],
@@ -154,6 +165,21 @@ export class RegisterComponent implements OnInit {
     this.disableForm()
   }
 
+  applyDataToEdit(data: any) {
+    console.log(data)
+    this.loginForm.get('taxCode')?.setValue(data.taxCode)
+    this.loginForm.get('email')?.setValue(data.email)
+    // this.loginForm.get('digitalSignatureType')?.setValue(data.digitalSignatureType)
+    this.radioValue = data.digitalSignatureType.toString()
+    this.loginForm.get('digitalSignature')?.setValue(data.digitalSignature)
+    this.loginForm.get('serial')?.setValue(data.serial)
+    this.loginForm.get('provider')?.setValue(data.provider)
+    this.loginForm.get('effectiveDate')?.setValue(this.formatDateToDDMMYYYY(data.effectiveDate))
+    this.loginForm.get('expiryDate')?.setValue(this.formatDateToDDMMYYYY(data.expiryDate))
+    this.loginForm.get('publicKey')?.setValue(data.publicKey)
+    this.loginForm.get('nameCert')?.setValue(data.digitalSignature)
+  }
+
   disableForm() {
     this.loginForm.get('digitalSignature')?.disable()
     this.loginForm.get('serial')?.disable()
@@ -164,17 +190,35 @@ export class RegisterComponent implements OnInit {
     this.loginForm.get('nameCert')?.disable()
   }
 
+  formatDateToDDMMYYYY(dateStr: string) {
+    const date = new Date(dateStr)
+
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+
+    return `${day}/${month}/${year}`
+  }
+
   onSubmit() {
     this.loginForm.markAllAsTouched()
+    if (this.isEdit) {
+      this.loginForm.get('adminPassword')?.clearValidators()
+      this.loginForm.get('adminPassword')?.updateValueAndValidity()
+      this.loginForm.get('confirmPassword')?.clearValidators()
+      this.loginForm.get('confirmPassword')?.updateValueAndValidity()
+    }
     if (this.loginForm.valid) {
-      this.register()
+      this.registerOrUpdate()
     } else {
       console.log('Form is invalid!')
     }
   }
-  register() {
+  registerOrUpdate() {
     const dataDialog = {
-      title: 'Bạn có muốn đăng ký tài khoản quản trị không?'
+      title: this.isEdit
+        ? 'Bạn có muốn đăng ký thay đổi tài khoản quản trị không?'
+        : 'Bạn có muốn đăng ký tài khoản quản trị không?'
     }
 
     const dialogRef = this.dialogService.openDialog(ConfirmPopupComponent, '', dataDialog, {
@@ -186,27 +230,51 @@ export class RegisterComponent implements OnInit {
 
     dialogRef.afterClose.subscribe((result: boolean) => {
       if (result) {
-        const body = {
-          taxCode: this.loginForm.value.taxCode,
-          adminPassword: this.loginForm.value.adminPassword,
-          digitalSignatureType: this.loginForm.value.digitalSignatureType,
-          digitalSignature: this.loginForm.getRawValue().taxCode,
-          serial: this.loginForm.getRawValue().serial,
-          provider: this.loginForm.getRawValue().provider,
-          effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-          expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-          publicKey: this.loginForm.getRawValue().publicKey,
-          taxCodeCTS: this.loginForm.getRawValue().nameCert,
-          email: this.loginForm.value.email,
-          credentialId: this.credentialId
-        }
         // console.log(body)
-        this.registerSrv.register(body).subscribe((res: any) => {
-          if (res && res.message === 'success') {
-            this.router.navigate(['vnaccs/login'])
-            this.notification.success('Đăng ký tài khoản quản trị thành công')
+        if (this.isEdit) {
+          //update
+          const body = {
+            taxCode: this.loginForm.value.taxCode,
+            digitalSignatureType: this.loginForm.value.digitalSignatureType,
+            digitalSignature: this.loginForm.getRawValue().taxCode,
+            serial: this.loginForm.getRawValue().serial,
+            provider: this.loginForm.getRawValue().provider,
+            effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+            expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+            publicKey: this.loginForm.getRawValue().publicKey,
+            taxCodeCTS: this.loginForm.getRawValue().nameCert,
+            email: this.loginForm.value.email,
+            credentialId: this.credentialId
           }
-        })
+          this.registerSrv.update(this.dataToEdit.id, body).subscribe((res: any) => {
+            if (res && res.success) {
+              this.router.navigate(['vnaccs/home'])
+              this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
+            }
+          })
+        } else {
+          //register
+          const body = {
+            taxCode: this.loginForm.value.taxCode,
+            adminPassword: this.loginForm.value.adminPassword,
+            digitalSignatureType: this.loginForm.value.digitalSignatureType,
+            digitalSignature: this.loginForm.getRawValue().taxCode,
+            serial: this.loginForm.getRawValue().serial,
+            provider: this.loginForm.getRawValue().provider,
+            effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+            expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+            publicKey: this.loginForm.getRawValue().publicKey,
+            taxCodeCTS: this.loginForm.getRawValue().nameCert,
+            email: this.loginForm.value.email,
+            credentialId: this.credentialId
+          }
+          this.registerSrv.register(body).subscribe((res: any) => {
+            if (res && res.message === 'success') {
+              this.router.navigate(['vnaccs/home'])
+              this.notification.success('Đăng ký tài khoản quản trị thành công')
+            }
+          })
+        }
       }
     })
   }
@@ -354,16 +422,13 @@ export class RegisterComponent implements OnInit {
   }
 
   convertComplexDateString(dateStr: string): number {
-    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
     const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(
       8,
       10
     )}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`
 
-    // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
 
-    // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
   }
 

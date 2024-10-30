@@ -1,4 +1,4 @@
-@import "../../shared/styles/variable";
+@import '../../shared/styles/variable';
 
 .container-fluid {
   background-color: $primary-color !important;
@@ -6,6 +6,12 @@
 
 a:hover {
   text-decoration: underline;
+}
+
+span.hyper-link {
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 ::ng-deep .ant-dropdown-menu {
@@ -35,11 +41,11 @@ a:hover {
     height: 85px;
 
     .left {
-    border-right: 2px solid white;
-    display: flex;
-    padding: 0 44px;
-    gap: 17px;
-    padding-right: 50px;
+      border-right: 2px solid white;
+      display: flex;
+      padding: 0 44px;
+      gap: 17px;
+      padding-right: 50px;
 
       .logo-text {
         display: flex;
@@ -67,10 +73,10 @@ a:hover {
       flex-direction: column;
 
       span {
-          height: 50%;
-          font-size: 32px;
-          font-weight: 700;
-          line-height: 38px;
+        height: 50%;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 38px;
       }
     }
   }
@@ -95,6 +101,10 @@ a:hover {
       padding: 0 8px;
       border-right: 1px solid white;
       border-left: 1px solid white;
+      font-family: 'Inter';
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
     }
   }
 
@@ -106,7 +116,6 @@ a:hover {
     padding-right: 118px;
     cursor: pointer;
 
-
     span {
       line-height: 20px;
     }
@@ -116,20 +125,20 @@ a:hover {
 @media only screen and (max-width: 1500px) {
   .header-container {
     height: 144px;
-      background-color: $primary-color;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    background-color: $primary-color;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .header-left {
       display: flex;
       height: 85px;
 
       .left {
-      border-right: 2px solid white;
-      display: flex;
-      padding: 0 16px;
+        border-right: 2px solid white;
+        display: flex;
+        padding: 0 16px;
         .logo-text {
           display: flex;
           flex-direction: column;
@@ -143,12 +152,12 @@ a:hover {
         flex-direction: column;
         padding-left: 16px !important;
         span {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 18px;
-            justify-content: start;
-            align-items: center;
-            display: flex;
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 18px;
+          justify-content: start;
+          align-items: center;
+          display: flex;
         }
       }
     }
@@ -162,13 +171,11 @@ a:hover {
       font-size: 16px;
       align-items: center;
 
-
       span {
         color: white;
         font-size: 14px;
         line-height: 20px;
         cursor: pointer;
-
       }
 
       span.custom-span {
@@ -184,8 +191,7 @@ a:hover {
       gap: 8px;
       height: 20px;
       padding-right: 118px;
-    cursor: pointer;
-
+      cursor: pointer;
 
       span {
         line-height: 20px;
@@ -197,20 +203,20 @@ a:hover {
 @media only screen and (max-width: 1400px) {
   .header-container {
     height: 144px;
-      background-color: $primary-color;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    background-color: $primary-color;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .header-left {
       display: flex;
       height: 85px;
 
       .left {
-      border-right: 2px solid white;
-      display: flex;
-      padding: 0 16px;
+        border-right: 2px solid white;
+        display: flex;
+        padding: 0 16px;
         .logo-text {
           display: flex;
           flex-direction: column;
@@ -237,12 +243,12 @@ a:hover {
         flex-direction: column;
         padding-left: 16px !important;
         span {
-            font-size: 26px !important;
-            font-weight: 700;
-            line-height: 18px;
-            justify-content: start;
-            align-items: center;
-            display: flex;
+          font-size: 26px !important;
+          font-weight: 700;
+          line-height: 18px;
+          justify-content: start;
+          align-items: center;
+          display: flex;
         }
       }
     }
@@ -260,8 +266,7 @@ a:hover {
         color: white;
         font-size: 14px;
         line-height: 20px;
-    cursor: pointer;
-
+        cursor: pointer;
       }
 
       span.custom-span {
@@ -277,8 +282,7 @@ a:hover {
       gap: 8px;
       height: 20px;
       padding-right: 118px;
-    cursor: pointer;
-
+      cursor: pointer;
 
       span {
         line-height: 20px;
@@ -290,20 +294,20 @@ a:hover {
 @media only screen and (max-width: 1200px) {
   .header-container {
     height: 144px;
-      background-color: $primary-color;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    background-color: $primary-color;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .header-left {
       display: flex;
       height: 85px;
 
       .left {
-      border-right: 2px solid white;
-      display: flex;
-      padding: 0 16px;
+        border-right: 2px solid white;
+        display: flex;
+        padding: 0 16px;
         .logo-text {
           display: flex;
           flex-direction: column;
@@ -330,12 +334,12 @@ a:hover {
         flex-direction: column;
         padding-left: 16px !important;
         span {
-            font-size: 16px !important;
-            font-weight: 700;
-            line-height: 18px;
-            justify-content: start;
-            align-items: center;
-            display: flex;
+          font-size: 16px !important;
+          font-weight: 700;
+          line-height: 18px;
+          justify-content: start;
+          align-items: center;
+          display: flex;
         }
       }
     }
@@ -353,8 +357,7 @@ a:hover {
         color: white;
         font-size: 14px;
         line-height: 20px;
-    cursor: pointer;
-
+        cursor: pointer;
       }
 
       span.custom-span {
@@ -370,8 +373,7 @@ a:hover {
       gap: 8px;
       height: 20px;
       padding-right: 118px;
-    cursor: pointer;
-
+      cursor: pointer;
 
       span {
         line-height: 20px;
@@ -379,4 +381,3 @@ a:hover {
     }
   }
 }
-

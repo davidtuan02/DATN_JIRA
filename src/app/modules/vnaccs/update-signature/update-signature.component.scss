@@ -1,5 +1,3 @@
-
-
 //   .login-form {
 //     max-width: 300px;
 //   }
@@ -24,7 +22,7 @@
 //     padding-right: 0 !important;
 // }
 
-@import "../../../shared/styles/variable";
+@import '../../../shared/styles/variable';
 
 .custom-label {
   font-size: 14px;
@@ -34,7 +32,9 @@
   // font-style: normal;
 }
 
-::ng-deep .ant-input-group, .ant-input-affix-wrapper, .ant-select {
+::ng-deep .ant-input-group,
+.ant-input-affix-wrapper,
+.ant-select {
   height: 40px;
   border-radius: 8px !important;
 }
@@ -52,7 +52,7 @@
   border-radius: 8px !important;
 }
 
-::ng-deep .ant-select-single:not(.ant-select-customize-input) .ant-select-selector  {
+::ng-deep .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   height: 100% !important;
   display: flex !important;
   align-items: center !important;
@@ -63,18 +63,18 @@ input {
   height: 100%;
 }
 
-::ng-deep.ant-radio-checked .ant-radio-inner{
+::ng-deep.ant-radio-checked .ant-radio-inner {
   border-color: $primary-color !important ;
 }
 
-::ng-deep.ant-radio-checked .ant-radio-inner:after{
+::ng-deep.ant-radio-checked .ant-radio-inner:after {
   background-color: $primary-color;
 }
 
 ::ng-deep.ant-radio:hover .ant-radio-inner {
-  border-color: $primary-color ;
+  border-color: $primary-color;
 }
-::ng-deep .ant-radio-checked .ant-radio-inner:focus{
+::ng-deep .ant-radio-checked .ant-radio-inner:focus {
   border-color: $primary-color;
 }
 
@@ -86,7 +86,7 @@ input {
 //   border-radius: 8px;
 // }
 
-::ng-deep.ant-modal-content{
+::ng-deep.ant-modal-content {
   border-radius: 8px !important;
 }
 
@@ -94,7 +94,7 @@ input {
   border-radius: 8px !important;
 }
 
-::ng-deep input[type="number"] {
+::ng-deep input[type='number'] {
   border-radius: 8px !important;
 }
 
@@ -107,7 +107,7 @@ input {
 }
 
 ::ng-deep nz-table {
-  max-width: 100%;  /* Đảm bảo bảng không vượt quá 100% chiều rộng của container */
+  max-width: 100%; /* Đảm bảo bảng không vượt quá 100% chiều rộng của container */
   overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung vượt quá chiều rộng */
 }
 
@@ -143,7 +143,7 @@ input {
 
       .text {
         span {
-            font-size: 12px !important;
+          font-size: 12px !important;
         }
       }
     }
@@ -154,13 +154,12 @@ input {
   .button {
     width: 138px !important;
 
-  .login-container {
-    padding-left: 150px !important;
-    padding-right: 150px !important;
+    .login-container {
+      padding-left: 150px !important;
+      padding-right: 150px !important;
+    }
   }
 }
-}
-
 
 @media only screen and (max-width: 1400px) {
   .login-container {
@@ -169,7 +168,6 @@ input {
   }
 
   .button {
-
     .button-content {
       width: 140px !important;
       height: 40px !important;
@@ -182,7 +180,7 @@ input {
 
       .text {
         span {
-            font-size: 12px !important;
+          font-size: 12px !important;
         }
       }
     }
@@ -203,16 +201,14 @@ input {
   }
 }
 
-@media only screen and (max-height: 1020px) {
-  .login-container {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    gap: 40px !important;
-  }
+// @media only screen and (max-height: 1020px) {
+//   .login-container {
+//     padding-top: 0 !important;
+//     padding-bottom: 0 !important;
+//     gap: 40px !important;
+//   }
 
-  .footer {
-    margin-bottom: 0 !important;
-  }
-}
-
-
+//   .footer {
+//     margin-bottom: 0 !important;
+//   }
+// }

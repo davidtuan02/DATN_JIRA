@@ -4,7 +4,7 @@
   </div>
   <div>
     <nz-steps [nzCurrent]="current" [nzLabelPlacement]="'vertical'">
-      <nz-step nzTitle="Ký chữ ký số" class="no-active"></nz-step>
+      <nz-step nzTitle="Ký chữ ký số" [ngClass]="isSigned ? 'active' : 'not-active'"></nz-step>
       <div class="step-connector">
         <div [ngClass]="isSent ? 'connector-line-sent' : 'connector-line'"></div>
       </div>

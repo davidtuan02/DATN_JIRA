@@ -72,10 +72,13 @@ export class HomeComponent implements OnInit {
         case 'editAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              console.log('acc infoo' + res.data)
+              console.log(res.data.id)
               this.router.navigate(['/vnaccs/home/account-update'], {
                 state: {
-                  data: res.data
+                  data: {
+                    id: res.data.id,
+                    body: res.data
+                  }
                 }
               })
             }
@@ -86,7 +89,12 @@ export class HomeComponent implements OnInit {
         case 'editAdminAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              this.router.navigate(['/vnaccs/home/account-admin-update'])
+              // console.log(res.data)
+              this.router.navigate(['/vnaccs/home/account-admin-update'], {
+                state: {
+                  data: res.data
+                }
+              })
             }
           })
           break

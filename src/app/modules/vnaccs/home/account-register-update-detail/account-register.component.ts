@@ -207,29 +207,48 @@ export class AccountRegisterComponent {
   getDataToEditAcc() {
     const state = history.state
     if (state && state.data && state.data.id) {
-      console.log('state rêcive' + state.data)
-      this.accReSrv.getInfoByAdmin(state.data.id).subscribe((res: any) => {
-        if (res && res.message === 'success') {
-          console.log(res)
-          this.responseFromCustom = state.data.requestStatus
-          // console.log(this.responseFromCustom)
-          this.dataFromSearch = state.data
-          this.dataFromSearch = res.data
-          this.form.get('userCode')?.setValue(res?.data?.userCode)
-          this.form.get('representativeName')?.setValue(res?.data?.representativeName)
-          this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
-          this.form.get('representativeIdNo')?.setValue(res?.data?.representativeIdNo)
-          this.form.get('address')?.setValue(res?.data?.address)
-          this.form.get('fieldOfActivity')?.setValue([parseInt(res.data.fieldOfActivity)])
-          this.form.get('proposal')?.setValue(res?.data?.proposal)
-          this.form.get('freeSoftware')?.setValue(res?.data?.freeSoftware)
-          this.form.get('ediSoftware')?.setValue(res?.data?.ediSoftware)
-          this.form.get('numberComputer')?.setValue(res?.data?.numberComputer)
-          this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
-          this.calculateTotal()
-          this.dataTable = res?.data?.userIdResponses
-        }
-      })
+      if (state.data.body) {
+        // console.log(state.data.body)
+        this.responseFromCustom = state.data.requestStatus
+        // this.dataFromSearch = state.data
+        this.dataFromSearch = state.data.body
+        this.form.get('userCode')?.setValue(state.data.body.userCode)
+        this.form.get('representativeName')?.setValue(state.data.body.representativeName)
+        this.form.get('representativeIdType')?.setValue(state.data.body.representativeIdType)
+        this.form.get('representativeIdNo')?.setValue(state.data.body.representativeIdNo)
+        this.form.get('address')?.setValue(state.data.body.address)
+        this.form.get('fieldOfActivity')?.setValue([parseInt(state.data.body.fieldOfActivity)])
+        this.form.get('proposal')?.setValue(state.data.body.proposal)
+        this.form.get('freeSoftware')?.setValue(state.data.body.freeSoftware)
+        this.form.get('ediSoftware')?.setValue(state.data.body.ediSoftware)
+        this.form.get('numberComputer')?.setValue(state.data.body.numberComputer)
+        this.form.get('userCodeExpiryDate')?.setValue(state.data.body.userCodeExpiryDate)
+        this.calculateTotal()
+        this.dataTable = state.data.body.userIdResponses
+      } else {
+        this.accReSrv.viewDetailRequestRegister(state.data.id).subscribe((res: any) => {
+          if (res && res.message === 'success') {
+            // console.log(res)
+            this.responseFromCustom = state.data.requestStatus
+            // console.log(this.responseFromCustom)
+            // this.dataFromSearch = state.data
+            this.dataFromSearch = res.data
+            this.form.get('userCode')?.setValue(res?.data?.userCode)
+            this.form.get('representativeName')?.setValue(res?.data?.representativeName)
+            this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
+            this.form.get('representativeIdNo')?.setValue(res?.data?.representativeIdNo)
+            this.form.get('address')?.setValue(res?.data?.address)
+            this.form.get('fieldOfActivity')?.setValue([parseInt(res.data.fieldOfActivity)])
+            this.form.get('proposal')?.setValue(res?.data?.proposal)
+            this.form.get('freeSoftware')?.setValue(res?.data?.freeSoftware)
+            this.form.get('ediSoftware')?.setValue(res?.data?.ediSoftware)
+            this.form.get('numberComputer')?.setValue(res?.data?.numberComputer)
+            this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
+            this.calculateTotal()
+            this.dataTable = res?.data?.requestUserIds
+          }
+        })
+      }
     } else {
       console.log('Không có dữ liệu trong state')
     }
@@ -238,7 +257,9 @@ export class AccountRegisterComponent {
   fromDetailToUpdate() {
     this.router.navigate(['/vnaccs/home/account-update'], {
       state: {
-        data: this.dataFromSearch
+        data: {
+          id: this.dataFromSearch.requestId
+        }
       }
     })
     this.modeScreen = 'update'

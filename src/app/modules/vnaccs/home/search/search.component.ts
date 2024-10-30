@@ -191,8 +191,6 @@ export class SearchComponent {
   handleNavigate(mode: 'detail' | 'custom' | 'edit' | 'delete', data: any) {
     switch (mode) {
       case 'detail': {
-        //dang fake k co dang ky tk quan tri
-        // console.log(data) //13, reuesttype:1...
         if (data?.requestType === 1 || data?.requestType === 2) {
           this.router.navigate(['/vnaccs/home/account-detail'], {
             state: {

@@ -6,13 +6,14 @@ import { NzCarouselComponent, NzCarouselModule } from 'ng-zorro-antd/carousel'
 import { HomeService } from '../home.service'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { NotificationService } from '../../../../shared/services/notification.service'
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
   standalone: true,
-  imports: [NzButtonModule, TranslateModule, CommonModule, NzCarouselModule]
+  imports: [NzButtonModule, TranslateModule, CommonModule, NzCarouselModule, NzToolTipModule]
 })
 export class HomePageComponent {
   @ViewChild('carousel') carousel!: NzCarouselComponent

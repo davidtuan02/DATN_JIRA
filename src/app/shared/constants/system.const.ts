@@ -5,5 +5,6 @@ export const STORAGE_KEYS = {
     USER_DATA: 'USER_DATA',
     USER_ID: 'USER_ID',
     ROLES: 'ROLES',
-    USER_RANDOM: 'USER_RANDOM'
+    USER_RANDOM: 'USER_RANDOM',
+    TAX_CODE: "TAX_CODE"
 }

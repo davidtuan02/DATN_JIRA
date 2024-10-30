@@ -50,14 +50,14 @@ export class HeaderVnaccsComponent implements OnInit{
 
   ngOnInit(): void {
     this.authService.taxCode$.subscribe((taxCode) => {
-      this.taxCode = taxCode;
+      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)
     });
     this.authService.taxCode$.subscribe(taxCode => {
-      this.taxCode = taxCode;
+      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)
       this.cdr.detectChanges();
     });
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLogin = isLoggedIn;
+      this.isLogin = this.authService.getLoginStatus();
       this.cdr.detectChanges();
     });
   }

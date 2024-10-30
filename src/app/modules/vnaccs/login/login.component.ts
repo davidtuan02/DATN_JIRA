@@ -30,6 +30,9 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { AuthService } from '../../../shared/services/auth.service'
 
+declare function initPlugin(): void;
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -58,6 +61,8 @@ import { AuthService } from '../../../shared/services/auth.service'
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
+
+
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup
   passwordVisible = false
@@ -80,14 +85,13 @@ export class LoginComponent implements OnInit {
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
-
   constructor(
     private fb: NonNullableFormBuilder,
     private loginSrv: LoginService,
     private router: Router,
     private notification: NotificationService,
     private message: NzMessageService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     this.loadForm()
   }
@@ -167,9 +171,11 @@ export class LoginComponent implements OnInit {
       if (res && res.code === 200) {
         localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
         sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        this.router.navigate(['vnaccs'])
+        localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+        sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
         this.authService.setLoginStatus(true)
         this.authService.setTaxCode(this.loginForm.value.taxCode)
+        this.router.navigate(['vnaccs'])
       }
     })
     // this.router.navigate(['vnaccs'])
@@ -297,6 +303,14 @@ export class LoginComponent implements OnInit {
         }
       })
     }
+  }
+  getVTCAInfo() {
+    // this.vtcaService.getSessionId().subscribe(res => {
+    //   this.vtcaService.getCertificate(res).subscribe(rs => {
+    //     console.log(rs)
+    //   })
+    // });
+    initPlugin();
   }
 
   applyData(data: any) {

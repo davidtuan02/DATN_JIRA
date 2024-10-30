@@ -9,63 +9,150 @@ var LibList_MACOS = "viettel-ca_v6.dylib;viettel-ca_v5.dylib;viettel-ca_v4.dylib
 var LibList_WIN = "viettel-ca_v6.dll;viettel-ca_v5.dll;viettel-ca_v4.dll;viettel-ca_v2.dll";
 var domain = "http://127.0.0.1:14007/";
 // Create Base64 Object
-var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9\+\/\=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/\r\n/g, "\n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+var Base64 = {
+  _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) {
+    var t = "";
+    var n, r, i, s, o, u, a;
+    var f = 0;
+    e = Base64._utf8_encode(e);
+    while (f < e.length) {
+      n = e.charCodeAt(f++);
+      r = e.charCodeAt(f++);
+      i = e.charCodeAt(f++);
+      s = n >> 2;
+      o = (n & 3) << 4 | r >> 4;
+      u = (r & 15) << 2 | i >> 6;
+      a = i & 63;
+      if (isNaN(r)) {
+        u = a = 64
+      } else if (isNaN(i)) {
+        a = 64
+      }
+      t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a)
+    }
+    return t
+  }, decode: function (e) {
+    var t = "";
+    var n, r, i;
+    var s, o, u, a;
+    var f = 0;
+    e = e.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    while (f < e.length) {
+      s = this._keyStr.indexOf(e.charAt(f++));
+      o = this._keyStr.indexOf(e.charAt(f++));
+      u = this._keyStr.indexOf(e.charAt(f++));
+      a = this._keyStr.indexOf(e.charAt(f++));
+      n = s << 2 | o >> 4;
+      r = (o & 15) << 4 | u >> 2;
+      i = (u & 3) << 6 | a;
+      t = t + String.fromCharCode(n);
+      if (u != 64) {
+        t = t + String.fromCharCode(r)
+      }
+      if (a != 64) {
+        t = t + String.fromCharCode(i)
+      }
+    }
+    t = Base64._utf8_decode(t);
+    return t
+  }, _utf8_encode: function (e) {
+    e = e.replace(/\r\n/g, "\n");
+    var t = "";
+    for (var n = 0; n < e.length; n++) {
+      var r = e.charCodeAt(n);
+      if (r < 128) {
+        t += String.fromCharCode(r)
+      } else if (r > 127 && r < 2048) {
+        t += String.fromCharCode(r >> 6 | 192);
+        t += String.fromCharCode(r & 63 | 128)
+      } else {
+        t += String.fromCharCode(r >> 12 | 224);
+        t += String.fromCharCode(r >> 6 & 63 | 128);
+        t += String.fromCharCode(r & 63 | 128)
+      }
+    }
+    return t
+  }, _utf8_decode: function (e) {
+    var t = "";
+    var n = 0;
+    var r = c1 = c2 = 0;
+    while (n < e.length) {
+      r = e.charCodeAt(n);
+      if (r < 128) {
+        t += String.fromCharCode(r);
+        n++
+      } else if (r > 191 && r < 224) {
+        c2 = e.charCodeAt(n + 1);
+        t += String.fromCharCode((r & 31) << 6 | c2 & 63);
+        n += 2
+      } else {
+        c2 = e.charCodeAt(n + 1);
+        c3 = e.charCodeAt(n + 2);
+        t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+        n += 3
+      }
+    }
+    return t
+  }
+}
+
+// var forge = require('node-forge');
 
 function showErrMsg_CMS(code) {
   switch (code) {
     case '100100':
-      alert('Lỗi: Không có chứng thư số.');
+      // alert('Lỗi: Không có chứng thư số.');
       return false;
       break;
     case '100101':
-      alert('Lỗi: Tương tác SignPlugin.');
+      // alert('Lỗi: Tương tác SignPlugin.');
       return false;
       break;
     case '100102':
     case '100202':
-      alert('Lỗi: Chứng thư số không hợp lệ hoặc không có quyền sử dụng. Vui lòng F5 lại trình duyệt và thử lại');
+      // alert('Lỗi: Chứng thư số không hợp lệ hoặc không có quyền sử dụng. Vui lòng F5 lại trình duyệt và thử lại');
       return false;
       break;
     case '100103':
     case '100205':
     case '100303':
-      alert('Lỗi: Session không hợp lệ');
+      // alert('Lỗi: Session không hợp lệ');
       return false;
       break;
     case '100104':
-      alert('Lỗi: Chứng thư số hết hạn');
+      // alert('Lỗi: Chứng thư số hết hạn');
       return false;
       break;
     case '100200':
-      alert('Lỗi: Dữ liệu không hợp lệ');
+      // alert('Lỗi: Dữ liệu không hợp lệ');
       return false;
       break;
     case '100201':
-      alert('Lỗi: Không tìm thấy chứng thư số');
+      // alert('Lỗi: Không tìm thấy chứng thư số');
       return false;
       break;
     case '100203':
-      alert('Lỗi: Lỗi trong quá trình ký');
+      // alert('Lỗi: Lỗi trong quá trình ký');
       return false;
       break;
     case '100204':
-      alert('Lỗi: Lỗi bộ nhớ không đủ');
+      // alert('Lỗi: Lỗi bộ nhớ không đủ');
       return false;
       break;
     case '100300':
-      alert('Lỗi: Chữ ký không đúng định dạng');
+      // alert('Lỗi: Chữ ký không đúng định dạng');
       return false;
       break;
     case '100301':
-      alert('Lỗi: Phân tích chứng thư số');
+      // alert('Lỗi: Phân tích chứng thư số');
       return false;
       break;
     case '100302':
-      alert('Lỗi: Chữ ký không hợp lệ');
+      // alert('Lỗi: Chữ ký không hợp lệ');
       return false;
       break;
     default:
-      alert('Lỗi: ' + code);
+      // alert('Lỗi: ' + code);
       return false;
       break;
   }
@@ -78,13 +165,13 @@ function showErrMsg_Docs(code) {
     case '100301':
     case '101002':
     case '101102':
-      alert('Lỗi: Chép file.');
+      // alert('Lỗi: Chép file.');
       return false;
       break;
     case '100102':
     case '100202':
     case '100302':
-      alert('Lỗi: Tài liệu bị mã hóa, không thể ký');
+      // alert('Lỗi: Tài liệu bị mã hóa, không thể ký');
       return false;
       break;
     case '100103':
@@ -92,21 +179,21 @@ function showErrMsg_Docs(code) {
     case '100303':
     case '100701':
     case '100802':
-      alert('Lỗi: Không tìm thấy chứng thư số để ký');
+      // alert('Lỗi: Không tìm thấy chứng thư số để ký');
       return false;
       break;
     case '100104':
     case '100204':
     case '100304':
     case '100803':
-      alert('Lỗi: Chứng thư số bị lỗi, không thể ký');
+      // alert('Lỗi: Chứng thư số bị lỗi, không thể ký');
       return false;
       break;
     case '100105':
     case '100205':
     case '100305':
     case '100804':
-      alert('Lỗi: Chứng thư số không hợp lệ hoặc không có quyền sử dụng. Vui lòng F5 lại trình duyệt và thử lại');
+      // alert('Lỗi: Chứng thư số không hợp lệ hoặc không có quyền sử dụng. Vui lòng F5 lại trình duyệt và thử lại');
       return false;
       break;
     case '100106':
@@ -114,31 +201,31 @@ function showErrMsg_Docs(code) {
     case '100306':
     case '101003':
     case '101103':
-      alert('Lỗi: Đọc file');
+      // alert('Lỗi: Đọc file');
       return false;
       break;
     case '100107':
     case '100207':
     case '100307':
     case '100805':
-      alert('Lỗi: Lỗi trong quá trình ký');
+      // alert('Lỗi: Lỗi trong quá trình ký');
       return false;
       break;
     case '100400':
     case '100401':
-      alert('Lỗi: Định dạng file không hỗ trợ');
+      // alert('Lỗi: Định dạng file không hỗ trợ');
       return false;
       break;
     case '100402':
-      alert('Lỗi: Tên file quá dài');
+      // alert('Lỗi: Tên file quá dài');
       return false;
       break;
     case '100403':
-      alert('Lỗi: Kích thước file quá lớn');
+      // alert('Lỗi: Kích thước file quá lớn');
       return false;
       break;
     case '100404':
-      alert('Lỗi: Chưa thiết lập link upload');
+      // alert('Lỗi: Chưa thiết lập link upload');
       return false;
       break;
     case '100405':
@@ -147,26 +234,26 @@ function showErrMsg_Docs(code) {
     case '100408':
     case '101004':
     case '101104':
-      alert('Lỗi: Lỗi trong quá trình upload file');
+      // alert('Lỗi: Lỗi trong quá trình upload file');
       return false;
       break;
     case '100600':
-      alert('Lỗi: Hủy chọn file');
+      // alert('Lỗi: Hủy chọn file');
       return false;
       break;
     case '100601':
-      alert('Lỗi: Hủy lưu file');
+      // alert('Lỗi: Hủy lưu file');
       return false;
       break;
     case '100500':
     case '101001':
     case '101101':
     case '101301':
-      alert('Lỗi: Input file');
+      // alert('Lỗi: Input file');
       return false;
       break;
     case '100501':
-      alert('Lỗi: Output file');
+      // alert('Lỗi: Output file');
       return false;
       break;
     case '100502':
@@ -176,29 +263,29 @@ function showErrMsg_Docs(code) {
     case '101100':
     case '101200':
     case '101300':
-      alert('Lỗi: Session không hợp lệ');
+      // alert('Lỗi: Session không hợp lệ');
       return false;
       break;
     case '100801':
-      alert('Lỗi: Dữ liệu XML không đúng định dạng');
+      // alert('Lỗi: Dữ liệu XML không đúng định dạng');
       return false;
       break;
     case '100502':
-      alert('Lỗi: Session không hợp lệ');
+      // alert('Lỗi: Session không hợp lệ');
       return false;
       break;
     case '101201':
-      alert('Lỗi: Định dạng thời gian không đúng');
+      // alert('Lỗi: Định dạng thời gian không đúng');
       return false;
       break;
     default:
-      alert('Lỗi: ' + code);
+      // alert('Lỗi: ' + code);
       return false;
       break;
   }
 }
 
-function initPlugin() {
+function initPlugin(comp) {
   //=================>>Check OS<<=================
   var OSName = "Unknown";
   if (window.navigator.userAgent.indexOf("Windows NT 6.2") != -1) OSName = "Windows 8";
@@ -215,42 +302,41 @@ function initPlugin() {
   var response = "";
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
-  }
-  else {// code for IE6, IE5
+  } else {// code for IE6, IE5
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       response = xmlhttp.responseText;
-      //alert("res = " + response);
+      // //alert("res = " + response);
 
       if (response != "") {
         hSession = response;
 
-        getCertifcate();
+        getCertifcate(comp);
 
         return;
       }
       if (response == "") {
-        alert("Vui lòng Kiểm tra:\n" +
-          "- Cài đặt Token manager của USB Token, Sign Plugin, cắm USB Token vào máy và bấm F5 để thử lại\n" +
-          "Nếu chưa được kiểm tra thêm:\n" +
-          "- Truy cập link http://127.0.0.1:14007/getSession có truy cập được không\n" +
-          "- Kiểm tra phần mềm Plugin 'signplugin_viettel-ca_v5.exe' có bật không?" +
-          "- Kiểm tra có nhiều phiên bản Plugin đang bật hay không? Chỉ giữ lại phiên bản mới nhất, phiên bản cũ gỡ ra hoặc không bật?");
+        // alert("Vui lòng Kiểm tra:\n" +
+        //   "- Cài đặt Token manager của USB Token, Sign Plugin, cắm USB Token vào máy và bấm F5 để thử lại\n" +
+        //   "Nếu chưa được kiểm tra thêm:\n" +
+        //   "- Truy cập link http://127.0.0.1:14007/getSession có truy cập được không\n" +
+        //   "- Kiểm tra phần mềm Plugin 'signplugin_viettel-ca_v5.exe' có bật không?" +
+        //   "- Kiểm tra có nhiều phiên bản Plugin đang bật hay không? Chỉ giữ lại phiên bản mới nhất, phiên bản cũ gỡ ra hoặc không bật?");
         return;
       }
     }
   }
   xmlhttp.onerror = function (e) {
     console.log(e.message);
-    alert("Vui lòng Kiểm tra:\n" +
-      "- Cài đặt Token manager của USB Token, Sign Plugin, cắm USB Token vào máy và bấm F5 để thử lại\n" +
-      "Nếu chưa được kiểm tra thêm:\n" +
-      "- Truy cập link http://127.0.0.1:14007/getSession có truy cập được không\n" +
-      "- Kiểm tra phần mềm Plugin 'signplugin_viettel-ca_v5.exe' có bật không?" +
-      "- Kiểm tra có nhiều phiên bản Plugin đang bật hay không? Chỉ giữ lại phiên bản mới nhất, phiên bản cũ gỡ ra hoặc không bật?\n"+
-      "Error: " + e.message);
+    // alert("Vui lòng Kiểm tra:\n" +
+    //   "- Cài đặt Token manager của USB Token, Sign Plugin, cắm USB Token vào máy và bấm F5 để thử lại\n" +
+    //   "Nếu chưa được kiểm tra thêm:\n" +
+    //   "- Truy cập link http://127.0.0.1:14007/getSession có truy cập được không\n" +
+    //   "- Kiểm tra phần mềm Plugin 'signplugin_viettel-ca_v5.exe' có bật không?" +
+    //   "- Kiểm tra có nhiều phiên bản Plugin đang bật hay không? Chỉ giữ lại phiên bản mới nhất, phiên bản cũ gỡ ra hoặc không bật?\n"+
+    //   "Error: " + e.message);
     return;
   };
   xmlhttp.open("POST", domain + "getSession", true);
@@ -258,7 +344,7 @@ function initPlugin() {
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send("liblist=" + LibList_MACOS);
   } else if ((OSName == "UNIX") || (OSName == "Linux")) {
-    alert("Not Support");
+    // alert("Not Support");
   } else {
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send("liblist=" + LibList_WIN);
@@ -266,18 +352,19 @@ function initPlugin() {
   }
 }
 
-function getCertifcate() {
+function getCertifcate(comp) {
   var ReqCert;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     ReqCert = new XMLHttpRequest();
-  }
-  else {// code for IE6, IE5
+  } else {// code for IE6, IE5
     ReqCert = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqCert.onreadystatechange = function () {
     if (ReqCert.readyState == 4 && ReqCert.status == 200) {
       cert_rawData = ReqCert.responseText;
-      console.log(JSON.parse(atob(ReqCert.responseText)))
+      // const certDer = forge.util.decode64(cert_rawData);
+      // const cert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(certDer));
+      // console.log(cert)
       //get info of certificate
       if (cert_rawData == "" || cert_rawData == undefined || cert_rawData == null) {
         //get infomation error
@@ -285,26 +372,24 @@ function getCertifcate() {
         var ReqLastErr;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqLastErr = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
+        } else {// code for IE6, IE5
           ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqLastErr.onreadystatechange = function () {
           if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            //alert("Error code = " +ReqLastErr.responseText);
+            // //alert("Error code = " +ReqLastErr.responseText);
             showErrMsg_CMS(ReqLastErr.responseText);
           }
         }
         ReqLastErr.open("POST", domain + "getLastErr", true);
         ReqLastErr.send();
-      }
-      else {
+      } else {
         //get serial number
         var ReqSNB;
+        getCertValidDate();
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqSNB = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
+        } else {// code for IE6, IE5
           ReqSNB = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqSNB.onreadystatechange = function () {
@@ -326,6 +411,21 @@ function getCertifcate() {
 
 }
 
+function getCertValidDate() {
+  var ReqValidDate;
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    ReqValidDate = new XMLHttpRequest();
+  } else {// code for IE6, IE5
+    ReqValidDate = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  ReqValidDate.onreadystatechange = function () {
+    console.log(ReqValidDate.responseText);
+  }
+  ReqValidDate.open("POST", domain + "getCertValidDate", true);
+  ReqValidDate.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  ReqValidDate.send();
+}
+
 function base64_decode(stringBase64) {
   var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
   var output = new Array();
@@ -335,11 +435,11 @@ function base64_decode(stringBase64) {
   var orig_input = stringBase64;
   stringBase64 = stringBase64.replace(/[^A-Za-z0-9\+\/\=]/g, "");
   if (orig_input != stringBase64)
-    alert("Warning! Characters outside Base64 range in input string ignored.");
-  if (stringBase64.length % 4) {
-    alert("Error: Input length is not a multiple of 4 bytes.");
-    return "";
-  }
+    // // alert("Warning! Characters outside Base64 range in input string ignored.");
+    if (stringBase64.length % 4) {
+      // // alert("Error: Input length is not a multiple of 4 bytes.");
+      return "";
+    }
 
   var j = 0;
   while (i < stringBase64.length) {
@@ -384,8 +484,7 @@ function signHash() {
   var xmlhttp;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
-  }
-  else {// code for IE6, IE5
+  } else {// code for IE6, IE5
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
   xmlhttp.onreadystatechange = function () {
@@ -396,20 +495,19 @@ function signHash() {
         var ReqLastErr;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqLastErr = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
+        } else {// code for IE6, IE5
           ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqLastErr.onreadystatechange = function () {
           if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            //alert("Error code = " +ReqLastErr.responseText);
+            // //alert("Error code = " +ReqLastErr.responseText);
             showErrMsg_CMS(ReqLastErr.responseText);
           }
         }
         ReqLastErr.open("POST", domain + "getLastErr", true);
         ReqLastErr.send();
       } else {
-        alert("Test Plugin ký thành công");
+        // // alert("Test Plugin ký thành công");
       }
     }
   }
@@ -426,8 +524,7 @@ function signData() {
   var xmlhttp;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
-  }
-  else {// code for IE6, IE5
+  } else {// code for IE6, IE5
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
   xmlhttp.onreadystatechange = function () {
@@ -438,13 +535,12 @@ function signData() {
         var ReqLastErr;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqLastErr = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
+        } else {// code for IE6, IE5
           ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqLastErr.onreadystatechange = function () {
           if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            //alert("Error code = " +ReqLastErr.responseText);
+            // //alert("Error code = " +ReqLastErr.responseText);
             showErrMsg_CMS(ReqLastErr.responseText);
           }
         }
@@ -464,15 +560,14 @@ function verifySignature() {
   var msg = sign_Data;
   var signature = sign_Signature;
   if (signature == "") {
-    alert("Vui long nhap chu ky");
+    // // alert("Vui long nhap chu ky");
     return;
   }
   msg = Base64.encode(msg);
   var xmlhttp;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
-  }
-  else {// code for IE6, IE5
+  } else {// code for IE6, IE5
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
   xmlhttp.onreadystatechange = function () {
@@ -483,13 +578,12 @@ function verifySignature() {
         var ReqLastErr;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqLastErr = new XMLHttpRequest();
-        }
-        else {// code for IE6, IE5
+        } else {// code for IE6, IE5
           ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqLastErr.onreadystatechange = function () {
           if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            //alert("Error code = " +ReqLastErr.responseText);
+            // //alert("Error code = " +ReqLastErr.responseText);
             showErrMsg_CMS(ReqLastErr.responseText);
           }
         }
@@ -497,8 +591,9 @@ function verifySignature() {
         ReqLastErr.send();
       } else {
 
-        alert("Test Plugin ký thành công");
-      };
+        // // alert("Test Plugin ký thành công");
+      }
+      ;
     }
   }
   xmlhttp.open("POST", domain + "Verify", true);

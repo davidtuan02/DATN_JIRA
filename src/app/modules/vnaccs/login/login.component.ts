@@ -30,7 +30,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { AuthService } from '../../../shared/services/auth.service'
 
-declare function initPlugin(): void;
+declare function initPlugin(comp: any): void;
 
 
 @Component({
@@ -304,13 +304,13 @@ export class LoginComponent implements OnInit {
       })
     }
   }
-  getVTCAInfo() {
+  async getVTCAInfo() {
     // this.vtcaService.getSessionId().subscribe(res => {
     //   this.vtcaService.getCertificate(res).subscribe(rs => {
     //     console.log(rs)
     //   })
     // });
-    initPlugin();
+    initPlugin(this);
   }
 
   applyData(data: any) {

@@ -28,6 +28,8 @@ import { SearchService } from './search.service'
 import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import { da } from 'date-fns/locale'
+import { NotificationService } from '../../../../shared/services/notification.service'
 
 @Component({
   selector: 'app-search',
@@ -119,7 +121,8 @@ export class SearchComponent {
     private fb: FormBuilder,
     private router: Router,
     private dialogSrv: DialogService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notification: NotificationService
   ) {}
 
   ngOnInit() {
@@ -199,9 +202,13 @@ export class SearchComponent {
           })
         }
         if (data?.requestType === 3) {
-          this.router.navigate(['/vnaccs/home/account-admin-update'], {
-            state: {
-              data: data
+          this.searchSrv.getInfoAccAdmin(data.id).subscribe((res: any) => {
+            if (res && res.errorCode == 0) {
+              this.router.navigate(['/vnaccs/home/account-admin-detail'], {
+                state: {
+                  data: res.data
+                }
+              })
             }
           })
         }
@@ -216,11 +223,24 @@ export class SearchComponent {
         break
       }
       case 'edit': {
-        this.router.navigate(['/vnaccs/home/account-update'], {
-          state: {
-            data: data
-          }
-        })
+        if (data?.requestType === 1 || data?.requestType === 2) {
+          this.router.navigate(['/vnaccs/home/account-update'], {
+            state: {
+              data: data
+            }
+          })
+        }
+        if (data?.requestType === 3) {
+          this.searchSrv.getInfoAccAdmin(data.id).subscribe((res: any) => {
+            if (res && res.errorCode == 0) {
+              this.router.navigate(['/vnaccs/home/account-admin-update'], {
+                state: {
+                  data: res.data
+                }
+              })
+            }
+          })
+        }
         break
       }
       case 'delete': {
@@ -235,8 +255,12 @@ export class SearchComponent {
         })
         dialogRef.afterClose.subscribe((res: any) => {
           if (res) {
-            console.log('xoa ok')
-            this.cdr.detectChanges()
+            this.searchSrv.deleteRequest(data.id).subscribe((res: any) => {
+              if (res && res.errorCode == 0) {
+                this.notification.success('Xóa đề xuất thành công')
+                this.search()
+              }
+            })
           }
         })
         break
@@ -245,6 +269,14 @@ export class SearchComponent {
   }
 
   search() {
+    // requestType: [null],
+    // requestStatus: [null],
+    // requestNo: [''],
+    // startDateSubmit: [''],
+    // endDateSubmit: [''],
+    // approvalFromDate: [''],
+    // approvalToDate: ['']
+
     const body = {
       requestType: '',
       requestStatus: '',
@@ -256,6 +288,19 @@ export class SearchComponent {
       pageSize: 10,
       pageNo: 0
     }
+
+    // const body = {
+    //   requestType: this.form.get('requestType')?.value,
+    //   requestStatus: this.form.get('requestStatus')?.value,
+    //   requestNo: this.form.get('requestNo')?.value,
+    //   startDateSubmit: new Date(this.form.get('startDateSubmit')?.value).getTime(),
+    //   endDateSubmit: new Date(this.form.get('endDateSubmit')?.value).getTime(),
+    //   approvalFromDate: new Date(this.form.get('approvalFromDate')?.value).getTime(),
+    //   approvalToDate: new Date(this.form.get('approvalToDate')?.value).getTime(),
+    //   pageSize: this.paginate.size,
+    //   pageNo: this.paginate.page - 1
+    // }
+    console.log(body)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {

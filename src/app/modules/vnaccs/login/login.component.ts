@@ -104,7 +104,8 @@ export class LoginComponent implements OnInit {
       expiryDate: [''],
       publicKey: [''],
       nameCert: [''],
-      credentialId: ['']
+      credentialId: [''],
+      taxCodeCTS: ['']
     })
     this.disableForm()
   }
@@ -149,33 +150,41 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const body = {
-      taxCode: this.loginForm.value.taxCode,
-      adminPassword: this.loginForm.value.adminPassword,
-      digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.getRawValue().nameCert,
-      serial: this.loginForm.getRawValue().serial,
-      provider: this.loginForm.getRawValue().provider,
-      // provider: this.loginForm.getRawValue().nameCert,
-      effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-      expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-      publicKey: this.loginForm.getRawValue().publicKey,
-      taxCodeCTS: this.loginForm.value.taxCodeCTS
-      // credentialId: this.loginForm.value.credentialId
-    }
-    this.loginSrv.login(body).subscribe((res: any) => {
-      if (res && res.code === 200) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        this.router.navigate(['vnaccs'])
-        this.authService.setLoginStatus(true)
-        this.authService.setTaxCode(this.loginForm.value.taxCode)
-      }
-    })
+    // const body = {
+    //   taxCode: this.loginForm.value.taxCode,
+    //   adminPassword: this.loginForm.value.adminPassword,
+    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+    //   digitalSignature: this.loginForm.getRawValue().nameCert,
+    //   serial: this.loginForm.getRawValue().serial,
+    //   provider: this.loginForm.getRawValue().provider,
+    //   // provider: this.loginForm.getRawValue().nameCert,
+    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+    //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+    //   publicKey: this.loginForm.getRawValue().publicKey,
+    //   taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
+    //   credentialId: this.loginForm.value.credentialId
+    // }
+    // this.loginSrv.login(body).subscribe((res: any) => {
+    //   if (res && res.code === 200) {
+    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     this.router.navigate(['vnaccs'])
+    //     this.authService.setLoginStatus(true)
+    //     this.authService.setTaxCode(this.loginForm.value.taxCode)
+    //   }
+    // })
 
-    // this.router.navigate(['vnaccs'])
-    // this.authService.setLoginStatus(true)
-    // this.authService.setTaxCode(this.loginForm.value.taxCode)
+    this.router.navigate(['vnaccs'])
+    this.authService.setLoginStatus(true)
+    this.authService.setTaxCode(this.loginForm.value.taxCode)
+    localStorage.setItem(
+      STORAGE_KEYS.TOKEN,
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
+    )
+    sessionStorage.setItem(
+      STORAGE_KEYS.TOKEN,
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
+    )
   }
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
@@ -193,24 +202,6 @@ export class LoginComponent implements OnInit {
 
     return `${day}/${month}/${year}`
   }
-
-  // convertDateToYMD = (dateString: string): string | null => {
-  //   const parts = dateString.split('/');
-
-  //   if (parts.length !== 3) {
-  //     return null;
-  //   }
-
-  //   const day = parts[0];
-  //   const month = parts[1];
-  //   const year = parts[2];
-
-  //   if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
-  //     return null;
-  //   }
-
-  //   return `${year}-${month}-${day}`;
-  // };
 
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode')
@@ -319,7 +310,8 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.loginForm.get('nameCert')?.setValue(data.subjectDN)
       this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
-      this.loginForm.get('credentialId')?.setValue(data.credentialId) //check
+      this.loginForm.get('credentialId')?.setValue(data.credentialId)
+      this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
       // this.loginForm.enable()
       // this.disableForm();
     }

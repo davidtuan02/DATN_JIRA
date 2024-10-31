@@ -13,7 +13,7 @@ export class RegisterService {
   constructor(private api: ApiService, private apiAdmin: ApiAdminService) {}
 
   update(id: any, body: any) {
-    return this.api.put<any>(this.PREFIX_API + `/admin-account/update-account-admin/${id}`, body)
+    return this.api.put<any>(this.PREFIX_API + `/admin-account/update-account-admin-by-request-id/${id}`, body)
   }
 
   register(body: any) {

@@ -101,7 +101,8 @@ export class SendCustomComponent {
       expiryDate: [''],
       publicKey: [''],
       nameCert: [''],
-      credentialId: ['']
+      credentialId: [''],
+      taxCodeCTS: ['']
     })
     this.form.get('digitalSignature')?.disable()
     this.form.get('serial')?.disable()
@@ -135,7 +136,7 @@ export class SendCustomComponent {
         let id: any
         const state = history.state
         if (state && state.data) {
-          console.log(state.data)
+          // console.log(state.data)
           id = state.data.id
         }
         const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
@@ -154,7 +155,9 @@ export class SendCustomComponent {
           provider: this.form.get('provider')?.getRawValue(),
           effectiveDate: this.convertDateTimestamp(this.form.getRawValue().effectiveDate),
           expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
-          publicKey: this.form.get('publicKey')?.getRawValue()
+          publicKey: this.form.get('publicKey')?.getRawValue(),
+          credentialId: this.form.get('credentialId')?.getRawValue(),
+          taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
         }
 
         this.sendSrv.sendCustom(id, body).subscribe((res: any) => {
@@ -190,7 +193,9 @@ export class SendCustomComponent {
       provider: this.form.get('provider')?.getRawValue(),
       effectiveDate: this.convertDateTimestamp(this.form.getRawValue().effectiveDate),
       expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
-      publicKey: this.form.get('publicKey')?.getRawValue()
+      publicKey: this.form.get('publicKey')?.getRawValue(),
+      credentialId: this.form.get('credentialId')?.getRawValue(),
+      taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
     }
 
     this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
@@ -343,9 +348,8 @@ export class SendCustomComponent {
       this.form.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.form.get('nameCert')?.setValue(data.subjectDN)
       this.form.get('publicKey')?.setValue(data.subjectDN) //check
-      // this.form.get('credentialId')?.setValue(data.credentialId) //check
-      // this.loginForm.enable()
-      // this.disableForm();
+      this.form.get('credentialId')?.setValue(data.credentialId)
+      this.form.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
   }
 }

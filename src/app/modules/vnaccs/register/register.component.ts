@@ -22,7 +22,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
 import { NzTableModule } from 'ng-zorro-antd/table'
-import { Router, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { NotificationService } from '../../../shared/services/notification.service'
 import { RegisterService } from './register.service'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
@@ -74,8 +74,6 @@ export class RegisterComponent implements OnInit {
   isVisible = false
   isOkLoading = false
 
-  // listOfData: any = [];
-
   msAcc: string = ''
 
   isVisibleDownload: boolean = false
@@ -114,11 +112,9 @@ export class RegisterComponent implements OnInit {
     }
   ]
 
-  credentialId!: any
+  dataToEditOrView: any
 
-  dataToEdit: any
-
-  isEdit: boolean = false
+  modeScreen!: 'register' | 'update' | 'detail'
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -129,17 +125,12 @@ export class RegisterComponent implements OnInit {
   ) {
     this.loadForm()
   }
+
   ngOnInit(): void {
-    const state = history.state
-    if (state && state.data) {
-      this.dataToEdit = state.data
-      // console.log(this.dataToEdit)
-      if (this.dataToEdit) {
-        this.isEdit = true
-        this.applyDataToEdit(this.dataToEdit)
-      }
-    }
+    const endpoint = this.router.url.split('/').pop() as 'register' | 'account-admin-update' | 'account-admin-detail'
+    this.determineMode(endpoint)
   }
+
   loadForm() {
     this.loginForm = this.fb.group(
       {
@@ -157,7 +148,9 @@ export class RegisterComponent implements OnInit {
         effectiveDate: [''],
         expiryDate: [''],
         publicKey: [''],
-        nameCert: ['']
+        nameCert: [''],
+        taxCodeCTS: [''],
+        credentialId: ['']
       },
       { validators: this.passwordMatchValidator.bind(this) }
     )
@@ -165,8 +158,55 @@ export class RegisterComponent implements OnInit {
     this.disableForm()
   }
 
-  applyDataToEdit(data: any) {
-    console.log(data)
+  determineMode(endpoint: string) {
+    const state = history.state
+    if (state && state.data) {
+      this.dataToEditOrView = state.data
+      if (this.dataToEditOrView) {
+        this.applyDataToEditOrView(this.dataToEditOrView)
+      }
+    }
+    switch (endpoint) {
+      case 'register': {
+        this.modeScreen = 'register'
+        break
+      }
+      case 'account-admin-update': {
+        this.modeScreen = 'update'
+        this.loginForm.disable()
+        this.loginForm.get('email')?.enable()
+        this.loginForm.get('signatureType')?.enable()
+        break
+      }
+      case 'account-admin-detail': {
+        this.modeScreen = 'detail'
+        this.loginForm.disable()
+        this.loginForm.get('signatureType')?.enable()
+        break
+      }
+    }
+  }
+
+  fromDetailToUpdate() {
+    this.router.navigate(['/vnaccs/home/account-admin-update'], {
+      state: {
+        data: this.dataToEditOrView
+      }
+    })
+  }
+
+  sendCustom() {
+    this.router.navigate(['/vnaccs/home/send-custom'], {
+      state: {
+        data: {
+          id: this.dataToEditOrView.requestId
+        }
+      }
+    })
+  }
+
+  applyDataToEditOrView(data: any) {
+    // console.log(data)
     this.loginForm.get('taxCode')?.setValue(data.taxCode)
     this.loginForm.get('email')?.setValue(data.email)
     // this.loginForm.get('digitalSignatureType')?.setValue(data.digitalSignatureType)
@@ -202,7 +242,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched()
-    if (this.isEdit) {
+    if (this.modeScreen === 'update') {
       this.loginForm.get('adminPassword')?.clearValidators()
       this.loginForm.get('adminPassword')?.updateValueAndValidity()
       this.loginForm.get('confirmPassword')?.clearValidators()
@@ -214,11 +254,14 @@ export class RegisterComponent implements OnInit {
       console.log('Form is invalid!')
     }
   }
+
   registerOrUpdate() {
+    // console.log(this.dataToEditOrView)
     const dataDialog = {
-      title: this.isEdit
-        ? 'Bạn có muốn đăng ký thay đổi tài khoản quản trị không?'
-        : 'Bạn có muốn đăng ký tài khoản quản trị không?'
+      title:
+        this.modeScreen === 'update'
+          ? 'Bạn có muốn đăng ký thay đổi tài khoản quản trị không?'
+          : 'Bạn có muốn đăng ký tài khoản quản trị không?'
     }
 
     const dialogRef = this.dialogService.openDialog(ConfirmPopupComponent, '', dataDialog, {
@@ -231,27 +274,28 @@ export class RegisterComponent implements OnInit {
     dialogRef.afterClose.subscribe((result: boolean) => {
       if (result) {
         // console.log(body)
-        if (this.isEdit) {
+        if (this.modeScreen === 'update') {
           //update
-          const body = {
-            taxCode: this.loginForm.value.taxCode,
-            digitalSignatureType: this.loginForm.value.digitalSignatureType,
-            digitalSignature: this.loginForm.getRawValue().taxCode,
-            serial: this.loginForm.getRawValue().serial,
-            provider: this.loginForm.getRawValue().provider,
-            effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-            expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-            publicKey: this.loginForm.getRawValue().publicKey,
-            taxCodeCTS: this.loginForm.getRawValue().nameCert,
-            email: this.loginForm.value.email,
-            credentialId: this.credentialId
-          }
-          this.registerSrv.update(this.dataToEdit.id, body).subscribe((res: any) => {
-            if (res && res.success) {
-              this.router.navigate(['vnaccs/home'])
-              this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
-            }
-          })
+          console.log(this.dataToEditOrView.id)
+          // const body = {
+          //   taxCode: this.loginForm.value.taxCode,
+          //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+          //   digitalSignature: this.loginForm.getRawValue().taxCode,
+          //   serial: this.loginForm.getRawValue().serial,
+          //   provider: this.loginForm.getRawValue().provider,
+          //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+          //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+          //   publicKey: this.loginForm.getRawValue().publicKey,
+          //   email: this.loginForm.value.email,
+          //   taxCodeCTS: this.loginForm.getRawValue().taxCode,
+          //   credentialId: this.loginForm.getRawValue().credentialId
+          // }
+          // this.registerSrv.update(this.dataToEditOrView.id, body).subscribe((res: any) => {
+          //   if (res && res.success) {
+          //     this.router.navigate(['vnaccs/home'])
+          //     this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
+          //   }
+          // })
         } else {
           //register
           const body = {
@@ -264,9 +308,9 @@ export class RegisterComponent implements OnInit {
             effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
             expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
             publicKey: this.loginForm.getRawValue().publicKey,
-            taxCodeCTS: this.loginForm.getRawValue().nameCert,
             email: this.loginForm.value.email,
-            credentialId: this.credentialId
+            taxCodeCTS: this.loginForm.getRawValue().taxCode,
+            credentialId: this.loginForm.getRawValue().credentialId
           }
           this.registerSrv.register(body).subscribe((res: any) => {
             if (res && res.message === 'success') {
@@ -451,9 +495,10 @@ export class RegisterComponent implements OnInit {
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.loginForm.get('nameCert')?.setValue(data.subjectDN)
       this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
+      this.loginForm.get('credentialId')?.setValue(data.credentialId)
+      this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
       // this.loginForm.enable()
       // this.disableForm();
-      this.credentialId = data.credentialId
     }
   }
 }

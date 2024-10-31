@@ -43,6 +43,10 @@ export const routes: Routes = [
             loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
           },
           {
+            path: 'account-admin-detail',
+            loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
+          },
+          {
             path: 'account-detail',
             loadComponent: () =>
               import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(

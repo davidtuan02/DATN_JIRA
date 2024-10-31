@@ -975,14 +975,26 @@ export class AccountRegisterComponent {
                 }
               })
             } else if (this.modeScreen === 'update') {
-              this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
-                if (res) {
-                  if (res.success) {
-                    this.notification.success(res.message)
-                    this.router.navigate(['/vnaccs/home'])
+              // console.log(this.dataFromSearch.requestId)
+              if (this.dataFromSearch.requestId) {
+                this.accReSrv.update(this.dataFromSearch.requestId, body).subscribe((res: any) => {
+                  if (res) {
+                    if (res.success) {
+                      this.notification.success(res.message)
+                      this.router.navigate(['/vnaccs/home'])
+                    }
                   }
-                }
-              })
+                })
+              } else {
+                this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
+                  if (res) {
+                    if (res.success) {
+                      this.notification.success(res.message)
+                      this.router.navigate(['/vnaccs/home'])
+                    }
+                  }
+                })
+              }
             }
           }
         }

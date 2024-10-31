@@ -1,7 +1,8 @@
 <div class="login-container flex flex-col w-100 pt-[40px] px-[200px] pb-[50px]">
   <div class="flex justify-center items-center font-inter-600 color-primary" style="font-size: 24px">
-    <span *ngIf="!isEdit">Đăng ký tài khoản quản trị</span>
-    <span *ngIf="isEdit">Sửa thông tin tài khoản quản trị</span>
+    <span *ngIf="modeScreen === 'register'">Đăng ký tài khoản quản trị</span>
+    <span *ngIf="modeScreen === 'update'">Sửa thông tin tài khoản quản trị</span>
+    <span *ngIf="modeScreen === 'detail'">Xem thông tin tài khoản quản trị</span>
   </div>
   <div class="flex flex-col">
     <div class="flex justify-start font-inter mb-[10px]" style="font-size: 14px">
@@ -44,7 +45,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16" *ngIf="!isEdit">
+      <nz-row nzGutter="16" *ngIf="modeScreen === 'register'">
         <!-- Mật khẩu -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mật khẩu <span style="color: #ed5564">*</span></label>
@@ -282,9 +283,10 @@
       </nz-row>
 
       <nz-row nzSpan="24">
+        <!-- register  -->
         <div class="flex justify-center items-center gap-[10px] w-100 mt-[30px]">
           <button
-            *ngIf="!isEdit"
+            *ngIf="modeScreen === 'register'"
             [routerLink]="['/vnaccs']"
             type="button"
             class="font-inter-600"
@@ -300,7 +302,7 @@
             Đóng
           </button>
           <button
-            *ngIf="!isEdit"
+            *ngIf="modeScreen === 'register'"
             type="submit"
             class="font-inter-600 text-white"
             style="
@@ -317,8 +319,8 @@
           <!-- update  -->
 
           <button
-            *ngIf="isEdit"
-            [routerLink]="['/vnaccs']"
+            *ngIf="modeScreen === 'update'"
+            [routerLink]="['/vnaccs/home/search-custom']"
             type="button"
             class="font-inter-600 flex items-center justify-center gap-[8px]"
             style="
@@ -339,7 +341,7 @@
             Đóng
           </button>
           <button
-            *ngIf="isEdit"
+            *ngIf="modeScreen === 'update'"
             type="submit"
             class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
             style="
@@ -357,6 +359,54 @@
               />
             </svg>
             Cập nhật
+          </button>
+
+          <!-- detail -->
+          <button
+            *ngIf="modeScreen === 'detail'"
+            [routerLink]="['/vnaccs/home/search-custom']"
+            type="button"
+            class="font-inter-600 flex items-center justify-center gap-[8px]"
+            style="
+              height: 40px;
+              width: 145px;
+              background-color: #f5f5f5;
+              color: #1944a7 !important;
+              font-size: 14px;
+              border-radius: 8px;
+            "
+          >
+            Đóng
+          </button>
+          <button
+            *ngIf="modeScreen === 'detail'"
+            (click)="fromDetailToUpdate()"
+            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            style="
+              height: 40px;
+              width: 145px;
+              background-color: #1944a7 !important;
+              font-size: 14px;
+              border-radius: 8px;
+            "
+          >
+            Chỉnh sửa
+          </button>
+          <button
+            *ngIf="modeScreen === 'detail'"
+            (click)="sendCustom()"
+            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            style="
+              height: 40px;
+              width: 145px;
+              background-color: white !important;
+              color: #3bb54a !important;
+              border: 0.5px solid #3bb54a;
+              font-size: 14px;
+              border-radius: 8px;
+            "
+          >
+            Gửi hải quan
           </button>
         </div>
       </nz-row>

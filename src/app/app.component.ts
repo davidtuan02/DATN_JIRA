@@ -28,3 +28,4 @@ export class AppComponent {
   }
 
 }
+declare function initPlugin() : void;

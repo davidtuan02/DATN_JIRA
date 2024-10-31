@@ -1,15 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
-import { NzButtonModule } from 'ng-zorro-antd/button'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { BrowserModule } from '@angular/platform-browser'
-import { CommonModule } from '@angular/common'
-import { HomeService } from './home.service'
-import { Subject } from 'rxjs'
-import { NzCarouselModule } from 'ng-zorro-antd/carousel'
-import { AuthService } from '../../../shared/services/auth.service'
-import { Router, RouterModule } from '@angular/router'
-import { STORAGE_KEYS } from '../../../shared/constants/system.const'
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core'
+import {NzButtonModule} from 'ng-zorro-antd/button'
+import {TranslateModule, TranslateService} from '@ngx-translate/core'
+import {BrowserModule} from '@angular/platform-browser'
+import {CommonModule} from '@angular/common'
+import {HomeService} from './home.service'
+import {Subject} from 'rxjs'
+import {NzCarouselModule} from 'ng-zorro-antd/carousel'
+import {AuthService} from '../../../shared/services/auth.service'
+import {Router, RouterModule} from '@angular/router'
+import {STORAGE_KEYS} from '../../../shared/constants/system.const'
+import {NzDropDownModule} from 'ng-zorro-antd/dropdown'
+import {NzModalService} from "ng-zorro-antd/modal";
+import {ProvideNewPasswordComponent} from "./provide-new-password/provide-new-password.component";
+import {NotificationService} from "../../../shared/services/notification.service";
 
 @Component({
   selector: 'app-home',
@@ -33,12 +36,15 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private homeSrv: HomeService
-  ) {}
+    private homeSrv: HomeService,
+    private modalService: NzModalService,
+    private notification: NotificationService
+  ) {
+  }
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-      this.isLogin = isLoggedIn
+      this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
   }
@@ -106,5 +112,24 @@ export class HomeComponent implements OnInit {
         }
       }
     }
+  }
+
+  onClickNewPassword() {
+    const modal = this.modalService.create({
+      nzTitle: "Cấp mới mật khẩu cho người sử dụng",
+      nzContent: ProvideNewPasswordComponent,
+      nzFooter: null
+    })
+    modal.afterClose.subscribe(rf => {
+      if (rf) {
+        const body = {
+          userId: rf.userId,
+          password: rf.password
+        }
+        this.homeSrv.updatePasswordForUserId(body).subscribe(res => {
+          this.notification.success("Đổi mật khẩu cho người dùng thành công")
+        })
+      }
+    })
   }
 }

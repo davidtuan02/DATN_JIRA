@@ -33,7 +33,7 @@ export class HomePageComponent {
     this.getGuideVideoFile()
     this.getAllNotiFile()
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-      this.isLogin = isLoggedIn
+      this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
   }

@@ -95,7 +95,7 @@ export class ChangePassComponent implements OnInit {
   loadForm() {
     this.authService.taxCode$.subscribe(taxCode => {
       this.loginForm = this.fb.group({
-        taxCode: [taxCode, [Validators.required]],
+        taxCode: [localStorage.getItem(STORAGE_KEYS.TAX_CODE), [Validators.required]],
         password: ['', [Validators.required]],
         newPassword: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
         confirmPassword: ['', [Validators.required]],

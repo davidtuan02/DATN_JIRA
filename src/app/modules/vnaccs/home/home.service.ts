@@ -13,6 +13,7 @@ export class HomeService {
   PREFIX_API = '/customs-gov/admin-service/api/file'
   PREFIX_API_USER = '/customs-gov/admin-service/api'
 
+
   constructor(private api: ApiService) {}
 
   registerAccountInfo(id: any, type: any) {
@@ -55,5 +56,13 @@ export class HomeService {
 
   getGuideVideoFile() {
     return this.api.get<any>(this.PREFIX_API + '/getGuideVideo')
+  }
+
+  getListUserId(taxCode: string){
+    return this.api.get(this.PREFIX_API_USER + `/user-id/get-by-tax-code?taxCode=${taxCode}`)
+  }
+
+  updatePasswordForUserId(body: any) {
+    return this.api.patch(this.PREFIX_API_USER + 'user-id/change-passWord', body);
   }
 }

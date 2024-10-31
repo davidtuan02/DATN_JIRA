@@ -151,7 +151,7 @@ export class AccountRegisterComponent {
     this.loadForm()
     this.loadFormValidateUserId()
     this.authSrv.taxCode$.subscribe((taxCode) => {
-      this.taxCode = taxCode
+      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)
       this.cdr.detectChanges()
     })
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import {STORAGE_KEYS} from "../constants/system.const";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,13 @@ export class AuthService {
   taxCode$ = this.taxCodeSubject.asObservable();
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
+  getLoginStatus() {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    if (token) {
+      return true;
+    }
+    return false;
+  }
   setLoginStatus(status: boolean) {
     this.isLoggedIn.next(status);
   }

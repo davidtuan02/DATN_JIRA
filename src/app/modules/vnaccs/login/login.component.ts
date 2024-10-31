@@ -29,6 +29,10 @@ import { PasswordMaskDirective } from './mask-password.directive'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { AuthService } from '../../../shared/services/auth.service'
+import * as asn1js from 'asn1js'
+import { Certificate } from 'pkijs'
+
+declare function initPlugin(comp: any): void
 
 @Component({
   selector: 'app-login',
@@ -77,6 +81,7 @@ export class LoginComponent implements OnInit {
   listOfData: any = []
 
   msAcc: string = ''
+  ctsInfo: any = {}
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
@@ -91,7 +96,9 @@ export class LoginComponent implements OnInit {
   ) {
     this.loadForm()
   }
+
   ngOnInit(): void {}
+
   loadForm() {
     this.loginForm = this.fb.group({
       taxCode: ['', [Validators.required]],
@@ -150,42 +157,36 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    // const body = {
-    //   taxCode: this.loginForm.value.taxCode,
-    //   adminPassword: this.loginForm.value.adminPassword,
-    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
-    //   digitalSignature: this.loginForm.getRawValue().nameCert,
-    //   serial: this.loginForm.getRawValue().serial,
-    //   provider: this.loginForm.getRawValue().provider,
-    //   // provider: this.loginForm.getRawValue().nameCert,
-    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-    //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-    //   publicKey: this.loginForm.getRawValue().publicKey,
-    //   taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
-    //   credentialId: this.loginForm.value.credentialId
-    // }
-    // this.loginSrv.login(body).subscribe((res: any) => {
-    //   if (res && res.code === 200) {
-    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-    //     this.router.navigate(['vnaccs'])
-    //     this.authService.setLoginStatus(true)
-    //     this.authService.setTaxCode(this.loginForm.value.taxCode)
-    //   }
-    // })
-
-    this.router.navigate(['vnaccs'])
-    this.authService.setLoginStatus(true)
-    this.authService.setTaxCode(this.loginForm.value.taxCode)
-    localStorage.setItem(
-      STORAGE_KEYS.TOKEN,
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    )
-    sessionStorage.setItem(
-      STORAGE_KEYS.TOKEN,
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    )
+    const body = {
+      taxCode: this.loginForm.value.taxCode,
+      adminPassword: this.loginForm.value.adminPassword,
+      digitalSignatureType: this.loginForm.value.digitalSignatureType,
+      digitalSignature: this.loginForm.getRawValue().nameCert,
+      serial: this.loginForm.getRawValue().serial,
+      provider: this.loginForm.getRawValue().provider,
+      // provider: this.loginForm.getRawValue().nameCert,
+      effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+      expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+      publicKey: this.loginForm.getRawValue().publicKey,
+      taxCodeCTS: this.loginForm.value.taxCodeCTS,
+      credentialId: this.loginForm.value.credentialId
+    }
+    this.loginSrv.login(body).subscribe((res: any) => {
+      if (res && res.code === 200) {
+        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+        this.router.navigate(['vnaccs'])
+        localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+        sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+        this.authService.setLoginStatus(true)
+        this.authService.setTaxCode(this.loginForm.value.taxCode)
+      }
+    })
+    // this.router.navigate(['vnaccs'])
+    // this.authService.setLoginStatus(true)
+    // this.authService.setTaxCode(this.loginForm.value.taxCode)
   }
+
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
       return null
@@ -232,6 +233,7 @@ export class LoginComponent implements OnInit {
       this.notification.success('Đã sao chép đường dẫn')
     }
   }
+
   navigateToDownload(store: string): void {
     if (store === 'appstore') {
       window.open('https://apps.apple.com/vn/app/mysign/id1633019232', '_blank')
@@ -246,6 +248,7 @@ export class LoginComponent implements OnInit {
     this.msAcc = ''
     this.listOfData = []
   }
+
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -291,6 +294,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  async getVTCAInfo() {
+    // this.vtcaService.getSessionId().subscribe(res => {
+    //   this.vtcaService.getCertificate(res).subscribe(rs => {
+    //     console.log(rs)
+    //   })
+    // });
+    initPlugin(this)
+    setTimeout(() => {
+      console.log(this.ctsInfo)
+    }, 100)
+  }
+
   applyData(data: any) {
     const currentDate = new Date().getTime()
     const validDate = this.convertComplexDateString(data.validFrom)
@@ -315,5 +330,68 @@ export class LoginComponent implements OnInit {
       // this.loginForm.enable()
       // this.disableForm();
     }
+  }
+
+  patchValueToForm(key: string, value: any) {
+    if (value) {
+      if (key === 'effectiveDate' || key === 'expiryDate') {
+        this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.loginForm.get(key)?.setValue(value)
+    }
+  }
+
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64)
+    const len = binaryString.length
+    const bytes = new Uint8Array(len)
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
+    return bytes.buffer
+  }
+
+  // Function to parse the certificate and get the public key
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<CryptoKey | null> {
+    try {
+      const certBuffer = this.base64ToArrayBuffer(base64Cert)
+
+      // Parse ASN.1 structure
+      const asn1 = asn1js.fromBER(certBuffer)
+      if (asn1.offset === -1) {
+        throw new Error('Error parsing certificate ASN.1 structure.')
+      }
+
+      // Parse X.509 Certificate
+      const certificate = new Certificate({ schema: asn1.result })
+
+      // Get the public key from the certificate
+      const publicKey = await certificate.getPublicKey()
+
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key:', error)
+      return null
+    }
+  }
+
+  convertDateFormat(dateStr: string): string {
+    // Parse the input date string in "dd/MM/yyyy HH:mm" format
+    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hour, minute)
+
+    // Format the date as "yyyyMMddHHmmss+0700"
+    const yyyy = date.getFullYear().toString()
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    const HH = date.getHours().toString().padStart(2, '0')
+    const mm = date.getMinutes().toString().padStart(2, '0')
+    const ss = date.getSeconds().toString().padStart(2, '0')
+
+    // Append the timezone offset in the "+0700" format
+    const timezoneOffset = '+0700' // adjust if necessary
+
+    return `${yyyy}${MM}${dd}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

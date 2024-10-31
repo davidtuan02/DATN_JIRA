@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector } from '@angular/core';
+import {inject, Injectable, Injector} from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -8,23 +8,25 @@ import {
   HttpInterceptorFn,
   HttpHandlerFn,
 } from '@angular/common/http';
-import { catchError, finalize, Observable, throwError } from 'rxjs';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { STORAGE_KEYS } from '../shared/constants/system.const';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { clearStore } from '../shared/utilities/system.utils';
-import { NotificationService } from '../shared/services/notification.service';
+import {catchError, finalize, Observable, throwError} from 'rxjs';
+import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {STORAGE_KEYS} from '../shared/constants/system.const';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {clearStore} from '../shared/utilities/system.utils';
+import {NotificationService} from '../shared/services/notification.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private count = 0;
+
   constructor(
     private spinner: NgxSpinnerService,
     private router: Router,
     private notification: NotificationService,
     private injector: Injector
-  ) {}
+  ) {
+  }
 
   intercept(
     request: HttpRequest<unknown>,
@@ -40,24 +42,29 @@ export class AuthInterceptor implements HttpInterceptor {
         },
       });
     }
-
-    if (this.count === 0) this.spinner.show();
-    this.count++;
-    return next.handle(request).pipe(
-      finalize(() => {
-        this.count--;
-        if (this.count === 0) this.spinner.hide();
-      }),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          clearStore();
-          this.router.navigate(['/']);
-        } else {
-          this.handleError(error);
-        }
-        return throwError(() => new Error(`${error}`));
+    if (request.body) {
+      const encodedBody = btoa(JSON.stringify(request.body))
+      request = request.clone({
+        body: encodedBody
       })
-    );
+    }
+      if (this.count === 0) this.spinner.show();
+      this.count++;
+      return next.handle(request).pipe(
+        finalize(() => {
+          this.count--;
+          if (this.count === 0) this.spinner.hide();
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            clearStore();
+            this.router.navigate(['/']);
+          } else {
+            this.handleError(error);
+          }
+          return throwError(() => new Error(`${error}`));
+        })
+      );
   }
 
   private handleError(err: HttpErrorResponse) {
@@ -66,7 +73,7 @@ export class AuthInterceptor implements HttpInterceptor {
       const message = translate.instant('common.err_system');
       this.notification.error(message);
     } else if (err.error instanceof Blob) {
-      const blob = new Blob([err.error], { type: 'application/json' });
+      const blob = new Blob([err.error], {type: 'application/json'});
       const reader = new FileReader();
       reader.onload = () => {
         const errorData = JSON.parse(reader.result as string);

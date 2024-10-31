@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    server:''
+    server:'http://192.168.0.3:8191'
 }

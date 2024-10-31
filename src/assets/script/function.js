@@ -367,26 +367,20 @@ function getCertifcate(comp) {
       // console.log(cert)
       //get info of certificate
       if (cert_rawData == "" || cert_rawData == undefined || cert_rawData == null) {
-        //get infomation error
-        //get serial number
-        var ReqLastErr;
-        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-          ReqLastErr = new XMLHttpRequest();
-        } else {// code for IE6, IE5
-          ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        ReqLastErr.onreadystatechange = function () {
-          if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            // //alert("Error code = " +ReqLastErr.responseText);
-            showErrMsg_CMS(ReqLastErr.responseText);
-          }
-        }
-        ReqLastErr.open("POST", domain + "getLastErr", true);
-        ReqLastErr.send();
       } else {
         //get serial number
         var ReqSNB;
-        getCertValidDate();
+        comp.getPublicKeyFromCertificate(cert_rawData).then(publicKey => {
+          if (publicKey) {
+            console.log(publicKey)
+            comp.patchValueToForm("publicKey", btoa(publicKey))
+          } else {
+          }
+        });
+        getCertValidDate(comp);
+        getCertExpireDate(comp);
+        getCertCommonName(comp);
+        getCertDN(comp);
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqSNB = new XMLHttpRequest();
         } else {// code for IE6, IE5
@@ -395,6 +389,7 @@ function getCertifcate(comp) {
         ReqSNB.onreadystatechange = function () {
           if (ReqSNB.readyState == 4 && ReqSNB.status == 200) {
             cert_SNB = ReqSNB.responseText;
+            comp.patchValueToForm("serial", cert_SNB)
             // signData();
             signHash();
           }
@@ -411,7 +406,7 @@ function getCertifcate(comp) {
 
 }
 
-function getCertValidDate() {
+function getCertValidDate(comp) {
   var ReqValidDate;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     ReqValidDate = new XMLHttpRequest();
@@ -419,11 +414,56 @@ function getCertValidDate() {
     ReqValidDate = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqValidDate.onreadystatechange = function () {
-    console.log(ReqValidDate.responseText);
+    comp.patchValueToForm("effectiveDate", ReqValidDate.responseText)
   }
   ReqValidDate.open("POST", domain + "getCertValidDate", true);
   ReqValidDate.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   ReqValidDate.send();
+}
+
+function getCertExpireDate(comp) {
+  var ReqExpireDate;
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    ReqExpireDate = new XMLHttpRequest();
+  } else {// code for IE6, IE5
+    ReqExpireDate = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  ReqExpireDate.onreadystatechange = function () {
+    comp.patchValueToForm("expiryDate", ReqExpireDate.responseText)
+  }
+  ReqExpireDate.open("POST", domain + "getCertExpireDate", true);
+  ReqExpireDate.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  ReqExpireDate.send();
+}
+
+function getCertCommonName(comp) {
+  var ReqCommonName;
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    ReqCommonName = new XMLHttpRequest();
+  } else {// code for IE6, IE5
+    ReqCommonName = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  ReqCommonName.onreadystatechange = function () {
+    comp.patchValueToForm("nameCert", ReqCommonName.responseText)
+  }
+  ReqCommonName.open("POST", domain + "getCertCN", true);
+  ReqCommonName.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  ReqCommonName.send();
+}
+
+function getCertDN(comp) {
+  var ReqDN;
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    ReqDN = new XMLHttpRequest();
+  } else {// code for IE6, IE5
+    ReqDN = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  ReqDN.onreadystatechange = function () {
+    comp.patchValueToForm("provider", ReqDN.responseText)
+  }
+  ReqDN.open("POST", domain + "getCertIssuer", true);
+  ReqDN.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  ReqDN.send();
 }
 
 function base64_decode(stringBase64) {

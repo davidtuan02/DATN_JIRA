@@ -1,0 +1,33 @@
+.ant-input-affix-wrapper {
+  border-radius: 8px !important;
+
+  .ant-input {
+    height: 30px;
+  }
+}
+
+.reject-button {
+  height: 40px !important;
+  width: 155px !important;
+  background-color: #f5f5f5 !important;
+  color: #1944a7 !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600 !important;
+  font-style: normal;
+}
+
+.confirm-button {
+  height: 40px !important;
+  width: 155px !important;
+  background-color: #1944a7 !important;
+  color: #FFF !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600 !important;
+  font-style: normal;
+}

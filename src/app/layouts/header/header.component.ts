@@ -1,20 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import {
-  BreadcrumService,
-  IBreadcrumb,
-} from '../../shared/services/breadcrum.service';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { clearStore } from '../../shared/utilities/system.utils';
-import { CommonModule } from '@angular/common';
-import { STORAGE_KEYS } from '../../shared/constants/system.const';
-import { HeaderService } from './header.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core'
+import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import { NzAvatarModule } from 'ng-zorro-antd/avatar'
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb'
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
+import { BreadcrumService, IBreadcrumb } from '../../shared/services/breadcrum.service'
+import { NzLayoutModule } from 'ng-zorro-antd/layout'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { clearStore } from '../../shared/utilities/system.utils'
+import { CommonModule } from '@angular/common'
+import { STORAGE_KEYS } from '../../shared/constants/system.const'
+import { HeaderService } from './header.service'
+import { AuthService } from '../../shared/services/auth.service'
 
 @Component({
   selector: 'app-header-vnaccs',
@@ -27,16 +24,16 @@ import { AuthService } from '../../shared/services/auth.service';
     TranslateModule,
     NzLayoutModule,
     RouterModule,
-    NzIconModule,
+    NzIconModule
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderVnaccsComponent implements OnInit{
-  isLogin: boolean = false;
-  breadcrums = signal<IBreadcrumb[]>([]);
-  taxCode: string | null = null;
+export class HeaderVnaccsComponent implements OnInit {
+  isLogin: boolean = false
+  breadcrums = signal<IBreadcrumb[]>([])
+  taxCode: string | null = null
 
   constructor(
     private router: Router,
@@ -45,44 +42,44 @@ export class HeaderVnaccsComponent implements OnInit{
     private cdr: ChangeDetectorRef,
     private authService: AuthService
   ) {
-    this.breadcrumcService.breadcrumb$.subscribe(breadcrumbs => this.breadcrums.set(breadcrumbs));
+    this.breadcrumcService.breadcrumb$.subscribe((breadcrumbs) => this.breadcrums.set(breadcrumbs))
   }
 
   ngOnInit(): void {
     this.authService.taxCode$.subscribe((taxCode) => {
       this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)
-    });
-    this.authService.taxCode$.subscribe(taxCode => {
+    })
+    this.authService.taxCode$.subscribe((taxCode) => {
       this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)
-      this.cdr.detectChanges();
-    });
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLogin = this.authService.getLoginStatus();
-      this.cdr.detectChanges();
-    });
+      this.cdr.detectChanges()
+    })
+    this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
+      this.isLogin = this.authService.getLoginStatus()
+      this.cdr.detectChanges()
+    })
   }
 
   getUserInfo(taxCode: string) {
     this.headerSrv.getUserInfo(taxCode).subscribe((res: any) => {
-      if(res && res.message === 'success') {
+      if (res && res.message === 'success') {
         console.log(res.data)
       }
     })
   }
 
   logout() {
-    clearStore();
-    this.authService.setLoginStatus(false);
-    this.authService.setTaxCode('');
-    this.router.navigate(['/vnaccs/login']);
+    clearStore()
+    this.authService.setLoginStatus(false)
+    this.authService.setTaxCode('')
+    localStorage.removeItem(STORAGE_KEYS.TAX_CODE)
+    this.router.navigate(['/vnaccs/login'])
   }
 
   handleClick(option: string) {
-    if(option === 'logout') {
-      this.logout();
-    }
-    else {
-      this.router.navigateByUrl('/vnaccs/change-password');
+    if (option === 'logout') {
+      this.logout()
+    } else {
+      this.router.navigateByUrl('/vnaccs/change-password')
     }
   }
 }

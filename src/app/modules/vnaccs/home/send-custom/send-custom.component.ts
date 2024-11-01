@@ -145,8 +145,12 @@ export class SendCustomComponent {
           decoded = this.decodeToken(token)
         }
 
+        const taxCode: any =
+          localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
+
         const body = {
           objectId: decoded.sub,
+          taxCode: taxCode,
           nameSender: this.form.get('fullName')?.value,
           digitalSignatureType: this.form.get('digitalSignatureType')?.value,
           nameCert: this.form.get('nameCert')?.value,

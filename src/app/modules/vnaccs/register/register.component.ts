@@ -276,30 +276,40 @@ export class RegisterComponent implements OnInit {
         // console.log(body)
         if (this.modeScreen === 'update') {
           //update
-          console.log(this.dataToEditOrView.id)
-          // const body = {
-          //   taxCode: this.loginForm.value.taxCode,
-          //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
-          //   digitalSignature: this.loginForm.getRawValue().taxCode,
-          //   serial: this.loginForm.getRawValue().serial,
-          //   provider: this.loginForm.getRawValue().provider,
-          //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-          //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-          //   publicKey: this.loginForm.getRawValue().publicKey,
-          //   email: this.loginForm.value.email,
-          //   taxCodeCTS: this.loginForm.getRawValue().taxCode,
-          //   credentialId: this.loginForm.getRawValue().credentialId
-          // }
-          // this.registerSrv.update(this.dataToEditOrView.id, body).subscribe((res: any) => {
-          //   if (res && res.success) {
-          //     this.router.navigate(['vnaccs/home'])
-          //     this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
-          //   }
-          // })
+          // console.log(this.dataToEditOrView.requestId)
+          const body = {
+            taxCode: this.loginForm.getRawValue().taxCode,
+            digitalSignatureType: this.loginForm.getRawValue().digitalSignatureType,
+            digitalSignature: this.loginForm.getRawValue().taxCode,
+            serial: this.loginForm.getRawValue().serial,
+            provider: this.loginForm.getRawValue().provider,
+            effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+            expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+            publicKey: this.loginForm.getRawValue().publicKey,
+            email: this.loginForm.getRawValue().email,
+            taxCodeCTS: this.loginForm.getRawValue().taxCode,
+            credentialId: this.loginForm.getRawValue().credentialId
+          }
+          // console.log(body)
+          if (this.dataToEditOrView.requestId) {
+            this.registerSrv.update(this.dataToEditOrView.id, body).subscribe((res: any) => {
+              if (res && res.success) {
+                this.router.navigate(['vnaccs/home/search-custom'])
+                this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
+              }
+            })
+          } else {
+            this.registerSrv.updateFirst(this.dataToEditOrView.id, body).subscribe((res: any) => {
+              if (res && res.success) {
+                this.router.navigate(['vnaccs/home'])
+                this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
+              }
+            })
+          }
         } else {
           //register
           const body = {
-            taxCode: this.loginForm.value.taxCode,
+            taxCode: this.loginForm.getRawValue().taxCode,
             adminPassword: this.loginForm.value.adminPassword,
             digitalSignatureType: this.loginForm.value.digitalSignatureType,
             digitalSignature: this.loginForm.getRawValue().taxCode,

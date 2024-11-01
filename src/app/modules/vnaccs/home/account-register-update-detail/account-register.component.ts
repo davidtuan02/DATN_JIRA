@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component } from '@angular/core'
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
-import { NzGridModule } from 'ng-zorro-antd/grid'
-import { NzInputModule } from 'ng-zorro-antd/input'
-import { NzSelectModule } from 'ng-zorro-antd/select'
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import {ChangeDetectorRef, Component} from '@angular/core'
+import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
+import {NzGridModule} from 'ng-zorro-antd/grid'
+import {NzInputModule} from 'ng-zorro-antd/input'
+import {NzSelectModule} from 'ng-zorro-antd/select'
+import {NzDatePickerModule} from 'ng-zorro-antd/date-picker'
 import {
   CUSTOMER_TABLE_SIZE,
   DATE_FORMAT,
@@ -12,22 +12,26 @@ import {
   INIT_PAGE,
   INIT_SIZE
 } from '../../../../shared/components/common.const'
-import { NzButtonComponent, NzButtonModule, NzButtonSize } from 'ng-zorro-antd/button'
-import { NzTableModule } from 'ng-zorro-antd/table'
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
-import { CommonModule, DatePipe } from '@angular/common'
-import { AccountRegisterService } from './account-register.service'
-import { NzSelectSizeType } from 'ng-zorro-antd/select'
-import { NzModalModule } from 'ng-zorro-antd/modal'
-import { ActivatedRoute, Router, RouterLink } from '@angular/router'
-import { NzRadioModule } from 'ng-zorro-antd/radio'
-import { NotificationService } from '../../../../shared/services/notification.service'
-import { DialogService } from '../../../../shared/services/dialog.service'
-import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
-import { AuthService } from '../../../../shared/services/auth.service'
-import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { debounceTime, Subject } from 'rxjs'
+import {NzButtonComponent, NzButtonModule, NzButtonSize} from 'ng-zorro-antd/button'
+import {NzTableModule} from 'ng-zorro-antd/table'
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
+import {CommonModule, DatePipe} from '@angular/common'
+import {AccountRegisterService} from './account-register.service'
+import {NzSelectSizeType} from 'ng-zorro-antd/select'
+import {NzModalModule} from 'ng-zorro-antd/modal'
+import {ActivatedRoute, Router, RouterLink} from '@angular/router'
+import {NzRadioModule} from 'ng-zorro-antd/radio'
+import {NotificationService} from '../../../../shared/services/notification.service'
+import {DialogService} from '../../../../shared/services/dialog.service'
+import {ConfirmPopupComponent} from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import {AuthService} from '../../../../shared/services/auth.service'
+import {STORAGE_KEYS} from '../../../../shared/constants/system.const'
+import {debounceTime, Subject} from 'rxjs'
+import * as asn1js from 'asn1js'
+import { Certificate } from 'pkijs'
+
 // import jwt_decode from 'jwt-decode';
+declare function initPlugin(comp: any): void
 
 @Component({
   selector: 'app-account-register',
@@ -112,14 +116,14 @@ export class AccountRegisterComponent {
 
   radioValue = '1'
   optionFileStatuss = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
 
   optionPaper = [
-    { value: 1, label: 'CMND' },
-    { value: 2, label: 'CCCD' },
-    { value: 3, label: 'Hộ chiếu' }
+    {value: 1, label: 'CMND'},
+    {value: 2, label: 'CCCD'},
+    {value: 3, label: 'Hộ chiếu'}
   ]
   msAcc: string = ''
   listOfData: any = []
@@ -145,7 +149,8 @@ export class AccountRegisterComponent {
     private router: Router,
     private authSrv: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadForm()
@@ -351,7 +356,7 @@ export class AccountRegisterComponent {
       const toDate = formGroup.get(toDateField)?.value
 
       if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
-        formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
+        formGroup.get(fromDateField)?.setErrors({dateRangeInvalid: true})
       } else {
         formGroup.get(fromDateField)?.setErrors(null)
       }
@@ -674,7 +679,7 @@ export class AccountRegisterComponent {
       customsExpiryDate: this.formValidateUserId.value.customsExpiryDate,
 
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
-      digitalSignature: this.formValidateUserId.getRawValue().digitalSignature,
+      digitalSignature: this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
       serial: this.formValidateUserId.getRawValue().serial,
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
@@ -705,7 +710,7 @@ export class AccountRegisterComponent {
       customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
 
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
-      digitalSignature: this.formValidateUserId.getRawValue().digitalSignature,
+      digitalSignature: this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
       serial: this.formValidateUserId.getRawValue().serial,
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
@@ -1017,5 +1022,72 @@ export class AccountRegisterComponent {
       console.error('Lỗi khi giải mã token:', error)
       return null
     }
+  }
+
+  async getVTCAInfo() {
+    initPlugin(this)
+  }
+
+  patchValueToForm(key: string, value: any) {
+    if (value) {
+      if (key === 'effectiveDate' || key === 'expiryDate') {
+        this.form.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.form.get(key)?.setValue(value)
+    }
+  }
+
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64)
+    const len = binaryString.length
+    const bytes = new Uint8Array(len)
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
+    return bytes.buffer
+  }
+
+  // Function to parse the certificate and get the public key
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<CryptoKey | null> {
+    try {
+      const certBuffer = this.base64ToArrayBuffer(base64Cert)
+
+      // Parse ASN.1 structure
+      const asn1 = asn1js.fromBER(certBuffer)
+      if (asn1.offset === -1) {
+        throw new Error('Error parsing certificate ASN.1 structure.')
+      }
+
+      // Parse X.509 Certificate
+      const certificate = new Certificate({schema: asn1.result})
+
+      // Get the public key from the certificate
+      const publicKey = await certificate.getPublicKey()
+
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key:', error)
+      return null
+    }
+  }
+
+  convertDateFormat(dateStr: string): string {
+    // Parse the input date string in "dd/MM/yyyy HH:mm" format
+    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hour, minute)
+
+    // Format the date as "yyyyMMddHHmmss+0700"
+    const yyyy = date.getFullYear().toString()
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    const HH = date.getHours().toString().padStart(2, '0')
+    const mm = date.getMinutes().toString().padStart(2, '0')
+    const ss = date.getSeconds().toString().padStart(2, '0')
+
+    // Append the timezone offset in the "+0700" format
+    const timezoneOffset = '+0700' // adjust if necessary
+
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

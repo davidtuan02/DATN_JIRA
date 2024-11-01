@@ -161,7 +161,7 @@ export class LoginComponent implements OnInit {
       taxCode: this.loginForm.value.taxCode,
       adminPassword: this.loginForm.value.adminPassword,
       digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.loginForm.getRawValue().nameCert,
+      digitalSignature: this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
       serial: this.loginForm.getRawValue().serial,
       provider: this.loginForm.getRawValue().provider,
       // provider: this.loginForm.getRawValue().nameCert,
@@ -295,15 +295,7 @@ export class LoginComponent implements OnInit {
   }
 
   async getVTCAInfo() {
-    // this.vtcaService.getSessionId().subscribe(res => {
-    //   this.vtcaService.getCertificate(res).subscribe(rs => {
-    //     console.log(rs)
-    //   })
-    // });
     initPlugin(this)
-    setTimeout(() => {
-      console.log(this.ctsInfo)
-    }, 100)
   }
 
   applyData(data: any) {
@@ -391,7 +383,6 @@ export class LoginComponent implements OnInit {
 
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
-
-    return `${yyyy}${MM}${dd}${HH}${mm}${ss}${timezoneOffset}`
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search') {
+  handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search'| 'accountInfo') {
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {
@@ -113,6 +113,18 @@ export class HomeComponent implements OnInit {
           })
           // this.router.navigate(['/vnaccs/home/account-register'])
           break
+        }
+        case 'accountInfo': {
+          this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
+            if (res && res.message === 'success') {
+              // console.log(res.data)
+              this.router.navigate(['/vnaccs/home/account-admin-update'], {
+                state: {
+                  data: res.data
+                }
+              })
+            }
+          })
         }
         case 'search': {
           this.router.navigate(['/vnaccs/home/search-custom'])

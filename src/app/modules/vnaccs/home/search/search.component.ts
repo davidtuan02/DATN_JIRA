@@ -256,7 +256,7 @@ export class SearchComponent {
         dialogRef.afterClose.subscribe((res: any) => {
           if (res) {
             this.searchSrv.deleteRequest(data.id).subscribe((res: any) => {
-              if (res && res.errorCode == 0) {
+              if (res && res.success) {
                 this.notification.success('Xóa đề xuất thành công')
                 this.search()
               }
@@ -332,7 +332,7 @@ export class SearchComponent {
     this.paginate.page = page
     this.checked = false
     this.indeterminate = false
-    // this.search();
+    this.search()
   }
 
   sizeChange(size: number) {
@@ -340,7 +340,7 @@ export class SearchComponent {
       page: INIT_PAGE,
       size: size
     }
-    // this.search();
+    this.search()
   }
 
   updateCheckedSet(id: number, checked: boolean): void {

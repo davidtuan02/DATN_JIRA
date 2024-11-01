@@ -16,6 +16,10 @@ export class RegisterService {
     return this.api.put<any>(this.PREFIX_API + `/admin-account/update-account-admin-by-request-id/${id}`, body)
   }
 
+  updateFirst(id: any, body: any) {
+    return this.api.put<any>(this.PREFIX_API + `/admin-account/update-account-admin/${id}`, body)
+  }
+
   register(body: any) {
     return this.api.post<any>(this.PREFIX_API + '/admin-account', body)
   }

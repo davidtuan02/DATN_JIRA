@@ -379,12 +379,12 @@ export class AccountRegisterComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisibleModalCTS = false
-      this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
+      // this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
       this.formValidateUserId.get('serial')?.setValue(data.serialNumber)
       this.formValidateUserId.get('provider')?.setValue(data.issuerDN)
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.formValidateUserId.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
-      // this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN);
+      this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN)
       this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN) //check
     }
   }
@@ -835,7 +835,7 @@ export class AccountRegisterComponent {
   }
 
   disabledDate = (current: Date): boolean => {
-    return current && current > new Date()
+    return current && current < new Date()
   }
 
   pageChange(page: number) {

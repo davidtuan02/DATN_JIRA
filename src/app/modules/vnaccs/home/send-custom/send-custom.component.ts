@@ -40,8 +40,6 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 export class SendCustomComponent {
   current = 0
 
-  index = 'First-content'
-
   optionRepresent = [
     {
       value: 1,
@@ -61,6 +59,7 @@ export class SendCustomComponent {
   isVisible: boolean = false
   isVisibleDownload: boolean = false
   isOkLoading = false
+  form!: FormGroup
 
   msAcc = ''
   listOfData: any[] = []
@@ -70,7 +69,6 @@ export class SendCustomComponent {
     { value: 0, label: 'Đang tắt' }
   ]
 
-  form!: FormGroup
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
   modalTitle: string = 'Lấy chứng thư số'
   isAbleBtnSign: boolean = false
@@ -91,7 +89,7 @@ export class SendCustomComponent {
 
   loadForm() {
     this.form = this.fb.group({
-      fullName: [''],
+      fullName: ['', [Validators.required]],
       registerPlace: [null],
       digitalSignatureType: [this.radioValue],
       digitalSignature: [''],
@@ -119,6 +117,22 @@ export class SendCustomComponent {
 
   done(): void {
     console.log('done')
+  }
+
+  getFullNameError() {
+    const control = this.form.get('fullName')
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   sendCustom() {
@@ -345,7 +359,7 @@ export class SendCustomComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      this.form.get('digitalSignature')?.setValue(data.subjectDN)
+      // this.form.get('digitalSignature')?.setValue(data.subjectDN)
       this.form.get('serial')?.setValue(data.serialNumber)
       this.form.get('provider')?.setValue(data.issuerDN)
       this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

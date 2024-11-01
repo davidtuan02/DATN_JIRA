@@ -176,8 +176,6 @@ export class LoginComponent implements OnInit {
     //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
     //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
     //     this.router.navigate(['vnaccs'])
-    //     localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
-    //     sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
     //     this.authService.setLoginStatus(true)
     //     this.authService.setTaxCode(this.loginForm.value.taxCode)
     //   }
@@ -225,13 +223,20 @@ export class LoginComponent implements OnInit {
     return undefined
   }
 
-  getPassError() {
+  getPassError(): string | undefined {
     const control = this.loginForm.get('adminPassword')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }
     }
+
     return undefined
   }
 

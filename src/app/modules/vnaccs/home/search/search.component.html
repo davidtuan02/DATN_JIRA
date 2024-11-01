@@ -198,18 +198,16 @@
                 [nzIndeterminate]="indeterminate"
                 (nzCheckedChange)="onAllChecked($event)"
               ></th>
-              <th nzAlign="center" nzWidth="60px" class="font-roboto-700" style="font-size: 14px">STT</th>
-              <th nzAlign="center" nzWidth="250px" class="font-roboto-700" style="font-size: 14px">Loại đăng ký</th>
-              <th nzAlign="left" nzWidth="100px" class="font-roboto-700" style="font-size: 14px">Số tiếp nhận</th>
-              <th nzAlign="left" nzWidth="100px" class="font-roboto-700" style="font-size: 14px">Năm tiếp nhận</th>
-              <th nzAlign="center" nzWidth="130px" class="font-roboto-700" style="font-size: 14px">Trạng thái</th>
-              <th nzAlign="center" nzWidth="90px" class="font-roboto-700" style="font-size: 14px">Người gửi</th>
-              <th nzAlign="center" nzWidth="130px" class="font-roboto-700" style="font-size: 14px">Ngày gửi</th>
-              <th nzAlign="center" nzWidth="130px" class="font-roboto-700" style="font-size: 14px">Ngày phê duyệt</th>
-              <th nzAlign="center" nzWidth="130px" class="font-roboto-700" style="font-size: 14px">
-                Ghi nhận của Hải quan
-              </th>
-              <th nzAlign="center" nzWidth="140px" class="font-roboto-700" style="font-size: 14px">Thao tác</th>
+              <th nzAlign="center" nzWidth="60px" style="font-size: 14px">STT</th>
+              <th nzAlign="center" nzWidth="250px" style="font-size: 14px">Loại đăng ký</th>
+              <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Số tiếp nhận</th>
+              <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Năm tiếp nhận</th>
+              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Trạng thái</th>
+              <th nzAlign="center" nzWidth="90px" style="font-size: 14px">Người gửi</th>
+              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày gửi</th>
+              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày phê duyệt</th>
+              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ghi nhận của Hải quan</th>
+              <th nzAlign="center" nzWidth="140px" style="font-size: 14px">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -354,7 +352,12 @@
               </td>
               <td nzAlign="center">
                 <div class="flex justify-center items-center gap-2">
-                  <span nz-tooltip [nzTooltipTitle]="'Xem chi tiết'" (click)="handleNavigate('detail', data)">
+                  <span
+                    nz-tooltip
+                    style="cursor: pointer"
+                    [nzTooltipTitle]="'Xem chi tiết'"
+                    (click)="handleNavigate('detail', data)"
+                  >
                     <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fill-rule="evenodd"
@@ -368,6 +371,7 @@
                   <span
                     *ngIf="data.requestStatus === 1"
                     nz-tooltip
+                    style="cursor: pointer"
                     [nzTooltipTitle]="'Đăng ký tới hải quan'"
                     (click)="handleNavigate('custom', data)"
                   >
@@ -382,6 +386,7 @@
                   <span
                     *ngIf="data.requestStatus === 1"
                     nz-tooltip
+                    style="cursor: pointer"
                     [nzTooltipTitle]="'Cập nhật'"
                     (click)="handleNavigate('edit', data)"
                   >
@@ -395,7 +400,12 @@
                     </svg>
                   </span>
 
-                  <span nz-tooltip [nzTooltipTitle]="'Xóa'" (click)="handleNavigate('delete', data)">
+                  <span
+                    nz-tooltip
+                    style="cursor: pointer"
+                    [nzTooltipTitle]="'Xóa'"
+                    (click)="handleNavigate('delete', data)"
+                  >
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fill-rule="evenodd"

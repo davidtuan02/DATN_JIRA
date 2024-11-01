@@ -29,6 +29,7 @@ import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import { TrimSpaceDirective } from '../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-register',
@@ -53,7 +54,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
     NzModalModule,
     NzTableModule,
     RouterLink,
-    NzToolTipModule
+    NzToolTipModule,
+    TrimSpaceDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -137,10 +139,14 @@ export class RegisterComponent implements OnInit {
         taxCode: ['', [Validators.required]],
         adminPassword: [
           '',
-          [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]
+          [
+            Validators.pattern(
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])([^\s])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]{};':"\\|,.<>\/?]{7,}$/
+            )
+          ]
         ],
         confirmPassword: ['', [Validators.required]],
-        email: ['', [Validators.email, Validators.required]],
+        email: ['', [Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z]{2,})+$/), Validators.required]],
         digitalSignatureType: [this.radioValue],
         digitalSignature: [''],
         serial: [''],
@@ -206,7 +212,6 @@ export class RegisterComponent implements OnInit {
   }
 
   applyDataToEditOrView(data: any) {
-    // console.log(data)
     this.loginForm.get('taxCode')?.setValue(data.taxCode)
     this.loginForm.get('email')?.setValue(data.email)
     // this.loginForm.get('digitalSignatureType')?.setValue(data.digitalSignatureType)
@@ -256,7 +261,6 @@ export class RegisterComponent implements OnInit {
   }
 
   registerOrUpdate() {
-    // console.log(this.dataToEditOrView)
     const dataDialog = {
       title:
         this.modeScreen === 'update'
@@ -273,10 +277,8 @@ export class RegisterComponent implements OnInit {
 
     dialogRef.afterClose.subscribe((result: boolean) => {
       if (result) {
-        // console.log(body)
         if (this.modeScreen === 'update') {
           //update
-          // console.log(this.dataToEditOrView.requestId)
           const body = {
             taxCode: this.loginForm.getRawValue().taxCode,
             digitalSignatureType: this.loginForm.getRawValue().digitalSignatureType,
@@ -290,7 +292,6 @@ export class RegisterComponent implements OnInit {
             taxCodeCTS: this.loginForm.getRawValue().taxCode,
             credentialId: this.loginForm.getRawValue().credentialId
           }
-          // console.log(body)
           if (this.dataToEditOrView.requestId) {
             this.registerSrv.update(this.dataToEditOrView.id, body).subscribe((res: any) => {
               if (res && res.success) {
@@ -333,7 +334,7 @@ export class RegisterComponent implements OnInit {
     })
   }
   convertDateTimestamp(date: any) {
-    const [d, m, y] = date.split(/-|\//) // splits "26-02-2012" or "26/02/2012"
+    const [d, m, y] = date.split(/-|\//)
     const dateNew = new Date(y, m - 1, d)
     return dateNew.getTime()
   }
@@ -370,7 +371,7 @@ export class RegisterComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
-      if (control.errors?.['email']) {
+      if (control.errors?.['pattern']) {
         return 'Email không đúng định dạng'
       }
     }
@@ -379,6 +380,12 @@ export class RegisterComponent implements OnInit {
 
   getPassError() {
     const control = this.loginForm.get('adminPassword')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
@@ -389,8 +396,15 @@ export class RegisterComponent implements OnInit {
     }
     return undefined
   }
+
   getConfirmPassError(): string | undefined {
     const control = this.loginForm.get('confirmPassword')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu không được để trống'

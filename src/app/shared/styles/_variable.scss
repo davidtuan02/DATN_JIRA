@@ -86,18 +86,6 @@ $error-cl: #f44336;
   font-style: normal;
 }
 
-.font-roboto-700 {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.font-roboto-400 {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -153,19 +141,24 @@ nz-date-picker {
 
 ::ng-deep.ant-radio-checked .ant-radio-inner {
   border-color: $primary-color !important ;
+  font-family: 'Inter', sans-serif;
 }
 
 ::ng-deep.ant-radio-checked .ant-radio-inner:after {
   background-color: $primary-color;
+  font-family: 'Inter', sans-serif;
 }
 
 ::ng-deep.ant-radio:hover .ant-radio-inner {
   border-color: $primary-color;
+  font-family: 'Inter', sans-serif;
 }
 ::ng-deep .ant-radio-checked .ant-radio-inner:focus {
   border-color: $primary-color;
+  font-family: 'Inter', sans-serif;
 }
 
 ::ng-deep .ant-notification-notice-content {
   margin-right: 10px;
+  font-family: 'Inter', sans-serif;
 }

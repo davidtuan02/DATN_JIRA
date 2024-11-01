@@ -218,13 +218,20 @@ export class UpdateSignatureComponent implements OnInit {
     return undefined
   }
 
-  getPassError() {
+  getPassError(): string | undefined {
     const control = this.loginForm.get('password')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }
     }
+
     return undefined
   }
 

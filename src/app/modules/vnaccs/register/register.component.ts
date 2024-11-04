@@ -170,7 +170,9 @@ export class RegisterComponent implements OnInit {
   determineMode(endpoint: string) {
     const state = history.state
     if (state && state.data) {
+      // console.log(state.data)
       this.dataToEditOrView = state.data
+      // console.log(this.dataToEditOrView)
       if (this.dataToEditOrView) {
         this.applyDataToEditOrView(this.dataToEditOrView)
       }
@@ -194,9 +196,11 @@ export class RegisterComponent implements OnInit {
         break
       }
     }
+    // console.log(this.modeScreen)
   }
 
   fromDetailToUpdate() {
+    console.log('from detail to edit:' + this.dataToEditOrView)
     this.router.navigate(['/vnaccs/home/account-admin-update'], {
       state: {
         data: this.dataToEditOrView
@@ -285,18 +289,19 @@ export class RegisterComponent implements OnInit {
           const body = {
             taxCode: this.loginForm.getRawValue().taxCode,
             digitalSignatureType: this.loginForm.getRawValue().digitalSignatureType,
-            digitalSignature: this.loginForm.getRawValue().taxCode,
+            digitalSignature: this.loginForm.getRawValue().digitalSignature,
             serial: this.loginForm.getRawValue().serial,
             provider: this.loginForm.getRawValue().provider,
             effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
             expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
             publicKey: this.loginForm.getRawValue().publicKey,
             email: this.loginForm.getRawValue().email,
-            taxCodeCTS: this.loginForm.getRawValue().taxCode,
-            credentialId: this.loginForm.getRawValue().credentialId
+            taxCodeCTS: this.loginForm.getRawValue().taxCode
+            // credentialId: '001301020532_5181042_20241017083237'
           }
+          // console.log(this.dataToEditOrView)
           if (this.dataToEditOrView.requestId) {
-            this.registerSrv.update(this.dataToEditOrView.id, body).subscribe((res: any) => {
+            this.registerSrv.update(this.dataToEditOrView.requestId, body).subscribe((res: any) => {
               if (res && res.success) {
                 this.router.navigate(['vnaccs/home/search-custom'])
                 this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
@@ -515,7 +520,7 @@ export class RegisterComponent implements OnInit {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
+      this.loginForm.get('digitalSignature')?.setValue(data.subjectDN)
       this.loginForm.get('serial')?.setValue(data.serialNumber)
       this.loginForm.get('provider')?.setValue(data.issuerDN)
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

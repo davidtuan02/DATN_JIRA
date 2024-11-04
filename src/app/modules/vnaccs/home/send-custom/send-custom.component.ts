@@ -76,6 +76,7 @@ export class SendCustomComponent {
   isAbleBtnSign: boolean = false
   isSigned: boolean = false
   isSent: boolean = false
+  requestNo!: string
 
   constructor(
     private notification: NotificationService,
@@ -185,6 +186,7 @@ export class SendCustomComponent {
             // console.log(res)
             this.current += 1
             this.isSent = true
+            this.requestNo = state.data.requestNo
           }
         })
       }
@@ -361,7 +363,7 @@ export class SendCustomComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.form.get('digitalSignature')?.setValue(data.subjectDN)
+      this.form.get('digitalSignature')?.setValue(data.subjectDN)
       this.form.get('serial')?.setValue(data.serialNumber)
       this.form.get('provider')?.setValue(data.issuerDN)
       this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

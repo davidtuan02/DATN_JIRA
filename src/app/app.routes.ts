@@ -32,6 +32,13 @@ export const routes: Routes = [
               )
           },
           {
+            path: 'account-detail',
+            loadComponent: () =>
+              import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
+                (c) => c.AccountRegisterComponent
+              )
+          },
+          {
             path: 'account-update',
             loadComponent: () =>
               import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
@@ -46,13 +53,7 @@ export const routes: Routes = [
             path: 'account-admin-detail',
             loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
           },
-          {
-            path: 'account-detail',
-            loadComponent: () =>
-              import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
-                (c) => c.AccountRegisterComponent
-              )
-          },
+
           {
             path: 'search-custom',
             loadComponent: () => import('./modules/vnaccs/home/search/search.component').then((c) => c.SearchComponent)

@@ -54,8 +54,12 @@ button {
   color: #ffffff !important;
 }
 
-.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
-  background-color: #2362f6 !important;
+// ::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+//   background-color: #2362f6 !important;
+// }
+
+::ng-deep .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+  color: #a5a5a5;
 }
 
 ::ng-deep .ant-steps-item-icon {

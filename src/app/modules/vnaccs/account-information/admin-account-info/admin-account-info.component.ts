@@ -69,7 +69,7 @@ export class AdminAccountInfoComponent implements OnInit {
         effectiveDate: this.datePipe.transform(res.data.effectiveDate, "dd/MM/yyyy"),
         expiryDate: this.datePipe.transform(res.data.expiryDate, "dd/MM/yyyy"),
         publicKey: res.data.publicKey,
-        nameCert: res.data.nameCert,
+        nameCert: res.data.digitalSignature,
         taxCodeCTS: res.data.taxCodeCTS,
         credentialId: res.data.credentialId
       })

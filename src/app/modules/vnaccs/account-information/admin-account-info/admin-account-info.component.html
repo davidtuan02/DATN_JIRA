@@ -5,10 +5,16 @@
       <nz-row nzGutter="16">
         <!-- Mã số thuế -->
         <nz-col nzSpan="12">
-          <label class="custom-label">Mã số thuế <span style="color: #ED5564;">*</span></label>
+          <label class="custom-label">Mã số thuế </label>
           <nz-input-group style="border-radius: 8px;">
             <input type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế"
                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);"/>
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
           </nz-input-group>
         </nz-col>
       </nz-row>
@@ -22,7 +28,7 @@
         <nz-col nzSpan="12">
           <div class="flex justify-between">
             <div class="flex flex-col gap-[10px]">
-              <label class="custom-label">Loại chữ ký số <span style="color: #ED5564;">*</span></label>
+              <label class="custom-label">Loại chữ ký số </label>
               <nz-radio-group formControlName="digitalSignatureType" style="font-size: 14px;">
                 <label nz-radio nzValue=1>Usb token</label>
                 <label nz-radio nzValue=2>Viettel - Mysign</label>
@@ -35,7 +41,7 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="form.get('digitalSignatureType')?.value === '1'; else vtsign">
           <div class="flex flex-col">
-            <label class="custom-label">Chữ ký số <span style="color: #ED5564;">*</span></label>
+            <label class="custom-label">Chữ ký số </label>
             <!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
             <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
             <!--              </nz-option>-->
@@ -51,7 +57,7 @@
         <!-- Tên chứng thư số -->
         <ng-template #vtsign>
           <nz-col nzSpan="12">
-            <label class="custom-label">Tên chứng thư số <span style="color: #ED5564;">*</span></label>
+            <label class="custom-label">Tên chứng thư số </label>
             <nz-input-group style="border-radius: 8px;">
               <input text nz-input maxlength="13" formControlName="nameCert"/>
             </nz-input-group>
@@ -65,7 +71,7 @@
       <nz-row nzGutter="16">
         <!-- Số seri -->
         <nz-col nzSpan="12">
-          <label class="custom-label">Số seri <span style="color: #ED5564;">*</span></label>
+          <label class="custom-label">Số seri </label>
           <nz-input-group style="border-radius: 8px;">
             <input text nz-input formControlName="serial"/>
           </nz-input-group>
@@ -75,7 +81,7 @@
 
         <!-- Nhà cung cấp chữ ký số -->
         <nz-col nzSpan="12">
-          <label class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ED5564;">*</span></label>
+          <label class="custom-label">Nhà cung cấp chữ ký số </label>
           <nz-input-group style="border-radius: 8px;">
             <input text nz-input formControlName="provider"/>
           </nz-input-group>
@@ -87,7 +93,7 @@
       <nz-row nzGutter="16">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
-          <label class="custom-label">Ngày hiệu lực <span style="color: #ED5564;">*</span></label>
+          <label class="custom-label">Ngày hiệu lực </label>
           <nz-input-group style="border-radius: 8px;" [nzSuffix]="suffixDate">
             <input text nz-input formControlName="effectiveDate"/>
           </nz-input-group>
@@ -123,7 +129,7 @@
 
         <!-- Ngày hết hiệu lực -->
         <nz-col nzSpan="12">
-          <label class="custom-label">Ngày hết hiệu lực <span style="color: #ED5564;">*</span></label>
+          <label class="custom-label">Ngày hết hiệu lực </label>
           <nz-input-group style="border-radius: 8px;" [nzSuffix]="suffixDate">
             <input text nz-input formControlName="expiryDate"/>
           </nz-input-group>
@@ -134,7 +140,7 @@
 
       <!-- Khóa công khai -->
       <nz-row nzSpan="24">
-        <label class="custom-label">Khóa công khai <span style="color: #ED5564;">*</span></label>
+        <label class="custom-label">Khóa công khai </label>
         <textarea style="min-height: 100px; border-radius: 8px;" formControlName="publicKey" nz-input>
         </textarea>
         <p style="max-height: 10px;" class="text-danger fs-14">

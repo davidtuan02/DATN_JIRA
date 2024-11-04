@@ -370,11 +370,11 @@ function getCertifcate(comp) {
       } else {
         //get serial number
         var ReqSNB;
+        console.log(cert_rawData)
         comp.getPublicKeyFromCertificate(cert_rawData).then(publicKey => {
           if (publicKey) {
             console.log(publicKey)
             comp.patchValueToForm("publicKey", btoa(publicKey))
-          } else {
           }
         });
         getCertValidDate(comp);
@@ -389,7 +389,9 @@ function getCertifcate(comp) {
         ReqSNB.onreadystatechange = function () {
           if (ReqSNB.readyState == 4 && ReqSNB.status == 200) {
             cert_SNB = ReqSNB.responseText;
-            comp.patchValueToForm("serial", cert_SNB)
+            if (cert_SNB) {
+              comp.patchValueToForm("serial", cert_SNB)
+            }
             // signData();
             signHash();
           }
@@ -414,7 +416,9 @@ function getCertValidDate(comp) {
     ReqValidDate = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqValidDate.onreadystatechange = function () {
-    comp.patchValueToForm("effectiveDate", ReqValidDate.responseText)
+    if (ReqValidDate.responseText) {
+      comp.patchValueToForm("effectiveDate", ReqValidDate.responseText)
+    }
   }
   ReqValidDate.open("POST", domain + "getCertValidDate", true);
   ReqValidDate.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -429,7 +433,9 @@ function getCertExpireDate(comp) {
     ReqExpireDate = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqExpireDate.onreadystatechange = function () {
-    comp.patchValueToForm("expiryDate", ReqExpireDate.responseText)
+    if (ReqExpireDate.responseText) {
+      comp.patchValueToForm("expiryDate", ReqExpireDate.responseText)
+    }
   }
   ReqExpireDate.open("POST", domain + "getCertExpireDate", true);
   ReqExpireDate.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -444,10 +450,12 @@ function getCertCommonName(comp) {
     ReqCommonName = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqCommonName.onreadystatechange = function () {
-    console.log(ReqCommonName.responseText)
     let cks = "";
-    cks = ReqCommonName.responseText.split("MST")[1].substring(1,15).replace("-", "")
-    comp.patchValueToForm("digitalSignature", cks)
+    if (ReqCommonName.responseText) {
+    console.log(ReqCommonName.responseText)
+      cks = ReqCommonName.responseText.split("MST")[1].substring(1,15).replace("-", "")
+      comp.patchValueToForm("digitalSignature", cks)
+    }
   }
   ReqCommonName.open("POST", domain + "getCertDN", true);
   ReqCommonName.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -462,7 +470,9 @@ function getCertDN(comp) {
     ReqDN = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqDN.onreadystatechange = function () {
-    comp.patchValueToForm("provider", ReqDN.responseText)
+    if (ReqDN.responseText) {
+      comp.patchValueToForm("provider", ReqDN.responseText)
+    }
   }
   ReqDN.open("POST", domain + "getCertIssuer", true);
   ReqDN.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

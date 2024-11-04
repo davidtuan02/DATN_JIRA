@@ -33,6 +33,8 @@ import { clearStore } from '../../../shared/utilities/system.utils'
 import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
 import * as asn1js from "asn1js";
 import {Certificate} from "pkijs";
+import * as forge from 'node-forge';
+
 declare function initPlugin(comp: any): void;
 @Component({
   selector: 'app-update-signature',
@@ -362,27 +364,20 @@ export class UpdateSignatureComponent implements OnInit {
   }
 
   // Function to parse the certificate and get the public key
-  async getPublicKeyFromCertificate(base64Cert: string): Promise<CryptoKey | null> {
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {
-      const certBuffer = this.base64ToArrayBuffer(base64Cert)
+    // Decode the base64-encoded certificate to DER format
+    const certDer = forge.util.decode64(base64Cert);
+    const certAsn1 = forge.asn1.fromDer(certDer);
+    const certificate = forge.pki.certificateFromAsn1(certAsn1);
 
-      // Parse ASN.1 structure
-      const asn1 = asn1js.fromBER(certBuffer)
-      if (asn1.offset === -1) {
-        throw new Error('Error parsing certificate ASN.1 structure.')
-      }
-
-      // Parse X.509 Certificate
-      const certificate = new Certificate({schema: asn1.result})
-
-      // Get the public key from the certificate
-      const publicKey = await certificate.getPublicKey()
-
-      return publicKey
-    } catch (error) {
-      console.error('Error extracting public key:', error)
-      return null
-    }
+    // Get the public key
+    const publicKey = certificate.publicKey;
+    return publicKey;
+  } catch (error) {
+    console.error('Error extracting public key with node-forge:', error);
+    return null;
+  }
   }
 
   convertDateFormat(dateStr: string): string {

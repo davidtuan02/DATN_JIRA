@@ -1063,7 +1063,7 @@ export class AccountRegisterComponent {
   }
 
   // Function to parse the certificate and get the public key
-  async getPublicKeyFromCertificate(base64Cert: string): Promise<CryptoKey | null> {
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {
       const certBuffer = this.base64ToArrayBuffer(base64Cert)
 

@@ -31,6 +31,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { AuthService } from '../../../shared/services/auth.service'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
+import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
 
 declare function initPlugin(comp: any): void
 
@@ -58,7 +59,8 @@ declare function initPlugin(comp: any): void
     NzTableModule,
     PasswordMaskDirective,
     NzToolTipModule,
-    RouterLink
+    RouterLink,
+    AutoTrimDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -30,6 +30,7 @@ import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { UpdateSignatureService } from './update-signature.service'
 import { clearStore } from '../../../shared/utilities/system.utils'
+import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
 
 @Component({
   selector: 'app-update-signature',
@@ -54,7 +55,8 @@ import { clearStore } from '../../../shared/utilities/system.utils'
     NzModalModule,
     NzTableModule,
     NzToolTipModule,
-    RouterLink
+    RouterLink,
+    AutoTrimDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

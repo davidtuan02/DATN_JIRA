@@ -29,6 +29,7 @@ import {STORAGE_KEYS} from '../../../../shared/constants/system.const'
 import {debounceTime, Subject} from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
+import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
@@ -53,7 +54,8 @@ declare function initPlugin(comp: any): void
     CommonModule,
     NzModalModule,
     RouterLink,
-    NzRadioModule
+    NzRadioModule,
+    AutoTrimDirective
   ]
 })
 export class AccountRegisterComponent {

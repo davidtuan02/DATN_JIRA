@@ -33,6 +33,7 @@ import { AuthService } from '../../../shared/services/auth.service'
 import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { clearStore } from '../../../shared/utilities/system.utils'
+import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
 
 @Component({
   selector: 'app-change-password',
@@ -57,7 +58,8 @@ import { clearStore } from '../../../shared/utilities/system.utils'
     NzModalModule,
     NzTableModule,
     NzToolTipModule,
-    RouterLink
+    RouterLink,
+    AutoTrimDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

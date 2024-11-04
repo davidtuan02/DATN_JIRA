@@ -30,6 +30,7 @@ import { ConfirmPopupComponent } from '../../../../shared/components/confirm-pop
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { da } from 'date-fns/locale'
 import { NotificationService } from '../../../../shared/services/notification.service'
+import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 
 @Component({
   selector: 'app-search',
@@ -52,7 +53,8 @@ import { NotificationService } from '../../../../shared/services/notification.se
     NzModalModule,
     RouterLink,
     NzRadioModule,
-    NzPaginationModule
+    NzPaginationModule,
+    AutoTrimDirective
   ]
 })
 export class SearchComponent {

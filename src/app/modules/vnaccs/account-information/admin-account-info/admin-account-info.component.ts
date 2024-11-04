@@ -8,6 +8,7 @@ import {NzRadioComponent, NzRadioGroupComponent} from "ng-zorro-antd/radio";
 import {STORAGE_KEYS} from "../../../../shared/constants/system.const";
 import {Router, RouterLink} from "@angular/router";
 import {AccountInformationService} from "../account-information.service";
+import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 @Component({
   selector: 'app-admin-account-info',
   standalone: true,
@@ -24,6 +25,7 @@ import {AccountInformationService} from "../account-information.service";
     NzRowDirective,
     ReactiveFormsModule,
     RouterLink,
+    AutoTrimDirective,
   ],
   providers: [DatePipe],
   templateUrl: './admin-account-info.component.html',

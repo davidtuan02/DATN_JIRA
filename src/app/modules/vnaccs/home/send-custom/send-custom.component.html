@@ -62,7 +62,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Họ tên người gửi Hải quan <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input
+            <input    autoTrim
               type="text"
               nz-input
               placeholder="Nhập họ tên người gửi Hải quan"
@@ -163,7 +163,7 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px">
-              <input text nz-input maxlength="13" formControlName="nameCert" />
+              <input autoTrim  text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </nz-col>
@@ -175,7 +175,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input text nz-input formControlName="serial" />
+            <input autoTrim  text nz-input formControlName="serial" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -184,7 +184,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input text nz-input formControlName="provider" />
+            <input autoTrim  text nz-input formControlName="provider" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -195,7 +195,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group nzSize="large" style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input text nz-input formControlName="effectiveDate" />
+            <input autoTrim  text nz-input formControlName="effectiveDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -204,7 +204,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hết hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group nzSize="large" style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input text nz-input formControlName="expiryDate" />
+            <input autoTrim  text nz-input formControlName="expiryDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -328,6 +328,7 @@
           placeholder="Nhập tài khoản MySign"
           nz-input
           style="width: 500px; border-radius: 8px"
+          autoTrim
         />
         <button class="text-white" style="border-radius: 8px; background-color: #1944a7 !important" (click)="getCTS()">
           <div class="flex justify-center items-center gap-2" style="width: 200px">
@@ -495,7 +496,7 @@
       </div>
       <span style="margin-top: 10px">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
       <nz-input-group [nzSuffix]="suffixCopy" style="border-radius: 8px; position: relative; width: 520px">
-        <input type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
+        <input autoTrim  type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
       </nz-input-group>
       <div class="flex justify-center gap-[15px] mt-[25px]">
         <svg

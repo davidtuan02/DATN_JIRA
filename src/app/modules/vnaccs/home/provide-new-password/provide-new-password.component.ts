@@ -18,6 +18,7 @@ import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {HomeService} from "../home.service";
 import {STORAGE_KEYS} from "../../../../shared/constants/system.const";
+import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 
 @Component({
   selector: 'app-provide-new-password',
@@ -35,7 +36,8 @@ import {STORAGE_KEYS} from "../../../../shared/constants/system.const";
     NzIconDirective,
     NzModalFooterDirective,
     NzButtonComponent,
-    NgIf
+    NgIf,
+    AutoTrimDirective
   ],
   templateUrl: './provide-new-password.component.html',
   styleUrl: './provide-new-password.component.scss'

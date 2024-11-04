@@ -78,7 +78,8 @@ export class AccountRegisterComponent {
   optionFileType = FILE_TYPE
 
   dataTable: any[] = []
-  modalTitle: string = 'Thêm mới người khai hải quan'
+  modalTitleSender: string = 'Thêm mới người khai hải quan'
+  modalTitleGetCTS: string = 'Lấy chứng thư số'
   total: number = 0
   paginate = {
     page: INIT_PAGE, //1
@@ -202,13 +203,20 @@ export class AccountRegisterComponent {
   }
 
   responseFromCustom: any
+  dataResponse: any
   dataFromSearch: any
 
   getDataToEditAcc() {
     const state = history.state
+    if (state && state.data) {
+      this.dataResponse = {
+        customsDepartmentNote: state.data.customsDepartmentNote,
+        approvalTime: state.data.approvalTime
+      }
+      console.log(this.dataResponse)
+    }
     if (state && state.data && state.data.id) {
       if (state.data.body) {
-        // console.log(state.data.body)
         this.responseFromCustom = state.data.requestStatus
         // this.dataFromSearch = state.data
         this.dataFromSearch = state.data.body
@@ -379,7 +387,7 @@ export class AccountRegisterComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisibleModalCTS = false
-      // this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
+      this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
       this.formValidateUserId.get('serial')?.setValue(data.serialNumber)
       this.formValidateUserId.get('provider')?.setValue(data.issuerDN)
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
@@ -577,13 +585,13 @@ export class AccountRegisterComponent {
     this.isVisible = true
     this.formValidateUserId.enable()
     if (mode === 'add') {
-      this.modalTitle = 'Thêm mới người khai hải quan'
+      this.modalTitleSender = 'Thêm mới người khai hải quan'
       this.mode = 'add'
       this.formValidateUserId.reset()
       this.disableForm()
     }
     if (mode === 'edit') {
-      this.modalTitle = 'Chỉnh sửa người khai hải quan'
+      this.modalTitleSender = 'Chỉnh sửa người khai hải quan'
       this.mode = 'edit'
       this.formValidateUserId.reset()
       this.indexToEdit = index
@@ -593,7 +601,7 @@ export class AccountRegisterComponent {
       this.formValidateUserId.get('userId')?.disable()
     }
     if (mode === 'view') {
-      this.modalTitle = 'Xem chi tiết người khai hải quan'
+      this.modalTitleSender = 'Xem chi tiết người khai hải quan'
       this.mode = 'view'
       this.formValidateUserId.reset()
       //appy data

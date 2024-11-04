@@ -333,7 +333,7 @@ export class ForgotPasswordComponent implements OnInit {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
+      this.loginForm.get('digitalSignature')?.setValue(data.subjectDN)
       this.loginForm.get('serial')?.setValue(data.serialNumber)
       this.loginForm.get('provider')?.setValue(data.issuerDN)
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

@@ -510,7 +510,7 @@
         </nz-col>
         <nz-col nzSpan="8">
           <span class="me-[14px] font-inter-400" style="font-size: 14px">Ngày phản hồi:</span
-          ><span class="font-inter" style="font-size: 14px">10/10/2024</span>
+          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.approvalTime | date : 'dd/MM/yyyy' }}</span>
         </nz-col>
       </nz-row>
 
@@ -521,7 +521,7 @@
         </nz-col> -->
         <nz-col nzSpan="8">
           <span class="me-[14px] font-inter-400" style="font-size: 14px">Ghi nhận Hải quan:</span
-          ><span class="font-inter" style="font-size: 14px"></span>
+          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.customsDepartmentNote }}</span>
         </nz-col>
       </nz-row>
     </div>
@@ -665,7 +665,7 @@
   [nzFooter]="footerTemplate"
 >
   <div *nzModalTitle class="font-inter-600" style="font-size: 18px">
-    {{ modalTitle }}
+    {{ modalTitleSender }}
   </div>
 
   <div *nzModalContent class="d-flex flex-column gap-3 mt-[-25px]">
@@ -1061,7 +1061,7 @@
   [nzFooter]="footerCTSTemplate"
 >
   <div *nzModalTitle class="font-inter-600" style="font-size: 18px">
-    {{ modalTitle }}
+    {{ modalTitleGetCTS }}
   </div>
 
   <div *nzModalContent class="d-flex flex-column gap-3 mt-[-10px]">
@@ -1148,68 +1148,72 @@
       <div class="font-inter" style="font-size: 14px; margin-bottom: 12px">
         <span>Danh sách chứng thư số</span>
       </div>
-      <nz-table #basicTable [nzData]="listOfData">
-        <thead>
-          <tr>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">STT</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Tên chứng thư</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Số seri</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of listOfData; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.serialNumber }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validFrom)">{{
-                  formatDateFromString(data.validFrom)
-                }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validTo)">{{
-                  formatDateFromString(data.validTo)
-                }}</span>
-              </div>
-            </td>
-            <td nzAlign="center">
-              <button
-                (click)="applyData(data)"
-                class="font-inter-600 text-white"
-                style="
-                  border-radius: 8px;
-                  background-color: #1944a7 !important;
-                  width: 77px;
-                  height: 34px;
-                  font-size: 14px;
-                "
-              >
-                Chọn
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+      <div style="overflow-y: auto">
+        <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">STT</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Tên chứng thư</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Số seri</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
+              <th nzWidth="50px" nzAlign="center" class="font-inter">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of listOfData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{
+                    data.serialNumber
+                  }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validFrom)">{{
+                    formatDateFromString(data.validFrom)
+                  }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validTo)">{{
+                    formatDateFromString(data.validTo)
+                  }}</span>
+                </div>
+              </td>
+              <td nzAlign="center">
+                <button
+                  (click)="applyData(data)"
+                  class="font-inter-600 text-white"
+                  style="
+                    border-radius: 8px;
+                    background-color: #1944a7 !important;
+                    width: 77px;
+                    height: 34px;
+                    font-size: 14px;
+                  "
+                >
+                  Chọn
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
     </div>
   </div>
 </nz-modal>
@@ -1504,7 +1508,6 @@
 <ng-template #footerTemplate>
   <div class="flex h-[40px] justify-end px-2 gap-[11px] pt-[6px]">
     <button
-      [routerLink]="['/vnaccs/home/account-register']"
       type="button"
       class="font-inter-600"
       style="
@@ -1535,7 +1538,6 @@
 <ng-template #footerCTSTemplate>
   <div class="flex h-[40px] justify-end px-2 gap-[11px] pt-[6px]">
     <button
-      [routerLink]="['/vnaccs/home/account-register']"
       type="button"
       class="font-inter-600"
       style="

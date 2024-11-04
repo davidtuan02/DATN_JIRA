@@ -197,7 +197,11 @@ export class SearchComponent {
         if (data?.requestType === 1 || data?.requestType === 2) {
           this.router.navigate(['/vnaccs/home/account-detail'], {
             state: {
-              data: data
+              data: {
+                ...data,
+                customsDepartmentNote: data.customsDepartmentNote,
+                approvalTime: data.approvalTime
+              }
             }
           })
         }

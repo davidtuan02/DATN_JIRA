@@ -359,7 +359,7 @@ export class SendCustomComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.form.get('digitalSignature')?.setValue(data.subjectDN)
+      this.form.get('digitalSignature')?.setValue(data.subjectDN)
       this.form.get('serial')?.setValue(data.serialNumber)
       this.form.get('provider')?.setValue(data.issuerDN)
       this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

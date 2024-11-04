@@ -178,6 +178,8 @@ export class LoginComponent implements OnInit {
     //     this.router.navigate(['vnaccs'])
     //     this.authService.setLoginStatus(true)
     //     this.authService.setTaxCode(this.loginForm.value.taxCode)
+    //     localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
+    //     sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
     //   }
     // })
 
@@ -334,7 +336,7 @@ export class LoginComponent implements OnInit {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
+      this.loginForm.get('digitalSignature')?.setValue(data.subjectDN)
       this.loginForm.get('serial')?.setValue(data.serialNumber)
       this.loginForm.get('provider')?.setValue(data.issuerDN)
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))

@@ -115,16 +115,9 @@ export class HomeComponent implements OnInit {
           break
         }
         case 'accountInfo': {
-          this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
-            if (res && res.message === 'success') {
               // console.log(res.data)
-              this.router.navigate(['/vnaccs/home/account-admin-update'], {
-                state: {
-                  data: res.data
-                }
-              })
-            }
-          })
+              this.router.navigate(['/vnaccs/home/account-information'])
+          break
         }
         case 'search': {
           this.router.navigate(['/vnaccs/home/search-custom'])

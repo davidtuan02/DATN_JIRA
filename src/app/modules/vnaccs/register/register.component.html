@@ -101,12 +101,12 @@
               </nz-radio-group>
               <p style="max-height: 10px" class="text-danger fs-14"></p>
             </div>
-            <div *ngIf="radioValue === '2'" class="pt-[23px]">
+            <div class="pt-[23px]">
               <button
                 type="button"
                 class="text-white button flex justify-center"
                 style="border-radius: 8px; background-color: #1944a7 !important"
-                (click)="showModal()"
+                (click)="radioValue === '2' ? showModal() : getVTCAInfo()"
               >
                 <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px">
                   <div class="svg">
@@ -141,10 +141,13 @@
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
             <label for="" class="custom-label">Chữ ký số <span style="color: #ed5564">*</span></label>
-            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">
-              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">
-              </nz-option>
-            </nz-select>
+<!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
+<!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
+<!--              </nz-option>-->
+<!--            </nz-select>-->
+            <nz-input-group style="border-radius: 8px">
+              <input text nz-input maxlength="13" formControlName="digitalSignature" />
+            </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </div>
         </nz-col>

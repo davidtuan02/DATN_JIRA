@@ -157,6 +157,34 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    const body = {
+      taxCode: this.loginForm.value.taxCode,
+      adminPassword: this.loginForm.value.adminPassword,
+      digitalSignatureType: this.loginForm.value.digitalSignatureType,
+      digitalSignature: this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
+      serial: this.loginForm.getRawValue().serial,
+      provider: this.loginForm.getRawValue().provider,
+      // provider: this.loginForm.getRawValue().nameCert,
+      effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+      expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+      publicKey: this.loginForm.getRawValue().publicKey,
+      taxCodeCTS: this.loginForm.value.taxCodeCTS,
+      credentialId: this.loginForm.value.credentialId
+    }
+    this.loginSrv.login(body).subscribe((res: any) => {
+      if (res && res.code === 200) {
+        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+        this.router.navigate(['vnaccs'])
+        localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+        sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+        this.authService.setLoginStatus(true)
+        this.authService.setTaxCode(this.loginForm.value.taxCode)
+      }
+    })
+    // this.router.navigate(['vnaccs'])
+    // this.authService.setLoginStatus(true)
+    // this.authService.setTaxCode(this.loginForm.value.taxCode)
     // const body = {
     //   taxCode: this.loginForm.value.taxCode,
     //   adminPassword: this.loginForm.value.adminPassword,
@@ -182,15 +210,6 @@ export class LoginComponent implements OnInit {
     //     sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
     //   }
     // })
-
-    localStorage.setItem(
-      STORAGE_KEYS.TOKEN,
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    )
-    sessionStorage.setItem(
-      STORAGE_KEYS.TOKEN,
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    )
     this.router.navigate(['vnaccs'])
     this.authService.setLoginStatus(true)
     localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
@@ -313,15 +332,7 @@ export class LoginComponent implements OnInit {
   }
 
   async getVTCAInfo() {
-    // this.vtcaService.getSessionId().subscribe(res => {
-    //   this.vtcaService.getCertificate(res).subscribe(rs => {
-    //     console.log(rs)
-    //   })
-    // });
     initPlugin(this)
-    setTimeout(() => {
-      console.log(this.ctsInfo)
-    }, 100)
   }
 
   applyData(data: any) {
@@ -409,7 +420,6 @@ export class LoginComponent implements OnInit {
 
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
-
-    return `${yyyy}${MM}${dd}${HH}${mm}${ss}${timezoneOffset}`
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

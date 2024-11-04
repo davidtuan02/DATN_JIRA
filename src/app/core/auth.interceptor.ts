@@ -120,7 +120,12 @@ export const authInterceptor: HttpInterceptorFn = (
       },
     });
   }
-
+  // if (req.body) {
+  //   const encodedBody = btoa(JSON.stringify(req.body))
+  //   request = req.clone({
+  //     body: encodedBody
+  //   })
+  // }
   if (count === 0) spinner.show();
   count++;
   return next(request).pipe(

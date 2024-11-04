@@ -862,12 +862,12 @@
               </nz-radio-group>
               <p style="max-height: 10px" class="text-danger fs-14"></p>
             </div>
-            <div *ngIf="radioValue === '2'" class="pt-[23px]">
+            <div class="pt-[23px]">
               <button
                 type="button"
                 class="text-white button flex justify-center"
                 style="width: 258px; border-radius: 8px; background-color: #1944a7 !important"
-                (click)="showModalCTS()"
+                (click)="radioValue === '2' ? showModalCTS() : getVTCAInfo()"
               >
                 <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px">
                   <div class="svg">

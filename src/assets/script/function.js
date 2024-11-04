@@ -444,9 +444,12 @@ function getCertCommonName(comp) {
     ReqCommonName = new ActiveXObject("Microsoft.XMLHTTP");
   }
   ReqCommonName.onreadystatechange = function () {
-    comp.patchValueToForm("nameCert", ReqCommonName.responseText)
+    console.log(ReqCommonName.responseText)
+    let cks = "";
+    cks = ReqCommonName.responseText.split("MST")[1].substring(1,15).replace("-", "")
+    comp.patchValueToForm("digitalSignature", cks)
   }
-  ReqCommonName.open("POST", domain + "getCertCN", true);
+  ReqCommonName.open("POST", domain + "getCertDN", true);
   ReqCommonName.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   ReqCommonName.send();
 }

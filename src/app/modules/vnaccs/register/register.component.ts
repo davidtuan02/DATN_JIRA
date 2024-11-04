@@ -29,6 +29,9 @@ import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import * as asn1js from "asn1js";
+import {Certificate} from "pkijs";
+declare function initPlugin(comp: any): void
 import { TrimSpaceDirective } from '../../../shared/directives/trim.directive'
 
 @Component({
@@ -318,7 +321,7 @@ export class RegisterComponent implements OnInit {
             taxCode: this.loginForm.getRawValue().taxCode,
             adminPassword: this.loginForm.value.adminPassword,
             digitalSignatureType: this.loginForm.value.digitalSignatureType,
-            digitalSignature: this.loginForm.getRawValue().taxCode,
+            digitalSignature: this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
             serial: this.loginForm.getRawValue().serial,
             provider: this.loginForm.getRawValue().provider,
             effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
@@ -529,5 +532,71 @@ export class RegisterComponent implements OnInit {
       // this.loginForm.enable()
       // this.disableForm();
     }
+  }
+  async getVTCAInfo() {
+    initPlugin(this)
+  }
+
+  patchValueToForm(key: string, value: any) {
+    if (value) {
+      if (key === 'effectiveDate' || key === 'expiryDate') {
+        this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.loginForm.get(key)?.setValue(value)
+    }
+  }
+
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64)
+    const len = binaryString.length
+    const bytes = new Uint8Array(len)
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
+    return bytes.buffer
+  }
+
+  // Function to parse the certificate and get the public key
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<CryptoKey | null> {
+    try {
+      const certBuffer = this.base64ToArrayBuffer(base64Cert)
+
+      // Parse ASN.1 structure
+      const asn1 = asn1js.fromBER(certBuffer)
+      if (asn1.offset === -1) {
+        throw new Error('Error parsing certificate ASN.1 structure.')
+      }
+
+      // Parse X.509 Certificate
+      const certificate = new Certificate({schema: asn1.result})
+
+      // Get the public key from the certificate
+      const publicKey = await certificate.getPublicKey()
+
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key:', error)
+      return null
+    }
+  }
+
+  convertDateFormat(dateStr: string): string {
+    // Parse the input date string in "dd/MM/yyyy HH:mm" format
+    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hour, minute)
+
+    // Format the date as "yyyyMMddHHmmss+0700"
+    const yyyy = date.getFullYear().toString()
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    const HH = date.getHours().toString().padStart(2, '0')
+    const mm = date.getMinutes().toString().padStart(2, '0')
+    const ss = date.getSeconds().toString().padStart(2, '0')
+
+    // Append the timezone offset in the "+0700" format
+    const timezoneOffset = '+0700' // adjust if necessary
+
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

@@ -120,6 +120,15 @@ export class SendCustomComponent {
     console.log('done')
   }
 
+  submit() {
+    this.form.markAllAsTouched()
+    if (!this.form.invalid) {
+      this.sign()
+    } else {
+      console.log('Form is invalid!')
+    }
+  }
+
   getFullNameError() {
     const control = this.form.get('fullName')
     const trimmedValue = control?.value?.trim()
@@ -220,7 +229,6 @@ export class SendCustomComponent {
 
     this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
       if (res && res.success) {
-        // console.log(res)
         this.isSigned = true
       }
     })
@@ -297,25 +305,23 @@ export class SendCustomComponent {
   }
 
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    } else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if (res) {
-          if (res.message === 'success') {
-            this.listOfData = res.data
-          } else {
-            this.notification.error(
-              'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-            )
-          }
-        } else {
-          this.notification.error(
-            'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-          )
+    this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
+      if (res) {
+        if (res.message === 'success') {
+          this.listOfData = res.data
         }
-      })
-    }
+        // else {
+        //   this.notification.error(
+        //     'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
+        //   )
+        // }
+      }
+      // else {
+      //   this.notification.error(
+      //     'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
+      //   )
+      // }
+    })
   }
 
   convertComplexDateString(dateStr: string): number {

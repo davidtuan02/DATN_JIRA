@@ -11,7 +11,7 @@
       <nz-step nzTitle="Gửi hải quan"></nz-step>
     </nz-steps>
 
-    <form action="" nz-form [formGroup]="form" *ngIf="current < 1" class="mt-[10px]">
+    <form action="" nz-form [formGroup]="form" *ngIf="current < 1" class="mt-[10px]" (ngSubmit)="submit()">
       <div class="flex justify-end">
         <button
           *ngIf="isSigned"
@@ -67,7 +67,7 @@
               nz-input
               placeholder="Nhập họ tên người gửi Hải quan"
               formControlName="fullName"
-              maxlength="50"
+              maxlength="150"
             />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14">
@@ -254,8 +254,7 @@
           </button>
           <button
             *ngIf="!isSigned"
-            type="button"
-            (click)="sign()"
+            type="submit"
             class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
             style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
           >
@@ -331,7 +330,7 @@
           style="width: 500px; border-radius: 8px"
         />
         <button class="text-white" style="border-radius: 8px; background-color: #1944a7 !important" (click)="getCTS()">
-          <div class="flex justify-center items-center gap-2" style="width: 200px">
+          <div class="flex justify-center items-center gap-2" style="width: 218px">
             <div>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle
@@ -361,7 +360,7 @@
           (click)="showModalDownload()"
           style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7"
         >
-          <div class="flex justify-center items-center gap-2" style="width: 200px">
+          <div class="flex justify-center items-center gap-2" style="width: 218px">
             <div>
               <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path

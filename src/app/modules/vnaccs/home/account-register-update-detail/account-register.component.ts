@@ -393,7 +393,6 @@ export class AccountRegisterComponent {
       this.isVisibleModalCTS = false
       this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
       // console.log(this.form.getRawValue().digitalSignature)
-
       this.formValidateUserId.get('serial')?.setValue(data.serialNumber)
       this.formValidateUserId.get('provider')?.setValue(data.issuerDN)
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
@@ -613,12 +612,11 @@ export class AccountRegisterComponent {
       //appy data
       this.setValueForm(data)
       this.formValidateUserId.disable()
-      this.formValidateUserId.get('digitalSignatureType')?.enable()
     }
   }
 
   setValueForm(data: any) {
-    console.log(data)
+    // console.log(data)
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)

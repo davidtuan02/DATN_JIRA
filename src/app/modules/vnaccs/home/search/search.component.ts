@@ -52,7 +52,8 @@ import { NotificationService } from '../../../../shared/services/notification.se
     NzModalModule,
     RouterLink,
     NzRadioModule,
-    NzPaginationModule
+    NzPaginationModule,
+    DatePipe
   ]
 })
 export class SearchComponent {
@@ -93,7 +94,11 @@ export class SearchComponent {
   dateFormat = DATE_FORMAT.COMMON
 
   // table
-  dataTable: any[] = []
+  dataTable: any[] = [
+    {
+      receiptTime: new Date(2023, 10, 15, 10, 30).toISOString()
+    }
+  ]
   total: number = 5
   paginate = {
     page: INIT_PAGE, //1
@@ -127,7 +132,7 @@ export class SearchComponent {
 
   ngOnInit() {
     this.loadForm()
-    this.search()
+    // this.search()
   }
 
   loadForm() {
@@ -287,7 +292,6 @@ export class SearchComponent {
       pageSize: this.paginate.size,
       pageNo: this.paginate.page - 1
     }
-    // console.log(body)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {

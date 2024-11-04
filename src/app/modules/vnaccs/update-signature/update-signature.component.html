@@ -9,7 +9,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input
+            <input    autoTrim
               type="text"
               nz-input
               formControlName="taxCode"
@@ -26,7 +26,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input
+            <input    autoTrim
               type="text"
               nz-input
               formControlName="email"
@@ -48,6 +48,7 @@
             <input
               [type]="passwordVisible ? 'text' : 'password'"
               nz-input
+              autoTrim
               formControlName="password"
               placeholder="Nhập mật khẩu"
               oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);"
@@ -75,12 +76,12 @@
               </nz-radio-group>
               <p style="max-height: 10px" class="text-danger fs-14"></p>
             </div>
-            <div *ngIf="radioValue === '2'" class="pt-[23px]">
+            <div  class="pt-[23px]">
               <button
                 type="button"
                 class="text-white button flex justify-center"
                 style="border-radius: 8px; background-color: #1944a7 !important"
-                (click)="showModal()"
+                (click)="radioValue === '2' ? showModal() : getVTCAInfo()"
               >
                 <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px">
                   <div class="svg">
@@ -115,10 +116,13 @@
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
             <label for="" class="custom-label">Chữ ký số <span style="color: #ed5564">*</span></label>
-            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">
-              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">
-              </nz-option>
-            </nz-select>
+<!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
+<!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
+<!--              </nz-option>-->
+<!--            </nz-select>-->
+            <nz-input-group style="border-radius: 8px">
+              <input autoTrim  text nz-input maxlength="13" formControlName="digitalSignature" />
+            </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </div>
         </nz-col>
@@ -128,7 +132,7 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px">
-              <input text nz-input maxlength="13" formControlName="nameCert" />
+              <input autoTrim  text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </nz-col>
@@ -140,7 +144,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input text nz-input formControlName="serial" />
+            <input autoTrim  text nz-input formControlName="serial" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -149,7 +153,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input text nz-input formControlName="provider" />
+            <input autoTrim  text nz-input formControlName="provider" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -160,7 +164,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input text nz-input formControlName="effectiveDate" />
+            <input autoTrim  text nz-input formControlName="effectiveDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -246,7 +250,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hết hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input text nz-input formControlName="expiryDate" />
+            <input autoTrim  text nz-input formControlName="expiryDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -328,6 +332,7 @@
       </div>
       <div class="flex gap-[25px]" style="height: 40px">
         <input
+          autoTrim
           type="text"
           [(ngModel)]="msAcc"
           placeholder="Nhập tài khoản MySign"
@@ -365,7 +370,7 @@
           (click)="showModalDownload()"
           style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7"
         >
-          <div class="flex justify-center items-center gap-2" style="width: 200px">
+          <div class="flex justify-center items-center gap-2" style="width: 230px">
             <div>
               <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -500,7 +505,7 @@
       </div>
       <span style="margin-top: 10px">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
       <nz-input-group [nzSuffix]="suffixCopy" style="border-radius: 8px; position: relative; width: 520px">
-        <input type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
+        <input autoTrim  type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
       </nz-input-group>
       <div class="flex justify-center gap-[15px] mt-[25px]">
         <svg

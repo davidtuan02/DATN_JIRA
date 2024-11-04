@@ -31,3 +31,32 @@
   font-weight: 600 !important;
   font-style: normal;
 }
+
+.ant-input.ng-invalid.ng-touched, .ant-input.ng-invalid.ng-dirty {
+  border: 1px solid #DC3545
+}
+
+.ant-input-affix-wrapper {
+  padding: 0 !important;
+  position: relative;
+  .ant-input-suffix {
+    position: absolute;
+    right: 0%;
+    top: 25%;
+    transform: translate(-25%, -0%);
+  }
+  .ant-input{
+    padding: 8px 12px !important
+  }
+}
+
+.ant-select.ng-invalid.ng-touched, .ant-select.ng-invalid.ng-dirty {
+  .ant-select-selector {
+    border: 1px solid #DC3545;
+
+    &:hover {
+      border: 1px solid #DC3545;
+    }
+  }
+
+}

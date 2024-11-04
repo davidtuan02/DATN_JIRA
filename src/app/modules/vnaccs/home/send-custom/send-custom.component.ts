@@ -16,6 +16,7 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 
 @Component({
   selector: 'app-send-custom',
@@ -34,7 +35,8 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
     NzTableModule,
     NzToolTipModule,
     NzRadioModule,
-    RouterLink
+    RouterLink,
+    AutoTrimDirective
   ]
 })
 export class SendCustomComponent {

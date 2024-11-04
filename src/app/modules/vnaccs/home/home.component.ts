@@ -131,7 +131,8 @@ export class HomeComponent implements OnInit {
     const modal = this.modalService.create({
       nzTitle: 'Cấp mới mật khẩu cho người sử dụng',
       nzContent: ProvideNewPasswordComponent,
-      nzFooter: null
+      nzFooter: null,
+      nzMaskClosable: false
     })
     modal.afterClose.subscribe((rf) => {
       if (rf) {

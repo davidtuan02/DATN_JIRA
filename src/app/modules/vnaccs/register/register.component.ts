@@ -31,8 +31,8 @@ import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import * as asn1js from "asn1js";
 import {Certificate} from "pkijs";
+import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
 declare function initPlugin(comp: any): void
-import { TrimSpaceDirective } from '../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-register',
@@ -58,7 +58,7 @@ import { TrimSpaceDirective } from '../../../shared/directives/trim.directive'
     NzTableModule,
     RouterLink,
     NzToolTipModule,
-    TrimSpaceDirective
+    AutoTrimDirective,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

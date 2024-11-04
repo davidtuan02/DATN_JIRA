@@ -1,15 +1,17 @@
-import { Directive, ElementRef, HostListener } from '@angular/core'
+import { AfterContentInit, Directive, ElementRef, HostListener, Optional } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: 'input',
-  standalone: true
+  selector: '[autoTrim]',
+  standalone: true,
 })
-export class TrimSpaceDirective {
-  constructor(private el: ElementRef) {}
+export class AutoTrimDirective {
+  constructor(
+    private el: ElementRef,
+    @Optional() private ngControl: NgControl,
+  ) {}
 
-  @HostListener('blur')
-  onBlur() {
-    const value: string = this.el.nativeElement.value
-    this.el.nativeElement.value = value.trim()
+  @HostListener('blur') onBlur() {
+    this.ngControl.control?.setValue(this.el.nativeElement.value.trim());
   }
 }

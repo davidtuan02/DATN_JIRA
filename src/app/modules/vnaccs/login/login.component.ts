@@ -130,12 +130,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loginForm.markAllAsTouched()
-    if (this.loginForm.valid) {
-      this.login()
-    } else {
-      console.log('Form is invalid!')
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+    this.login();
   }
 
   convertDateTimestamp(date: any) {
@@ -183,7 +182,6 @@ export class LoginComponent implements OnInit {
         this.authService.setLoginStatus(true)
         this.authService.setTaxCode(this.loginForm.value.taxCode)
       }
-    })
     // this.router.navigate(['vnaccs'])
     // this.authService.setLoginStatus(true)
     // this.authService.setTaxCode(this.loginForm.value.taxCode)
@@ -215,6 +213,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
     sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
     this.authService.setTaxCode(this.loginForm.get('taxCode')?.value)
+    })
   }
 
   formatDateFromString = (dateString: string): string | null => {

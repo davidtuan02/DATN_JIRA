@@ -256,7 +256,7 @@ export class SearchComponent {
         dialogRef.afterClose.subscribe((res: any) => {
           if (res) {
             this.searchSrv.deleteRequest(data.id).subscribe((res: any) => {
-              if (res && res.errorCode == 0) {
+              if (res && res.success) {
                 this.notification.success('Xóa đề xuất thành công')
                 this.search()
               }
@@ -269,38 +269,18 @@ export class SearchComponent {
   }
 
   search() {
-    // requestType: [null],
-    // requestStatus: [null],
-    // requestNo: [''],
-    // startDateSubmit: [''],
-    // endDateSubmit: [''],
-    // approvalFromDate: [''],
-    // approvalToDate: ['']
-
     const body = {
-      requestType: '',
-      requestStatus: '',
-      requestNo: '',
-      startDateSubmit: '',
-      endDateSubmit: '',
-      approvalFromDate: '',
-      approvalToDate: '',
-      pageSize: 10,
-      pageNo: 0
+      requestType: this.form.get('requestType')?.value?.[0],
+      requestStatus: this.form.get('requestStatus')?.value?.[0],
+      requestNo: this.form.get('requestNo')?.value,
+      startDateSubmit: new Date(this.form.get('startDateSubmit')?.value).getTime(),
+      endDateSubmit: new Date(this.form.get('endDateSubmit')?.value).getTime(),
+      approvalFromDate: new Date(this.form.get('approvalFromDate')?.value).getTime(),
+      approvalToDate: new Date(this.form.get('approvalToDate')?.value).getTime(),
+      pageSize: this.paginate.size,
+      pageNo: this.paginate.page - 1
     }
-
-    // const body = {
-    //   requestType: this.form.get('requestType')?.value,
-    //   requestStatus: this.form.get('requestStatus')?.value,
-    //   requestNo: this.form.get('requestNo')?.value,
-    //   startDateSubmit: new Date(this.form.get('startDateSubmit')?.value).getTime(),
-    //   endDateSubmit: new Date(this.form.get('endDateSubmit')?.value).getTime(),
-    //   approvalFromDate: new Date(this.form.get('approvalFromDate')?.value).getTime(),
-    //   approvalToDate: new Date(this.form.get('approvalToDate')?.value).getTime(),
-    //   pageSize: this.paginate.size,
-    //   pageNo: this.paginate.page - 1
-    // }
-    console.log(body)
+    // console.log(body)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {
@@ -352,7 +332,7 @@ export class SearchComponent {
     this.paginate.page = page
     this.checked = false
     this.indeterminate = false
-    // this.search();
+    this.search()
   }
 
   sizeChange(size: number) {
@@ -360,7 +340,7 @@ export class SearchComponent {
       page: INIT_PAGE,
       size: size
     }
-    // this.search();
+    this.search()
   }
 
   updateCheckedSet(id: number, checked: boolean): void {

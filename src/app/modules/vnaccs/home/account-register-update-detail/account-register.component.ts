@@ -222,7 +222,7 @@ export class AccountRegisterComponent {
         this.form.get('representativeIdType')?.setValue(state.data.body.representativeIdType)
         this.form.get('representativeIdNo')?.setValue(state.data.body.representativeIdNo)
         this.form.get('address')?.setValue(state.data.body.address)
-        this.form.get('fieldOfActivity')?.setValue([parseInt(state.data.body.fieldOfActivity)])
+        this.form.get('fieldOfActivity')?.setValue(state.data.body.fieldOfActivity?.split(';').map(Number))
         this.form.get('proposal')?.setValue(state.data.body.proposal)
         this.form.get('freeSoftware')?.setValue(state.data.body.freeSoftware)
         this.form.get('ediSoftware')?.setValue(state.data.body.ediSoftware)
@@ -233,9 +233,7 @@ export class AccountRegisterComponent {
       } else {
         this.accReSrv.viewDetailRequestRegister(state.data.id).subscribe((res: any) => {
           if (res && res.message === 'success') {
-            // console.log(res)
             this.responseFromCustom = state.data.requestStatus
-            // console.log(this.responseFromCustom)
             // this.dataFromSearch = state.data
             this.dataFromSearch = res.data
             this.form.get('userCode')?.setValue(res?.data?.userCode)
@@ -243,7 +241,7 @@ export class AccountRegisterComponent {
             this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
             this.form.get('representativeIdNo')?.setValue(res?.data?.representativeIdNo)
             this.form.get('address')?.setValue(res?.data?.address)
-            this.form.get('fieldOfActivity')?.setValue([parseInt(res.data.fieldOfActivity)])
+            this.form.get('fieldOfActivity')?.setValue(res.data.fieldOfActivity?.split(';').map(Number))
             this.form.get('proposal')?.setValue(res?.data?.proposal)
             this.form.get('freeSoftware')?.setValue(res?.data?.freeSoftware)
             this.form.get('ediSoftware')?.setValue(res?.data?.ediSoftware)
@@ -386,12 +384,12 @@ export class AccountRegisterComponent {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisibleModalCTS = false
-      this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
+      // this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
       this.formValidateUserId.get('serial')?.setValue(data.serialNumber)
       this.formValidateUserId.get('provider')?.setValue(data.issuerDN)
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.formValidateUserId.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
-      // this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN);
+      this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN)
       this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN) //check
     }
   }
@@ -614,7 +612,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)
-    this.formValidateUserId.get('fieldOfActivity')?.setValue([data?.fieldOfActivity])
+    this.formValidateUserId.get('fieldOfActivity')?.setValue(data?.fieldOfActivity?.split(';').map(Number))
     this.formValidateUserId.get('idType')?.setValue(data?.idType)
     this.formValidateUserId.get('idNo')?.setValue(data?.idNo)
     this.formValidateUserId.get('customsEffectiveDate')?.setValue(data?.customsEffectiveDate)
@@ -674,7 +672,7 @@ export class AccountRegisterComponent {
       email: this.formValidateUserId.value.email,
       idType: this.formValidateUserId.value.idType,
       idNo: this.formValidateUserId.value.idNo,
-      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.[0],
+      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.join(';'),
       customsEffectiveDate: this.formValidateUserId.value.customsEffectiveDate,
       customsExpiryDate: this.formValidateUserId.value.customsExpiryDate,
 
@@ -705,7 +703,7 @@ export class AccountRegisterComponent {
       email: this.formValidateUserId.value.email,
       idType: this.formValidateUserId.value.idType,
       idNo: this.formValidateUserId.value.idNo,
-      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.[0],
+      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.join(';'),
       customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.value.customsEffectiveDate),
       customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
 
@@ -842,7 +840,7 @@ export class AccountRegisterComponent {
   }
 
   disabledDate = (current: Date): boolean => {
-    return current && current > new Date()
+    return current && current < new Date()
   }
 
   pageChange(page: number) {
@@ -956,7 +954,7 @@ export class AccountRegisterComponent {
           representativeIdType: this.form.value.representativeIdType,
           representativeIdNo: this.form.value.representativeIdNo,
           address: this.form.value.address,
-          fieldOfActivity: this.form.value.fieldOfActivity?.[0],
+          fieldOfActivity: this.form.value.fieldOfActivity?.join(';'),
           proposal: this.form.value.proposal,
           freeSoftware: this.form.value.freeSoftware,
           ediSoftware: this.form.value.ediSoftware,
@@ -986,14 +984,15 @@ export class AccountRegisterComponent {
                   if (res) {
                     if (res.success) {
                       this.notification.success(res.message)
-                      this.router.navigate(['/vnaccs/home'])
+                      this.router.navigate(['/vnaccs/home/search-custom'])
                     }
                   }
                 })
               } else {
+                //update first
                 this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
                   if (res) {
-                    if (res.success) {
+                    if (res.errorCode == 0) {
                       this.notification.success(res.message)
                       this.router.navigate(['/vnaccs/home'])
                     }

@@ -185,6 +185,34 @@ export class LoginComponent implements OnInit {
     // this.router.navigate(['vnaccs'])
     // this.authService.setLoginStatus(true)
     // this.authService.setTaxCode(this.loginForm.value.taxCode)
+    // const body = {
+    //   taxCode: this.loginForm.value.taxCode,
+    //   adminPassword: this.loginForm.value.adminPassword,
+    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+    //   digitalSignature: this.loginForm.getRawValue().nameCert,
+    //   serial: this.loginForm.getRawValue().serial,
+    //   provider: this.loginForm.getRawValue().provider,
+    //   // provider: this.loginForm.getRawValue().nameCert,
+    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+    //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+    //   publicKey: this.loginForm.getRawValue().publicKey,
+    //   taxCodeCTS: this.loginForm.value.taxCodeCTS,
+    //   credentialId: this.loginForm.value.credentialId
+    // }
+    // this.loginSrv.login(body).subscribe((res: any) => {
+    //   if (res && res.code === 200) {
+    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+    //     this.router.navigate(['vnaccs'])
+    //     this.authService.setLoginStatus(true)
+    //     this.authService.setTaxCode(this.loginForm.value.taxCode)
+    //   }
+    // })
+    this.router.navigate(['vnaccs'])
+    this.authService.setLoginStatus(true)
+    localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
+    sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
+    this.authService.setTaxCode(this.loginForm.get('taxCode')?.value)
   }
 
   formatDateFromString = (dateString: string): string | null => {
@@ -214,13 +242,20 @@ export class LoginComponent implements OnInit {
     return undefined
   }
 
-  getPassError() {
+  getPassError(): string | undefined {
     const control = this.loginForm.get('adminPassword')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }
     }
+
     return undefined
   }
 

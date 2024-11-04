@@ -1,4 +1,4 @@
-@import "../../shared/styles/variable";
+@import '../../shared/styles/variable';
 
 .container-fluid {
   background-color: $primary-color !important;
@@ -22,7 +22,6 @@
       flex-direction: column;
       gap: 10px;
       padding-left: 110px;
-
     }
 
     .top-right {
@@ -31,9 +30,11 @@
       gap: 10px;
       padding-left: 160px;
 
-
       span.custom-span {
         text-decoration: underline;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }

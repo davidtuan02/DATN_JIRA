@@ -221,7 +221,10 @@ export class SearchComponent {
       case 'custom': {
         this.router.navigate(['/vnaccs/home/send-custom'], {
           state: {
-            data: data
+            data: {
+              ...data,
+              requestNo: data.requestNo
+            }
           }
         })
         break

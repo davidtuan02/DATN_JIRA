@@ -74,6 +74,7 @@ export class SendCustomComponent {
   isAbleBtnSign: boolean = false
   isSigned: boolean = false
   isSent: boolean = false
+  requestNo!: string
 
   constructor(
     private notification: NotificationService,
@@ -183,6 +184,7 @@ export class SendCustomComponent {
             // console.log(res)
             this.current += 1
             this.isSent = true
+            this.requestNo = state.data.requestNo
           }
         })
       }

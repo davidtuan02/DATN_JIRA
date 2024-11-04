@@ -1,9 +1,9 @@
-import {ChangeDetectorRef, Component} from '@angular/core'
-import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
-import {NzGridModule} from 'ng-zorro-antd/grid'
-import {NzInputModule} from 'ng-zorro-antd/input'
-import {NzSelectModule} from 'ng-zorro-antd/select'
-import {NzDatePickerModule} from 'ng-zorro-antd/date-picker'
+import { ChangeDetectorRef, Component } from '@angular/core'
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { NzGridModule } from 'ng-zorro-antd/grid'
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzSelectModule } from 'ng-zorro-antd/select'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import {
   CUSTOMER_TABLE_SIZE,
   DATE_FORMAT,
@@ -12,21 +12,21 @@ import {
   INIT_PAGE,
   INIT_SIZE
 } from '../../../../shared/components/common.const'
-import {NzButtonComponent, NzButtonModule, NzButtonSize} from 'ng-zorro-antd/button'
-import {NzTableModule} from 'ng-zorro-antd/table'
-import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
-import {CommonModule, DatePipe} from '@angular/common'
-import {AccountRegisterService} from './account-register.service'
-import {NzSelectSizeType} from 'ng-zorro-antd/select'
-import {NzModalModule} from 'ng-zorro-antd/modal'
-import {ActivatedRoute, Router, RouterLink} from '@angular/router'
-import {NzRadioModule} from 'ng-zorro-antd/radio'
-import {NotificationService} from '../../../../shared/services/notification.service'
-import {DialogService} from '../../../../shared/services/dialog.service'
-import {ConfirmPopupComponent} from '../../../../shared/components/confirm-popup/confirm-popup.component'
-import {AuthService} from '../../../../shared/services/auth.service'
-import {STORAGE_KEYS} from '../../../../shared/constants/system.const'
-import {debounceTime, Subject} from 'rxjs'
+import { NzButtonComponent, NzButtonModule, NzButtonSize } from 'ng-zorro-antd/button'
+import { NzTableModule } from 'ng-zorro-antd/table'
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import { CommonModule, DatePipe } from '@angular/common'
+import { AccountRegisterService } from './account-register.service'
+import { NzSelectSizeType } from 'ng-zorro-antd/select'
+import { NzModalModule } from 'ng-zorro-antd/modal'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
+import { NzRadioModule } from 'ng-zorro-antd/radio'
+import { NotificationService } from '../../../../shared/services/notification.service'
+import { DialogService } from '../../../../shared/services/dialog.service'
+import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import { AuthService } from '../../../../shared/services/auth.service'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import { debounceTime, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 
@@ -117,14 +117,14 @@ export class AccountRegisterComponent {
 
   radioValue = '1'
   optionFileStatuss = [
-    {value: 1, label: 'Đang hiển thị'},
-    {value: 0, label: 'Đang tắt'}
+    { value: 1, label: 'Đang hiển thị' },
+    { value: 0, label: 'Đang tắt' }
   ]
 
   optionPaper = [
-    {value: 1, label: 'CMND'},
-    {value: 2, label: 'CCCD'},
-    {value: 3, label: 'Hộ chiếu'}
+    { value: 1, label: 'CMND' },
+    { value: 2, label: 'CCCD' },
+    { value: 3, label: 'Hộ chiếu' }
   ]
   msAcc: string = ''
   listOfData: any = []
@@ -150,8 +150,7 @@ export class AccountRegisterComponent {
     private router: Router,
     private authSrv: AuthService,
     private cdr: ChangeDetectorRef
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadForm()
@@ -362,7 +361,7 @@ export class AccountRegisterComponent {
       const toDate = formGroup.get(toDateField)?.value
 
       if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
-        formGroup.get(fromDateField)?.setErrors({dateRangeInvalid: true})
+        formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
       } else {
         formGroup.get(fromDateField)?.setErrors(null)
       }
@@ -393,6 +392,8 @@ export class AccountRegisterComponent {
     } else {
       this.isVisibleModalCTS = false
       this.formValidateUserId.get('digitalSignature')?.setValue(data.subjectDN)
+      // console.log(this.form.getRawValue().digitalSignature)
+
       this.formValidateUserId.get('serial')?.setValue(data.serialNumber)
       this.formValidateUserId.get('provider')?.setValue(data.issuerDN)
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
@@ -617,6 +618,7 @@ export class AccountRegisterComponent {
   }
 
   setValueForm(data: any) {
+    console.log(data)
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)
@@ -628,7 +630,7 @@ export class AccountRegisterComponent {
     // this.formValidateUserId.get('digitalSignatureType')?.setValue(data?.digitalSignatureType?.toString())
     this.radioValue = data?.digitalSignatureType?.toString()
     this.formValidateUserId.get('digitalSignature')?.setValue(data?.digitalSignature)
-    this.formValidateUserId.get('nameCert')?.setValue(data?.nameCert)
+    this.formValidateUserId.get('nameCert')?.setValue(data?.digitalSignature)
     this.formValidateUserId.get('serial')?.setValue(data?.serial)
     this.formValidateUserId.get('provider')?.setValue(data?.provider)
     this.formValidateUserId.get('effectiveDate')?.setValue(this.convertTimestampToDate(data?.effectiveDate))
@@ -685,7 +687,8 @@ export class AccountRegisterComponent {
       customsExpiryDate: this.formValidateUserId.value.customsExpiryDate,
 
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
-      digitalSignature: this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
+      digitalSignature:
+        this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
       serial: this.formValidateUserId.getRawValue().serial,
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
@@ -705,6 +708,8 @@ export class AccountRegisterComponent {
   }
 
   validateUserId() {
+    // console.log(this.form.getRawValue().digitalSignature)
+    // console.log(this.form.getRawValue().nameCert)
     const body = {
       userId: this.formValidateUserId.value.userId,
       fullName: this.formValidateUserId.value.fullName,
@@ -714,9 +719,11 @@ export class AccountRegisterComponent {
       fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.join(';'),
       customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.value.customsEffectiveDate),
       customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
-
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
-      digitalSignature: this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
+      digitalSignature:
+        this.radioValue === '1'
+          ? this.formValidateUserId.getRawValue().digitalSignature
+          : this.formValidateUserId.getRawValue().nameCert,
       serial: this.formValidateUserId.getRawValue().serial,
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
@@ -1065,7 +1072,7 @@ export class AccountRegisterComponent {
       }
 
       // Parse X.509 Certificate
-      const certificate = new Certificate({schema: asn1.result})
+      const certificate = new Certificate({ schema: asn1.result })
 
       // Get the public key from the certificate
       const publicKey = await certificate.getPublicKey()

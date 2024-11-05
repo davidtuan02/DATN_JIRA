@@ -509,22 +509,22 @@
   [nzOkLoading]="isOkLoading"
   [nzFooter]="footerDownloadTemplate"
 >
-  <div *nzModalTitle class="font-inter-600" style="font-size: 18px">{{ modalTitleDownload }}</div>
+  <div *nzModalTitle class="font-inter-600" style="font-size: 18pxl; color: #2c3546">{{ modalTitleDownload }}</div>
 
   <div *nzModalContent class="d-flex flex-column gap-3 mt-[-25px]">
     <div class="flex flex-column items-center pt-[10px] gap-[13px] font-inter-400">
-      <span>Quét mã QR bên dưới</span>
+      <span style="color: #000000">Quét mã QR bên dưới</span>
       <img src="../../../../assets/images/qrmysign 1.png" alt="" />
       <div class="flex justify-center items-center gap-2 mt-[10px]">
         <svg width="190" height="2" viewBox="0 0 190 2" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 1.02197L190.003 1.02197" stroke="#BFBFBF" />
         </svg>
-        <span>HOẶC</span>
+        <span style="color: #948e8e">HOẶC</span>
         <svg width="190" height="2" viewBox="0 0 190 2" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 1.02197L190.003 1.02197" stroke="#BFBFBF" />
         </svg>
       </div>
-      <span style="margin-top: 10px">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
+      <span style="margin-top: 10px; color: #000000">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
       <nz-input-group [nzSuffix]="suffixCopy" style="border-radius: 8px; position: relative; width: 520px">
         <input autoTrim type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
       </nz-input-group>
@@ -781,30 +781,10 @@
   </div>
 </nz-modal>
 
-<ng-template #footerTemplate>
-  <button
-    style="height: 40px; width: 145px; background-color: #f5f5f5; border-radius: 8px; color: #1944a7; font-size: 14px"
-    class="font-inter-600"
-    (click)="handleCancel()"
-  >
-    Đóng
-  </button>
-</ng-template>
-
-<ng-template #footerDownloadTemplate>
-  <button
-    style="height: 40px; width: 145px; background-color: #f5f5f5; border-radius: 8px; color: #1944a7; font-size: 14px"
-    class="font-inter-600"
-    (click)="handleCancelDownload()"
-  >
-    Đóng
-  </button>
-</ng-template>
-
 <ng-template #suffixCopy>
   <svg
     (click)="copyText()"
-    style="position: absolute; right: -1; cursor: pointer"
+    style="position: absolute; top: -10px; cursor: pointer"
     width="129"
     height="40"
     viewBox="0 0 129 40"
@@ -824,6 +804,26 @@
       fill="white"
     />
   </svg>
+</ng-template>
+
+<ng-template #footerTemplate>
+  <button
+    style="height: 40px; width: 145px; background-color: #f5f5f5; border-radius: 8px; color: #1944a7; font-size: 14px"
+    class="font-inter-600"
+    (click)="handleCancel()"
+  >
+    Đóng
+  </button>
+</ng-template>
+
+<ng-template #footerDownloadTemplate>
+  <button
+    style="height: 40px; width: 145px; background-color: #f5f5f5; border-radius: 8px; color: #1944a7; font-size: 14px"
+    class="font-inter-600"
+    (click)="handleCancelDownload()"
+  >
+    Đóng
+  </button>
 </ng-template>
 
 <ng-template #suffixPassword>

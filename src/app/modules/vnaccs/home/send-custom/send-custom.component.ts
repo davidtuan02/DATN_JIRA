@@ -76,7 +76,6 @@ export class SendCustomComponent {
   requestNo!: string
   getCTSForm!: FormGroup
 
-
   constructor(
     private notification: NotificationService,
     private loginSrv: LoginService,
@@ -113,8 +112,8 @@ export class SendCustomComponent {
     this.form.get('nameCert')?.disable()
 
     this.getCTSForm = this.fb.group({
-        msAcc: ['', [Validators.required]]
-      })
+      msAcc: ['', [Validators.required]]
+    })
   }
 
   pre(): void {
@@ -217,6 +216,8 @@ export class SendCustomComponent {
       decoded = this.decodeToken(token)
     }
 
+    const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
+
     const body = {
       objectId: decoded.sub,
       nameSender: this.form.get('fullName')?.value,
@@ -229,7 +230,8 @@ export class SendCustomComponent {
       expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
       publicKey: this.form.get('publicKey')?.getRawValue(),
       credentialId: this.form.get('credentialId')?.getRawValue(),
-      taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
+      taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue(),
+      taxCode: taxCode
     }
 
     this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
@@ -327,9 +329,8 @@ export class SendCustomComponent {
           this.listOfData = res.data
         }
       })
-    }
-    else {
-      console.log("Form is invalid!")
+    } else {
+      console.log('Form is invalid!')
     }
   }
 

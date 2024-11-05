@@ -35,7 +35,8 @@ import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { clearStore } from '../../../shared/utilities/system.utils'
 import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-
+import forge from "node-forge";
+declare function initPlugin(comp: any): void;
 @Component({
   selector: 'app-change-password',
   standalone: true,
@@ -172,7 +173,7 @@ export class ChangePassComponent implements OnInit {
           newPassword: this.loginForm.value.newPassword,
           confirmPassword: this.loginForm.value.confirmPassword,
           digitalSignatureType: this.loginForm.value.digitalSignatureType,
-          digitalSignature: this.loginForm.getRawValue().taxCode,
+          digitalSignature: this.loginForm.getRawValue().digitalSignature,
           serial: this.loginForm.getRawValue().serial,
           provider: this.loginForm.getRawValue().provider,
           effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
@@ -375,5 +376,53 @@ export class ChangePassComponent implements OnInit {
       this.loginForm.get('credentialId')?.setValue(data.credentialId)
       this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
+  }
+
+  async getVTCAInfo() {
+    initPlugin(this)
+  }
+  patchValueToForm(key: string, value: any) {
+    if (value) {
+      if (key === 'effectiveDate' || key === 'expiryDate') {
+        this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.loginForm.get(key)?.setValue(value)
+    }
+  }
+
+  // Function to parse the certificate and get the public key
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
+    try {
+      // Decode the base64-encoded certificate to DER format
+      const certDer = forge.util.decode64(base64Cert)
+      const certAsn1 = forge.asn1.fromDer(certDer)
+      const certificate = forge.pki.certificateFromAsn1(certAsn1)
+
+      // Get the public key
+      const publicKey = certificate.publicKey
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key with node-forge:', error)
+      return null
+    }
+  }
+
+  convertDateFormat(dateStr: string): string {
+    // Parse the input date string in "dd/MM/yyyy HH:mm" format
+    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hour, minute)
+
+    // Format the date as "yyyyMMddHHmmss+0700"
+    const yyyy = date.getFullYear().toString()
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    const HH = date.getHours().toString().padStart(2, '0')
+    const mm = date.getMinutes().toString().padStart(2, '0')
+    const ss = date.getSeconds().toString().padStart(2, '0')
+
+    // Append the timezone offset in the "+0700" format
+    const timezoneOffset = '+0700' // adjust if necessary
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

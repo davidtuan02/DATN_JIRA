@@ -44,7 +44,7 @@ import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
 })
 export class ProvideNewPasswordComponent implements OnInit {
   form: FormGroup = new FormGroup({});
-  listUserId = [];
+  listUserId: any = [];
   passwordVisible: boolean = false;
   rePasswordVisible: boolean = false;
 
@@ -65,7 +65,7 @@ export class ProvideNewPasswordComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      userId: [null, Validators.required],
+      userid: [null, Validators.required],
       password: [null, Validators.compose([Validators.required, Validators.pattern(PASSWORD_REGEX)])],
       rePassword: [null, Validators.compose([Validators.required])]
     }, {validators: this.passwordMatchValidator})

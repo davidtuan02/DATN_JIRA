@@ -376,16 +376,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binaryString = window.atob(base64)
-    const len = binaryString.length
-    const bytes = new Uint8Array(len)
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i)
-    }
-    return bytes.buffer
-  }
-
   // Function to parse the certificate and get the public key
   async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {

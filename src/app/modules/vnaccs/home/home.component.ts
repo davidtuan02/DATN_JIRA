@@ -137,7 +137,7 @@ export class HomeComponent implements OnInit {
     modal.afterClose.subscribe((rf) => {
       if (rf) {
         const body = {
-          userId: rf.userId,
+          userid: rf.userid,
           password: rf.password
         }
         this.homeSrv.updatePasswordForUserId(body).subscribe((res) => {

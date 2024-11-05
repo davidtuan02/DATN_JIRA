@@ -35,6 +35,7 @@
 .ant-input-affix-wrapper {
   padding: 0 !important;
   position: relative;
+  height: 40px;
   .ant-input-suffix {
     position: absolute;
     right: 0%;
@@ -55,4 +56,8 @@
     }
   }
 
+}
+
+.ant-input::placeholder, .ant-select-selection-search-input::placeholder {
+  font-size: 14px !important;
 }

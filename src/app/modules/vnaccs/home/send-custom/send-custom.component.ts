@@ -61,7 +61,6 @@ export class SendCustomComponent {
   isOkLoading = false
   form!: FormGroup
 
-  msAcc = ''
   listOfData: any[] = []
 
   optionFileStatuss = [
@@ -75,6 +74,8 @@ export class SendCustomComponent {
   isSigned: boolean = false
   isSent: boolean = false
   requestNo!: string
+  getCTSForm!: FormGroup
+
 
   constructor(
     private notification: NotificationService,
@@ -110,6 +111,10 @@ export class SendCustomComponent {
     this.form.get('expiryDate')?.disable()
     this.form.get('publicKey')?.disable()
     this.form.get('nameCert')?.disable()
+
+    this.getCTSForm = this.fb.group({
+        msAcc: ['', [Validators.required]]
+      })
   }
 
   pre(): void {
@@ -252,6 +257,16 @@ export class SendCustomComponent {
     }
   }
 
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
+  }
+
   convertDateTimestamp(date: any) {
     const [d, m, y] = date.split(/-|\//) // splits "26-02-2012" or "26/02/2012"
     const dateNew = new Date(y, m - 1, d)
@@ -276,11 +291,6 @@ export class SendCustomComponent {
     }
   }
 
-  showModal() {
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
-  }
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -296,32 +306,31 @@ export class SendCustomComponent {
 
   handleOkDownload() {
     this.isVisibleDownload = false
-    // this.router.navigate(['vnaccs/register']);
   }
 
   handleCancelDownload(): void {
     this.isVisibleDownload = false
-    // this.router.navigate(['vnaccs/register']);
+  }
+
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
   }
 
   getCTS() {
-    this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-      if (res) {
-        if (res.message === 'success') {
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.loginSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
           this.listOfData = res.data
         }
-        // else {
-        //   this.notification.error(
-        //     'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-        //   )
-        // }
-      }
-      // else {
-      //   this.notification.error(
-      //     'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-      //   )
-      // }
-    })
+      })
+    }
+    else {
+      console.log("Form is invalid!")
+    }
   }
 
   convertComplexDateString(dateStr: string): number {

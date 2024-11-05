@@ -94,11 +94,7 @@ export class SearchComponent {
   dateFormat = DATE_FORMAT.COMMON
 
   // table
-  dataTable: any[] = [
-    {
-      receiptTime: new Date(2023, 10, 15, 10, 30).toISOString()
-    }
-  ]
+  dataTable: any[] = []
   total: number = 5
   paginate = {
     page: INIT_PAGE, //1
@@ -132,7 +128,7 @@ export class SearchComponent {
 
   ngOnInit() {
     this.loadForm()
-    // this.search()
+    this.search()
   }
 
   loadForm() {

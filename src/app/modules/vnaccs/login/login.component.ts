@@ -85,6 +85,8 @@ export class LoginComponent implements OnInit {
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
+  getCTSForm!: FormGroup
+
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -115,6 +117,9 @@ export class LoginComponent implements OnInit {
       taxCodeCTS: ['']
     })
     this.disableForm()
+    this.getCTSForm = this.fb.group({
+        msAcc: ['', [Validators.required]]
+      })
   }
 
   disableForm() {
@@ -270,6 +275,16 @@ export class LoginComponent implements OnInit {
     return undefined
   }
 
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
+  }
+
   copyText(): void {
     const inputElement = document.getElementById('copyInput') as HTMLInputElement
     if (inputElement) {
@@ -287,12 +302,6 @@ export class LoginComponent implements OnInit {
     if (store === 'chplay') {
       window.open('https://play.google.com/store/apps/details?id=com.viettel.cloud.ca.mysign&hl=vi', '_blank')
     }
-  }
-
-  showModal() {
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
   }
 
   showModalDownload() {
@@ -318,25 +327,24 @@ export class LoginComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
+
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    } else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if (res) {
-          if (res.message === 'success') {
-            this.listOfData = res.data
-          } else {
-            this.notification.error(
-              'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-            )
-          }
-        } else {
-          this.notification.error(
-            'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-          )
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.loginSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
         }
       })
+    }
+    else {
+      console.log("Form is invalid!")
     }
   }
 

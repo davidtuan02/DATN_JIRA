@@ -82,7 +82,6 @@ export class ChangePassComponent implements OnInit {
 
   listOfData: any = []
 
-  msAcc: string = ''
   getCTSForm!: FormGroup
 
   isVisibleDownload: boolean = false
@@ -294,11 +293,7 @@ export class ChangePassComponent implements OnInit {
     }
   }
 
-  showModal() {
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
-  }
+
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -321,20 +316,24 @@ export class ChangePassComponent implements OnInit {
     this.isVisibleDownload = false
     // this.router.navigate(['vnaccs/register']);
   }
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
 
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    } else {
-      this.changepassSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.changepassSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
         if (res && res.message === 'success') {
           this.listOfData = res.data
-        } else {
-          this.notification.error(
-            'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-          )
         }
       })
+    }
+    else {
+      console.log("Form is invalid!")
     }
   }
 

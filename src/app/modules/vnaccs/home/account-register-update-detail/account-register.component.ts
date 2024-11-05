@@ -143,6 +143,7 @@ export class AccountRegisterComponent {
   indexToEdit!: any
 
   dataFromRouter: any
+  getCTSForm!: FormGroup
 
   constructor(
     private accReSrv: AccountRegisterService,
@@ -303,6 +304,10 @@ export class AccountRegisterComponent {
       ediSoftware: ['0'],
       numberComputer: [''],
       userCodeExpiryDate: ['']
+    })
+
+    this.getCTSForm = this.fb.group({
+      msAcc: ['', [Validators.required]]
     })
 
     this.form.get('numberComputer')?.disable()
@@ -753,19 +758,27 @@ export class AccountRegisterComponent {
     })
   }
 
-  getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    }
-    this.accReSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-      if (res && res.message === 'success') {
-        this.listOfData = res.data
-      } else {
-        this.notification.error(
-          'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-        )
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Tài khoản MySign không được để trống'
       }
-    })
+    }
+    return undefined
+  }
+
+  getCTS() {
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.accReSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
+        }
+      })
+    } else {
+      console.log('Form is invalid!')
+    }
   }
 
   formatDateFromString = (dateString: string): string | null => {

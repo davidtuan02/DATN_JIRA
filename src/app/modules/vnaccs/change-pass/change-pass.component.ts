@@ -229,7 +229,7 @@ export class ChangePassComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Họ tên người gửi Hải quan không được để trống'
+        return 'Tài khoản MySign không được để trống'
       }
     }
     return undefined
@@ -296,7 +296,6 @@ export class ChangePassComponent implements OnInit {
     }
   }
 
-
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -334,9 +333,8 @@ export class ChangePassComponent implements OnInit {
           this.listOfData = res.data
         }
       })
-    }
-    else {
-      console.log("Form is invalid!")
+    } else {
+      console.log('Form is invalid!')
     }
   }
 

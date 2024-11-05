@@ -354,7 +354,9 @@ export class AccountRegisterComponent {
         provider: [''],
         effectiveDate: [''],
         expiryDate: [''],
-        publicKey: ['']
+        publicKey: [''],
+        credentialId: [''],
+        taxCodeCTS: ['']
       },
       {
         validator: this.dateRangeValidator('customsEffectiveDate', 'customsExpiryDate')
@@ -405,7 +407,9 @@ export class AccountRegisterComponent {
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.formValidateUserId.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN)
-      this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN) //check
+      this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN), //check
+        this.formValidateUserId.get('credentialId')?.setValue(data.credentialId)
+      this.formValidateUserId.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
   }
 
@@ -713,8 +717,8 @@ export class AccountRegisterComponent {
   }
 
   validateUserId() {
-    // console.log(this.form.getRawValue().digitalSignature)
-    // console.log(this.form.getRawValue().nameCert)
+    const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
+
     const body = {
       userId: this.formValidateUserId.value.userId,
       fullName: this.formValidateUserId.value.fullName,
@@ -733,7 +737,10 @@ export class AccountRegisterComponent {
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
       expiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().expiryDate),
-      publicKey: this.formValidateUserId.getRawValue().publicKey
+      publicKey: this.formValidateUserId.getRawValue().publicKey,
+      taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS,
+      credentialId: this.formValidateUserId.getRawValue().credentialId,
+      taxCode: taxCode
     }
     // console.log(this.formValidateUserId.value.fullName)
 

@@ -4,10 +4,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
 import { HomeService } from './home.service'
-import { Subject } from 'rxjs'
+import { filter, Subject } from 'rxjs'
 import { NzCarouselModule } from 'ng-zorro-antd/carousel'
 import { AuthService } from '../../../shared/services/auth.service'
-import { Router, RouterModule } from '@angular/router'
+import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 import { NzModalService } from 'ng-zorro-antd/modal'
@@ -31,6 +31,7 @@ import { NotificationService } from '../../../shared/services/notification.servi
 })
 export class HomeComponent implements OnInit {
   isLogin: boolean = false
+  selectedItem: string | null = null
 
   constructor(
     private authService: AuthService,
@@ -45,6 +46,12 @@ export class HomeComponent implements OnInit {
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
+    })
+
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      if (event.urlAfterRedirects === '/vnaccs/home') {
+        this.selectedItem = null
+      }
     })
   }
 
@@ -66,7 +73,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search'| 'accountInfo') {
+  handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search' | 'accountInfo') {
+    this.selectedItem = mode
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {
@@ -115,8 +123,8 @@ export class HomeComponent implements OnInit {
           break
         }
         case 'accountInfo': {
-              // console.log(res.data)
-              this.router.navigate(['/vnaccs/home/account-information'])
+          // console.log(res.data)
+          this.router.navigate(['/vnaccs/home/account-information'])
           break
         }
         case 'search': {
@@ -131,13 +139,12 @@ export class HomeComponent implements OnInit {
     const modal = this.modalService.create({
       nzTitle: 'Cấp mới mật khẩu cho người sử dụng',
       nzContent: ProvideNewPasswordComponent,
-      nzFooter: null,
-      nzMaskClosable: false
+      nzFooter: null
     })
     modal.afterClose.subscribe((rf) => {
       if (rf) {
         const body = {
-          userid: rf.userid,
+          userId: rf.userId,
           password: rf.password
         }
         this.homeSrv.updatePasswordForUserId(body).subscribe((res) => {

@@ -22,7 +22,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
 import { NzTableModule } from 'ng-zorro-antd/table'
-import { ActivatedRoute, Router, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouteReuseStrategy, RouterLink } from '@angular/router'
 import { NotificationService } from '../../../shared/services/notification.service'
 import { RegisterService } from './register.service'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
@@ -33,6 +33,7 @@ import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
+import { RouteStateService } from '../../../shared/services/clear-state.service'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -61,6 +62,7 @@ declare function initPlugin(comp: any): void
     NzToolTipModule,
     AutoTrimDirective
   ],
+  providers: [{ provide: RouteReuseStrategy, useClass: RouteStateService }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RegisterComponent implements OnInit {
@@ -128,7 +130,8 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private notification: NotificationService,
     private registerSrv: RegisterService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private routeStateService: RouteStateService
   ) {
     this.loadForm()
   }
@@ -175,9 +178,7 @@ export class RegisterComponent implements OnInit {
   determineMode(endpoint: string) {
     const state = history.state
     if (state && state.data) {
-      // console.log(state.data)
       this.dataToEditOrView = state.data
-      // console.log(this.dataToEditOrView)
       if (this.dataToEditOrView) {
         this.applyDataToEditOrView(this.dataToEditOrView)
       }
@@ -204,12 +205,15 @@ export class RegisterComponent implements OnInit {
   }
 
   fromDetailToUpdate() {
-    console.log('from detail to edit:' + this.dataToEditOrView)
+    localStorage.setItem('test', JSON.stringify(this.dataToEditOrView))
     this.router.navigate(['/vnaccs/home/account-admin-update'], {
-      state: {
-        data: this.dataToEditOrView
+      queryParams: {
+        data: JSON.stringify(this.dataToEditOrView)
       }
     })
+    // this.routeStateService.clearRouteStateAndNavigate('/vnaccs/home/account-admin-update', {
+    //   data: this.dataToEditOrView
+    // })
   }
 
   sendCustom() {
@@ -462,7 +466,7 @@ export class RegisterComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Họ tên người gửi Hải quan không được để trống'
       }
     }
     return undefined
@@ -555,6 +559,16 @@ export class RegisterComponent implements OnInit {
         this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
       } else this.loginForm.get(key)?.setValue(value)
     }
+  }
+
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64)
+    const len = binaryString.length
+    const bytes = new Uint8Array(len)
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
+    return bytes.buffer
   }
 
   // Function to parse the certificate and get the public key

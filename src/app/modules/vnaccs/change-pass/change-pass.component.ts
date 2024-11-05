@@ -34,9 +34,9 @@ import { AuthService } from '../../../shared/services/auth.service'
 import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { clearStore } from '../../../shared/utilities/system.utils'
-import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-import forge from "node-forge";
-declare function initPlugin(comp: any): void;
+import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import forge from 'node-forge'
+declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-change-password',
   standalone: true,
@@ -229,7 +229,7 @@ export class ChangePassComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

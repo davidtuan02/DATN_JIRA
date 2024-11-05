@@ -29,8 +29,8 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { debounceTime, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
-import * as forge from "node-forge"
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import * as forge from 'node-forge'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -763,7 +763,7 @@ export class AccountRegisterComponent {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

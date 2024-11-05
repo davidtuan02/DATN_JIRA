@@ -265,7 +265,7 @@ export class SendCustomComponent {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

@@ -85,6 +85,8 @@ export class ForgotPasswordComponent implements OnInit {
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
 
+  getCTSForm!: FormGroup
+
   constructor(
     private fb: NonNullableFormBuilder,
     private notification: NotificationService,
@@ -119,6 +121,10 @@ export class ForgotPasswordComponent implements OnInit {
         },
         { validators: this.passwordMatchValidator.bind(this) }
       )
+
+      this.getCTSForm = this.fb.group({
+        msAcc: ['', [Validators.required]]
+      })
 
       this.disableForm()
     })
@@ -264,13 +270,7 @@ export class ForgotPasswordComponent implements OnInit {
     }
   }
 
-  showModal() {
-    console.log('h')
 
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
-  }
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -294,19 +294,35 @@ export class ForgotPasswordComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
-  getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    }
-    this.forgotSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-      if (res && res.message === 'success') {
-        this.listOfData = res.data
-      } else {
-        this.notification.error(
-          'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-        )
+  getMsAccError(): string | undefined {
+    const control = this.loginForm.get('msAc')
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Xác nhận lại mật khẩu mới không được để trống'
       }
-    })
+    }
+    return undefined
+  }
+
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
+
+  getCTS() {
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.forgotSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
+        }
+      })
+    }
+    else {
+      console.log("Form is invalid!")
+    }
   }
 
   convertComplexDateString(dateStr: string): number {

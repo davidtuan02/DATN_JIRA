@@ -31,8 +31,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { AuthService } from '../../../shared/services/auth.service'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
-import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-import * as forge from 'node-forge';
+import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import * as forge from 'node-forge'
 
 declare function initPlugin(comp: any): void
 
@@ -88,6 +88,7 @@ export class LoginComponent implements OnInit {
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
+  getCTSForm!: FormGroup
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -118,6 +119,9 @@ export class LoginComponent implements OnInit {
       taxCodeCTS: ['']
     })
     this.disableForm()
+    this.getCTSForm = this.fb.group({
+      msAcc: ['', [Validators.required]]
+    })
   }
 
   disableForm() {
@@ -132,10 +136,10 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
+      this.loginForm.markAllAsTouched()
+      return
     }
-    this.login();
+    this.login()
   }
 
   convertDateTimestamp(date: any) {
@@ -163,7 +167,8 @@ export class LoginComponent implements OnInit {
       taxCode: this.loginForm.value.taxCode,
       adminPassword: this.loginForm.value.adminPassword,
       digitalSignatureType: this.loginForm.value.digitalSignatureType,
-      digitalSignature: this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
+      digitalSignature:
+        this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
       serial: this.loginForm.getRawValue().serial,
       provider: this.loginForm.getRawValue().provider,
       // provider: this.loginForm.getRawValue().nameCert,
@@ -183,37 +188,37 @@ export class LoginComponent implements OnInit {
         this.authService.setLoginStatus(true)
         this.authService.setTaxCode(this.loginForm.value.taxCode)
       }
-    // this.router.navigate(['vnaccs'])
-    // this.authService.setLoginStatus(true)
-    // this.authService.setTaxCode(this.loginForm.value.taxCode)
-    // const body = {
-    //   taxCode: this.loginForm.value.taxCode,
-    //   adminPassword: this.loginForm.value.adminPassword,
-    //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
-    //   digitalSignature: this.loginForm.getRawValue().nameCert,
-    //   serial: this.loginForm.getRawValue().serial,
-    //   provider: this.loginForm.getRawValue().provider,
-    //   // provider: this.loginForm.getRawValue().nameCert,
-    //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
-    //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
-    //   publicKey: this.loginForm.getRawValue().publicKey,
-    //   taxCodeCTS: this.loginForm.value.taxCodeCTS,
-    //   credentialId: this.loginForm.value.credentialId
-    // }
-    // this.loginSrv.login(body).subscribe((res: any) => {
-    //   if (res && res.code === 200) {
-    //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-    //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-    //     this.router.navigate(['vnaccs'])
-    //     this.authService.setLoginStatus(true)
-    //     this.authService.setTaxCode(this.loginForm.value.taxCode)
-    //   }
-    // })
-    this.router.navigate(['vnaccs'])
-    this.authService.setLoginStatus(true)
-    localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
-    sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
-    this.authService.setTaxCode(this.loginForm.get('taxCode')?.value)
+      // this.router.navigate(['vnaccs'])
+      // this.authService.setLoginStatus(true)
+      // this.authService.setTaxCode(this.loginForm.value.taxCode)
+      // const body = {
+      //   taxCode: this.loginForm.value.taxCode,
+      //   adminPassword: this.loginForm.value.adminPassword,
+      //   digitalSignatureType: this.loginForm.value.digitalSignatureType,
+      //   digitalSignature: this.loginForm.getRawValue().nameCert,
+      //   serial: this.loginForm.getRawValue().serial,
+      //   provider: this.loginForm.getRawValue().provider,
+      //   // provider: this.loginForm.getRawValue().nameCert,
+      //   effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
+      //   expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
+      //   publicKey: this.loginForm.getRawValue().publicKey,
+      //   taxCodeCTS: this.loginForm.value.taxCodeCTS,
+      //   credentialId: this.loginForm.value.credentialId
+      // }
+      // this.loginSrv.login(body).subscribe((res: any) => {
+      //   if (res && res.code === 200) {
+      //     localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+      //     sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+      //     this.router.navigate(['vnaccs'])
+      //     this.authService.setLoginStatus(true)
+      //     this.authService.setTaxCode(this.loginForm.value.taxCode)
+      //   }
+      // })
+      // this.router.navigate(['vnaccs'])
+      // this.authService.setLoginStatus(true)
+      // localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
+      // sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
+      // this.authService.setTaxCode(this.loginForm.get('taxCode')?.value)
     })
   }
 
@@ -261,6 +266,16 @@ export class LoginComponent implements OnInit {
     return undefined
   }
 
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
+  }
+
   copyText(): void {
     const inputElement = document.getElementById('copyInput') as HTMLInputElement
     if (inputElement) {
@@ -278,12 +293,6 @@ export class LoginComponent implements OnInit {
     if (store === 'chplay') {
       window.open('https://play.google.com/store/apps/details?id=com.viettel.cloud.ca.mysign&hl=vi', '_blank')
     }
-  }
-
-  showModal() {
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
   }
 
   showModalDownload() {
@@ -309,25 +318,23 @@ export class LoginComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
+
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    } else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if (res) {
-          if (res.message === 'success') {
-            this.listOfData = res.data
-          } else {
-            this.notification.error(
-              'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-            )
-          }
-        } else {
-          this.notification.error(
-            'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-          )
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.loginSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
         }
       })
+    } else {
+      console.log('Form is invalid!')
     }
   }
 
@@ -383,16 +390,16 @@ export class LoginComponent implements OnInit {
   async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {
       // Decode the base64-encoded certificate to DER format
-      const certDer = forge.util.decode64(base64Cert);
-      const certAsn1 = forge.asn1.fromDer(certDer);
-      const certificate = forge.pki.certificateFromAsn1(certAsn1);
+      const certDer = forge.util.decode64(base64Cert)
+      const certAsn1 = forge.asn1.fromDer(certDer)
+      const certificate = forge.pki.certificateFromAsn1(certAsn1)
 
       // Get the public key
-      const publicKey = certificate.publicKey;
-      return publicKey;
+      const publicKey = certificate.publicKey
+      return publicKey
     } catch (error) {
-      console.error('Error extracting public key with node-forge:', error);
-      return null;
+      console.error('Error extracting public key with node-forge:', error)
+      return null
     }
   }
 

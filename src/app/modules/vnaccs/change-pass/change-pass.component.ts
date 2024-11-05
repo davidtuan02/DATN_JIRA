@@ -3,6 +3,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import {
   AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -83,7 +84,7 @@ export class ChangePassComponent implements OnInit {
 
   listOfData: any = []
 
-  msAcc: string = ''
+  getCTSForm!: FormGroup
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
@@ -123,6 +124,10 @@ export class ChangePassComponent implements OnInit {
         },
         { validators: this.passwordMatchValidator.bind(this) }
       )
+
+      this.getCTSForm = this.fb.group({
+        msAcc: ['', [Validators.required]]
+      })
 
       this.disableForm()
     })
@@ -219,6 +224,16 @@ export class ChangePassComponent implements OnInit {
     return undefined
   }
 
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
+  }
+
   getPassError() {
     const control = this.loginForm.get('password')
     if (control?.touched && control.invalid) {
@@ -280,13 +295,7 @@ export class ChangePassComponent implements OnInit {
     }
   }
 
-  showModal() {
-    console.log('h')
 
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
-  }
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -309,20 +318,25 @@ export class ChangePassComponent implements OnInit {
     this.isVisibleDownload = false
     // this.router.navigate(['vnaccs/register']);
   }
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
 
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.changepassSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
+        }
+      })
     }
-    this.changepassSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-      if (res && res.message === 'success') {
-        this.listOfData = res.data
-      } else {
-        this.notification.error(
-          'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-        )
-      }
-    })
+    else {
+      console.log("Form is invalid!")
+    }
   }
 
   convertComplexDateString(dateStr: string): number {

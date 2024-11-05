@@ -63,7 +63,6 @@ export class SendCustomComponent {
   isOkLoading = false
   form!: FormGroup
 
-  msAcc = ''
   listOfData: any[] = []
 
   optionFileStatuss = [
@@ -77,6 +76,7 @@ export class SendCustomComponent {
   isSigned: boolean = false
   isSent: boolean = false
   requestNo!: string
+  getCTSForm!: FormGroup
 
   constructor(
     private notification: NotificationService,
@@ -112,6 +112,10 @@ export class SendCustomComponent {
     this.form.get('expiryDate')?.disable()
     this.form.get('publicKey')?.disable()
     this.form.get('nameCert')?.disable()
+
+    this.getCTSForm = this.fb.group({
+      msAcc: ['', [Validators.required]]
+    })
   }
 
   pre(): void {
@@ -120,6 +124,15 @@ export class SendCustomComponent {
 
   done(): void {
     console.log('done')
+  }
+
+  submit() {
+    this.form.markAllAsTouched()
+    if (!this.form.invalid) {
+      this.sign()
+    } else {
+      console.log('Form is invalid!')
+    }
   }
 
   getFullNameError() {
@@ -205,6 +218,8 @@ export class SendCustomComponent {
       decoded = this.decodeToken(token)
     }
 
+    const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
+
     const body = {
       objectId: decoded.sub,
       nameSender: this.form.get('fullName')?.value,
@@ -217,12 +232,12 @@ export class SendCustomComponent {
       expiryDate: this.convertDateTimestamp(this.form.getRawValue().expiryDate),
       publicKey: this.form.get('publicKey')?.getRawValue(),
       credentialId: this.form.get('credentialId')?.getRawValue(),
-      taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
+      taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue(),
+      taxCode: taxCode
     }
 
     this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
       if (res && res.success) {
-        // console.log(res)
         this.isSigned = true
       }
     })
@@ -244,6 +259,16 @@ export class SendCustomComponent {
       console.error('Lỗi khi giải mã token:', error)
       return null
     }
+  }
+
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
   }
 
   convertDateTimestamp(date: any) {
@@ -270,11 +295,6 @@ export class SendCustomComponent {
     }
   }
 
-  showModal() {
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
-  }
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -290,33 +310,29 @@ export class SendCustomComponent {
 
   handleOkDownload() {
     this.isVisibleDownload = false
-    // this.router.navigate(['vnaccs/register']);
   }
 
   handleCancelDownload(): void {
     this.isVisibleDownload = false
-    // this.router.navigate(['vnaccs/register']);
+  }
+
+  showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
   }
 
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
-    } else {
-      this.loginSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-        if (res) {
-          if (res.message === 'success') {
-            this.listOfData = res.data
-          } else {
-            this.notification.error(
-              'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-            )
-          }
-        } else {
-          this.notification.error(
-            'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-          )
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.loginSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
         }
       })
+    } else {
+      console.log('Form is invalid!')
     }
   }
 

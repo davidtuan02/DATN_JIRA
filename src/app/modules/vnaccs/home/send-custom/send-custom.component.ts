@@ -16,7 +16,7 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-send-custom',
@@ -265,7 +265,7 @@ export class SendCustomComponent {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Họ tên người gửi Hải quan không được để trống'
+        return 'Tài khoản MySign không được để trống'
       }
     }
     return undefined

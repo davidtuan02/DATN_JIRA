@@ -30,12 +30,12 @@ import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { UpdateSignatureService } from './update-signature.service'
 import { clearStore } from '../../../shared/utilities/system.utils'
-import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-import * as asn1js from "asn1js";
-import {Certificate} from "pkijs";
-import * as forge from 'node-forge';
+import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import * as asn1js from 'asn1js'
+import { Certificate } from 'pkijs'
+import * as forge from 'node-forge'
 
-declare function initPlugin(comp: any): void;
+declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-update-signature',
   standalone: true,
@@ -89,7 +89,6 @@ export class UpdateSignatureComponent implements OnInit {
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
   getCTSForm!: FormGroup
-
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -265,7 +264,7 @@ export class UpdateSignatureComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Họ tên người gửi Hải quan không được để trống'
+        return 'Tài khoản MySign không được để trống'
       }
     }
     return undefined
@@ -294,7 +293,7 @@ export class UpdateSignatureComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
-   showModal() {
+  showModal() {
     this.isVisible = true
     this.getCTSForm.reset()
     this.getCTSForm.markAsUntouched()
@@ -309,9 +308,8 @@ export class UpdateSignatureComponent implements OnInit {
           this.listOfData = res.data
         }
       })
-    }
-    else {
-      console.log("Form is invalid!")
+    } else {
+      console.log('Form is invalid!')
     }
   }
 
@@ -377,18 +375,18 @@ export class UpdateSignatureComponent implements OnInit {
   // Function to parse the certificate and get the public key
   async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {
-    // Decode the base64-encoded certificate to DER format
-    const certDer = forge.util.decode64(base64Cert);
-    const certAsn1 = forge.asn1.fromDer(certDer);
-    const certificate = forge.pki.certificateFromAsn1(certAsn1);
+      // Decode the base64-encoded certificate to DER format
+      const certDer = forge.util.decode64(base64Cert)
+      const certAsn1 = forge.asn1.fromDer(certDer)
+      const certificate = forge.pki.certificateFromAsn1(certAsn1)
 
-    // Get the public key
-    const publicKey = certificate.publicKey;
-    return publicKey;
-  } catch (error) {
-    console.error('Error extracting public key with node-forge:', error);
-    return null;
-  }
+      // Get the public key
+      const publicKey = certificate.publicKey
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key with node-forge:', error)
+      return null
+    }
   }
 
   convertDateFormat(dateStr: string): string {

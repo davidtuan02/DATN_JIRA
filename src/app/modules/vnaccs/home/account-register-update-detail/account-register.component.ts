@@ -220,7 +220,7 @@ export class AccountRegisterComponent {
         customsDepartmentNote: state.data.customsDepartmentNote,
         approvalTime: state.data.approvalTime
       }
-      console.log(this.dataResponse)
+      // console.log(this.dataResponse)
     }
     if (state && state.data && state.data.id) {
       if (state.data.body) {
@@ -419,7 +419,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('provider')?.disable()
     this.formValidateUserId.get('effectiveDate')?.disable()
     this.formValidateUserId.get('expiryDate')?.disable()
-    // this.formValidateUserId.get('nameCert')?.disable();
+    this.formValidateUserId.get('nameCert')?.disable()
     this.formValidateUserId.get('publicKey')?.disable()
   }
 
@@ -599,6 +599,7 @@ export class AccountRegisterComponent {
 
   showModalUserId(mode: 'add' | 'view' | 'edit', data: any, index: any) {
     this.isVisible = true
+    this.formValidateUserId.reset()
     this.formValidateUserId.enable()
     if (mode === 'add') {
       this.modalTitleSender = 'Thêm mới người khai hải quan'

@@ -279,8 +279,8 @@ export class SearchComponent {
 
   search() {
     const body = {
-      requestType: this.form.get('requestType')?.value?.[0],
-      requestStatus: this.form.get('requestStatus')?.value?.[0],
+      requestType: this.form.get('requestType')?.value?.join(';'),
+      requestStatus: this.form.get('requestStatus')?.value?.join(';'),
       requestNo: this.form.get('requestNo')?.value,
       startDateSubmit: new Date(this.form.get('startDateSubmit')?.value).getTime(),
       endDateSubmit: new Date(this.form.get('endDateSubmit')?.value).getTime(),

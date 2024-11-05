@@ -29,10 +29,10 @@ import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
-import * as asn1js from "asn1js";
-import {Certificate} from "pkijs";
-import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-import * as forge from 'node-forge';
+import * as asn1js from 'asn1js'
+import { Certificate } from 'pkijs'
+import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import * as forge from 'node-forge'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -59,7 +59,7 @@ declare function initPlugin(comp: any): void
     NzTableModule,
     RouterLink,
     NzToolTipModule,
-    AutoTrimDirective,
+    AutoTrimDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -123,7 +123,6 @@ export class RegisterComponent implements OnInit {
   modeScreen!: 'register' | 'update' | 'detail'
   getCTSForm!: FormGroup
 
-
   constructor(
     private fb: NonNullableFormBuilder,
     private router: Router,
@@ -167,8 +166,8 @@ export class RegisterComponent implements OnInit {
       { validators: this.passwordMatchValidator.bind(this) }
     )
     this.getCTSForm = this.fb.group({
-        msAcc: ['', [Validators.required]]
-      })
+      msAcc: ['', [Validators.required]]
+    })
 
     this.disableForm()
   }
@@ -326,7 +325,10 @@ export class RegisterComponent implements OnInit {
             taxCode: this.loginForm.getRawValue().taxCode,
             adminPassword: this.loginForm.value.adminPassword,
             digitalSignatureType: this.loginForm.value.digitalSignatureType,
-            digitalSignature: this.radioValue === '1' ? this.loginForm.getRawValue().digitalSignature : this.loginForm.getRawValue().nameCert,
+            digitalSignature:
+              this.radioValue === '1'
+                ? this.loginForm.getRawValue().digitalSignature
+                : this.loginForm.getRawValue().nameCert,
             serial: this.loginForm.getRawValue().serial,
             provider: this.loginForm.getRawValue().provider,
             effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
@@ -460,12 +462,11 @@ export class RegisterComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Họ tên người gửi Hải quan không được để trống'
+        return 'Tài khoản MySign không được để trống'
       }
     }
     return undefined
   }
-
 
   showModalDownload() {
     this.isVisible = false
@@ -490,7 +491,7 @@ export class RegisterComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
-   showModal() {
+  showModal() {
     this.isVisible = true
     this.getCTSForm.reset()
     this.getCTSForm.markAsUntouched()
@@ -505,9 +506,8 @@ export class RegisterComponent implements OnInit {
           this.listOfData = res.data
         }
       })
-    }
-    else {
-      console.log("Form is invalid!")
+    } else {
+      console.log('Form is invalid!')
     }
   }
 
@@ -560,18 +560,18 @@ export class RegisterComponent implements OnInit {
   // Function to parse the certificate and get the public key
   async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
     try {
-    // Decode the base64-encoded certificate to DER format
-    const certDer = forge.util.decode64(base64Cert);
-    const certAsn1 = forge.asn1.fromDer(certDer);
-    const certificate = forge.pki.certificateFromAsn1(certAsn1);
+      // Decode the base64-encoded certificate to DER format
+      const certDer = forge.util.decode64(base64Cert)
+      const certAsn1 = forge.asn1.fromDer(certDer)
+      const certificate = forge.pki.certificateFromAsn1(certAsn1)
 
-    // Get the public key
-    const publicKey = certificate.publicKey;
-    return publicKey;
-  } catch (error) {
-    console.error('Error extracting public key with node-forge:', error);
-    return null;
-  }
+      // Get the public key
+      const publicKey = certificate.publicKey
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key with node-forge:', error)
+      return null
+    }
   }
 
   convertDateFormat(dateStr: string): string {

@@ -30,7 +30,7 @@ import { ConfirmPopupComponent } from '../../../../shared/components/confirm-pop
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { da } from 'date-fns/locale'
 import { NotificationService } from '../../../../shared/services/notification.service'
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-search',
@@ -289,7 +289,6 @@ export class SearchComponent {
       pageSize: this.paginate.size,
       pageNo: this.paginate.page - 1
     }
-    // console.log(body)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {

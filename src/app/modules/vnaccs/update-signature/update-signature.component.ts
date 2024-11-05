@@ -88,6 +88,8 @@ export class UpdateSignatureComponent implements OnInit {
 
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
+  getCTSForm!: FormGroup
+
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -259,13 +261,16 @@ export class UpdateSignatureComponent implements OnInit {
     }
   }
 
-  showModal() {
-    console.log('h')
-
-    this.isVisible = true
-    this.msAcc = ''
-    this.listOfData = []
+  getMsAccError(): string | undefined {
+    const control = this.getCTSForm.get('msAcc')
+    if (control?.touched && control.invalid) {
+      if (control.errors?.['required']) {
+        return 'Họ tên người gửi Hải quan không được để trống'
+      }
+    }
+    return undefined
   }
+
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -289,19 +294,25 @@ export class UpdateSignatureComponent implements OnInit {
     // this.router.navigate(['vnaccs/register']);
   }
 
+   showModal() {
+    this.isVisible = true
+    this.getCTSForm.reset()
+    this.getCTSForm.markAsUntouched()
+    this.listOfData = []
+  }
+
   getCTS() {
-    if (this.msAcc === '') {
-      this.notification.error('Vui lòng nhập tài khoản MySign để lấy chứng thư số')
+    this.getCTSForm.markAllAsTouched()
+    if (!this.getCTSForm.invalid) {
+      this.updateSignatureSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.listOfData = res.data
+        }
+      })
     }
-    this.updateSignatureSrv.getCertInfo(this.msAcc).subscribe((res: any) => {
-      if (res && res.message === 'success') {
-        this.listOfData = res.data
-      } else {
-        this.notification.error(
-          'Có lỗi xảy ra khi kết nối với hệ thống Viettel - MySign. Vui lòng thử lại hoặc liên hệ quản trị viên'
-        )
-      }
-    })
+    else {
+      console.log("Form is invalid!")
+    }
   }
 
   convertComplexDateString(dateStr: string): number {

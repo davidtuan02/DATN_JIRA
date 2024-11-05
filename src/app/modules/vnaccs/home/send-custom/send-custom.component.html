@@ -11,7 +11,7 @@
       <nz-step nzTitle="Gửi hải quan"></nz-step>
     </nz-steps>
 
-    <form action="" nz-form [formGroup]="form" *ngIf="current < 1" class="mt-[10px]">
+    <form action="" nz-form [formGroup]="form" *ngIf="current < 1" class="mt-[10px]" (ngSubmit)="submit()">
       <div class="flex justify-end">
         <button
           *ngIf="isSigned"
@@ -62,7 +62,8 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Họ tên người gửi Hải quan <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input    autoTrim
+            <input
+              autoTrim
               type="text"
               nz-input
               placeholder="Nhập họ tên người gửi Hải quan"
@@ -163,7 +164,7 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px">
-              <input autoTrim  text nz-input maxlength="13" formControlName="nameCert" />
+              <input autoTrim text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </nz-col>
@@ -175,7 +176,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input autoTrim  text nz-input formControlName="serial" />
+            <input autoTrim text nz-input formControlName="serial" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -184,7 +185,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input autoTrim  text nz-input formControlName="provider" />
+            <input autoTrim text nz-input formControlName="provider" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -195,7 +196,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group nzSize="large" style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input autoTrim  text nz-input formControlName="effectiveDate" />
+            <input autoTrim text nz-input formControlName="effectiveDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -204,7 +205,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hết hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group nzSize="large" style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input autoTrim  text nz-input formControlName="expiryDate" />
+            <input autoTrim text nz-input formControlName="expiryDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -254,8 +255,7 @@
           </button>
           <button
             *ngIf="!isSigned"
-            type="button"
-            (click)="sign()"
+            type="submit"
             class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
             style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
           >
@@ -308,7 +308,7 @@
   [(nzVisible)]="isVisible"
   [nzBodyStyle]="{ height: 'auto' }"
   nzMaskClosable="false"
-  [nzStyle]="{ width: '1000px', 'border-radius': '8px' }"
+  [nzStyle]="{ width: '1200px', 'border-radius': '8px' }"
   (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()"
   nzMaskClosable="false"
@@ -320,111 +320,128 @@
   <div *nzModalContent class="d-flex flex-column gap-3 mt-[-10px]">
     <div class="flex flex-column">
       <div class="font-inter-500" style="font-size: 14px">
-        <span>Tài khoản MySign</span>
+        <span>Tài khoản MySign <span style="color: #ed5564">*</span></span>
       </div>
-      <div class="flex gap-[25px]" style="height: 40px">
-        <input
-          type="text"
-          [(ngModel)]="msAcc"
-          placeholder="Nhập tài khoản MySign"
-          nz-input
-          style="width: 500px; border-radius: 8px"
-          autoTrim
-        />
-        <button class="text-white" style="border-radius: 8px; background-color: #1944a7 !important" (click)="getCTS()">
-          <div class="flex justify-center items-center gap-2" style="width: 200px">
-            <div>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle
-                  cx="9.80687"
-                  cy="9.80547"
-                  r="7.49047"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M15.0156 15.4042L17.9523 18.3333"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+      <form nz-form [formGroup]="getCTSForm" class="flex gap-[25px] justify-between" style="height: 40px">
+        <nz-input-group nz-col nzSpan="8">
+          <input
+            type="text"
+            formControlName="msAcc"
+            placeholder="Nhập tài khoản MySign"
+            nz-input
+            style="width: 500px; border-radius: 8px"
+          />
+          <p style="max-height: 10px" class="text-danger fs-14">
+            {{ getMsAccError() }}
+          </p>
+        </nz-input-group>
+        <div class="flex gap-[14px]">
+          <button
+            class="text-white"
+            style="border-radius: 8px; background-color: #1944a7 !important; height: 100%"
+            (click)="getCTS()"
+          >
+            <div class="flex justify-center items-center gap-2" style="width: 218px">
+              <div>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle
+                    cx="9.80687"
+                    cy="9.80547"
+                    r="7.49047"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M15.0156 15.4042L17.9523 18.3333"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <span>Lấy chứng thư số</span>
+              </div>
             </div>
-            <div>
-              <span>Lấy chứng thư số</span>
+          </button>
+          <button
+            (click)="showModalDownload()"
+            style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7; height: 100%"
+          >
+            <div class="flex justify-center items-center gap-2" style="width: 218px">
+              <div>
+                <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M9.50229 6.93945V13.0448"
+                    stroke="#1944A7"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12.5564 9.99215H6.44531"
+                    stroke="#1944A7"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13.4061 1.66675H5.59654C2.87432 1.66675 1.16797 3.59348 1.16797 6.32105V13.6791C1.16797 16.4067 2.86638 18.3334 5.59654 18.3334H13.4061C16.1362 18.3334 17.8346 16.4067 17.8346 13.6791V6.32105C17.8346 3.59348 16.1362 1.66675 13.4061 1.66675Z"
+                    stroke="#1944A7"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <span>Đăng ký tài khoản MySign</span>
+              </div>
             </div>
-          </div>
-        </button>
-        <button
-          (click)="showModalDownload()"
-          style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7"
-        >
-          <div class="flex justify-center items-center gap-2" style="width: 230px">
-            <div>
-              <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M9.50229 6.93945V13.0448"
-                  stroke="#1944A7"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M12.5564 9.99215H6.44531"
-                  stroke="#1944A7"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M13.4061 1.66675H5.59654C2.87432 1.66675 1.16797 3.59348 1.16797 6.32105V13.6791C1.16797 16.4067 2.86638 18.3334 5.59654 18.3334H13.4061C16.1362 18.3334 17.8346 16.4067 17.8346 13.6791V6.32105C17.8346 3.59348 16.1362 1.66675 13.4061 1.66675Z"
-                  stroke="#1944A7"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </div>
-            <div>
-              <span>Đăng ký tài khoản MySign</span>
-            </div>
-          </div>
-        </button>
-      </div>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <div class="flex flex-col" style="overflow-x: auto">
+    <div class="flex flex-col">
       <div class="font-inter" style="font-size: 14px; margin-bottom: 12px">
         <span>Danh sách chứng thư số</span>
       </div>
-      <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false">
+      <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false" nzTableLayout="fixed">
         <thead>
           <tr>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">STT</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Tên chứng thư</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Số seri</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
-            <th nzWidth="50px" nzAlign="center" class="font-inter">Thao tác</th>
+            <th nzWidth="70px" nzAlign="center" class="font-inter">STT</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter">Tên chứng thư</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter">Số seri</th>
+            <th nzWidth="200px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
+            <th nzWidth="170px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
+            <th nzWidth="100px" nzAlign="center" class="font-inter">Thao tác</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let data of listOfData; let i = index">
-            <td>{{ i + 1 }}</td>
+            <td nzAlign="center">{{ i + 1 }}</td>
             <td>
               <div class="flex items-center" style="overflow: hidden">
                 <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
               </div>
             </td>
             <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.serialNumber }}</span>
+              <div class="flex items-center">
+                <span
+                  nzEllipsis
+                  style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+                  class="cell-table"
+                  nz-tooltip
+                  [nzTooltipTitle]="data.serialNumber"
+                  >{{ data.serialNumber }}</span
+                >
               </div>
             </td>
             <td>
@@ -497,7 +514,7 @@
       </div>
       <span style="margin-top: 10px">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
       <nz-input-group [nzSuffix]="suffixCopy" style="border-radius: 8px; position: relative; width: 520px">
-        <input autoTrim  type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
+        <input autoTrim type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
       </nz-input-group>
       <div class="flex justify-center gap-[15px] mt-[25px]">
         <svg

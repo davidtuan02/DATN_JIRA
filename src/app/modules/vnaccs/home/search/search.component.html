@@ -35,7 +35,8 @@
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Số tiếp nhận</label>
           <nz-input-group style="border-radius: 8px" nzSize="large">
-            <input    autoTrim
+            <input
+              autoTrim
               type="text"
               nz-input
               placeholder="Nhập số tiếp nhận"
@@ -255,7 +256,7 @@
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
                     nz-tooltip
-                    [nzTooltipTitle]="data.receiptTime"
+                    [nzTooltipTitle]="data.receiptTime | date : 'yyyy'"
                     >{{ data.receiptTime | date : 'yyyy' }}</span
                   >
                 </div>
@@ -323,8 +324,9 @@
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
                     nz-tooltip
-                    [nzTooltipTitle]="data.receiptTime"
-                    >{{ data.receiptTime | date : 'dd/MM/yyyy hh:mm:ss' }}</span
+                    [nzTooltipTitle]="data.receiptTime | date : 'dd/MM/yyyy hh:mm:ss'"
+                  >
+                    {{ data.receiptTime | date : 'dd/MM/yyyy hh:mm:ss' }}</span
                   >
                 </div>
               </td>
@@ -334,7 +336,7 @@
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
                     nz-tooltip
-                    [nzTooltipTitle]="data.approvalTime"
+                    [nzTooltipTitle]="data.approvalTime | date : 'dd/MM/yyyy hh:mm:ss'"
                     >{{ data.approvalTime | date : 'dd/MM/yyyy hh:mm:ss' }}</span
                   >
                 </div>
@@ -401,6 +403,7 @@
                   </span>
 
                   <span
+                    *ngIf="data.requestStatus === 1"
                     nz-tooltip
                     style="cursor: pointer"
                     [nzTooltipTitle]="'Xóa'"

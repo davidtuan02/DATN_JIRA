@@ -1,19 +1,32 @@
 @import '../../../../shared/styles/variable';
 
+::ng-deep.ant-modal-body {
+  padding-bottom: 10px !important;
+}
+
+::ng-deep .ant-modal-content {
+  border-radius: 8px;
+}
+
+::ng-deep .ant-modal-header {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
 ::ng-deep .ant-input::placeholder {
   font-size: 14px !important;
-  // font-family: "Inter", sans-serif;
-  // font-optical-sizing: auto;
-  // font-weight: 500;
-  // font-style: normal;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
 ::ng-deep .ant-select-selection-placeholder {
   font-size: 14px !important;
-  // font-family: "Inter", sans-serif;
-  // font-optical-sizing: auto;
-  // font-weight: 500;
-  // font-style: normal;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
 nz-select,

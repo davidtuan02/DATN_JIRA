@@ -135,6 +135,18 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched()
       return

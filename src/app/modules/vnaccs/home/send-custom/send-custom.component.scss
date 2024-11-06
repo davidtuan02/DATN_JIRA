@@ -1,5 +1,14 @@
 @import '../../../../shared/styles/variable';
 
+::ng-deep .ant-modal-content {
+  border-radius: 8px;
+}
+
+::ng-deep .ant-modal-header {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
 .steps-content {
   margin-top: 16px;
   border: 1px dashed #e9e9e9;

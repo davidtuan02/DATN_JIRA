@@ -205,10 +205,9 @@ export class RegisterComponent implements OnInit {
   }
 
   fromDetailToUpdate() {
-    localStorage.setItem('test', JSON.stringify(this.dataToEditOrView))
     this.router.navigate(['/vnaccs/home/account-admin-update'], {
-      queryParams: {
-        data: JSON.stringify(this.dataToEditOrView)
+      state: {
+        data: this.dataToEditOrView
       }
     })
     // this.routeStateService.clearRouteStateAndNavigate('/vnaccs/home/account-admin-update', {
@@ -267,6 +266,18 @@ export class RegisterComponent implements OnInit {
       this.loginForm.get('adminPassword')?.updateValueAndValidity()
       this.loginForm.get('confirmPassword')?.clearValidators()
       this.loginForm.get('confirmPassword')?.updateValueAndValidity()
+    }
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
     }
     if (this.loginForm.valid) {
       this.registerOrUpdate()

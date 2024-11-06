@@ -25,7 +25,14 @@
     </div>
   </ng-container>
   <ng-template #login>
-    <div class="header-right-login" nz-button nz-dropdown [nzDropdownMenu]="menu" [nzPlacement]="'bottomRight'">
+    <div
+      class="header-right-login"
+      nz-button
+      nz-dropdown
+      nzTrigger="click"
+      [nzDropdownMenu]="menu"
+      [nzPlacement]="'bottomRight'"
+    >
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse
           cx="14.4725"

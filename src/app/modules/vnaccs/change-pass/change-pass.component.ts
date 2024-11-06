@@ -147,6 +147,18 @@ export class ChangePassComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched()
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (this.loginForm.valid) {
       this.changepass()
     } else {

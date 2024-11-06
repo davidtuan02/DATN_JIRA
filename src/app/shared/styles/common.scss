@@ -19,7 +19,7 @@
   height: 40px !important;
   width: 155px !important;
   background-color: #1944a7 !important;
-  color: #FFF !important;
+  color: #fff !important;
   font-size: 14px !important;
   border-radius: 8px !important;
   font-family: 'Inter', sans-serif;
@@ -28,8 +28,14 @@
   font-style: normal;
 }
 
-.ant-input.ng-invalid.ng-touched, .ant-input.ng-invalid.ng-dirty {
-  border: 1px solid #DC3545
+.ant-input.ng-invalid.ng-touched,
+.ant-input.ng-invalid.ng-dirty {
+  border: 1px solid #dc3545;
+}
+
+nz-date-picker.ng-touched.ng-invalid,
+nz-date-picker.ng-dirty.ng-invalid {
+  border: 1px solid #dc3545;
 }
 
 .ant-input-affix-wrapper {
@@ -42,22 +48,23 @@
     top: 25%;
     transform: translate(-25%, -0%);
   }
-  .ant-input{
-    padding: 8px 12px !important
+  .ant-input {
+    padding: 8px 12px !important;
   }
 }
 
-.ant-select.ng-invalid.ng-touched, .ant-select.ng-invalid.ng-dirty {
+.ant-select.ng-invalid.ng-touched,
+.ant-select.ng-invalid.ng-dirty {
   .ant-select-selector {
-    border: 1px solid #DC3545;
+    border: 1px solid #dc3545;
 
     &:hover {
-      border: 1px solid #DC3545;
+      border: 1px solid #dc3545;
     }
   }
-
 }
 
-.ant-input::placeholder, .ant-select-selection-search-input::placeholder {
+.ant-input::placeholder,
+.ant-select-selection-search-input::placeholder {
   font-size: 14px !important;
 }

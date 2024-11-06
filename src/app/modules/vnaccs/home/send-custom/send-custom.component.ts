@@ -128,6 +128,18 @@ export class SendCustomComponent {
 
   submit() {
     this.form.markAllAsTouched()
+    const rawFormData = this.getCTSForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (!this.form.invalid) {
       this.sign()
     } else {

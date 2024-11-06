@@ -37,9 +37,11 @@
     </div>
   </div>
   <div
+    #buttonDiv
     class="item item-combobox"
     style="cursor: pointer"
     nz-dropdown
+    nzTrigger="click"
     [ngClass]="{ selected: selectedItem === 'edit' }"
     [nzDropdownMenu]="menu"
     [nzPlacement]="'bottomCenter'"

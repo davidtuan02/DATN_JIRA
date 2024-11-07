@@ -1136,8 +1136,8 @@ export class AccountRegisterComponent {
   patchValueToForm(key: string, value: any) {
     if (value) {
       if (key === 'effectiveDate' || key === 'expiryDate') {
-        this.form.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
-      } else this.form.get(key)?.setValue(value)
+        this.formValidateUserId.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.formValidateUserId.get(key)?.setValue(value)
     }
   }
 

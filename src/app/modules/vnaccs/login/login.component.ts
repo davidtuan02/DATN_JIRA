@@ -135,6 +135,18 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched()
       return
@@ -253,7 +265,7 @@ export class LoginComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

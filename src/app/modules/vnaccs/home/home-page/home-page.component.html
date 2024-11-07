@@ -14,30 +14,26 @@
           Tải Java về để đọc chữ kỹ số tại đường dẫn: <span (click)="downloadJDK()" class="text-download">JDK</span>
         </li>
       </div>
-      <!-- <div class="carousel-container">
-        <button class="arrow-button left-arrow" (click)="carousel.pre()">
-          &#9664;
-        </button> -->
-
       <nz-carousel #carousel [nzEffect]="effect" class="custom-carousel">
         <div nz-carousel-content *ngFor="let url of listUrl; let i = index" class="carousel-item">
           <video
+            #videoRef
             class="responsive-video"
             crossorigin="anonymous"
             controls
+            style="position: relative; width: 100%"
             [id]="'video' + i"
+            (timeupdate)="updateSlider(videoRef)"
             (ended)="onVideoEnded(carousel)"
           >
             <source [src]="url" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
+          <div class="flex justify-center" style="margin-top: 20px; width: 100%">
+            <span class="font-inter-400">Video hướng dẫn</span>
+          </div>
         </div>
       </nz-carousel>
-
-      <!-- <button class="arrow-button right-arrow" (click)="carousel.next()">
-          &#9654;
-        </button>
-      </div> -->
     </div>
   </div>
   <div class="content-right">

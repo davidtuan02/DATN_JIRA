@@ -119,6 +119,10 @@ export class UpdateSignatureComponent implements OnInit {
         credentialId: ['']
       })
 
+      this.getCTSForm = this.fb.group({
+        msAcc: ['', [Validators.required]]
+      })
+
       this.disableForm()
     })
   }
@@ -135,6 +139,18 @@ export class UpdateSignatureComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched()
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (this.loginForm.valid) {
       this.updateSignature()
     } else {
@@ -264,7 +280,7 @@ export class UpdateSignatureComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined
@@ -339,15 +355,15 @@ export class UpdateSignatureComponent implements OnInit {
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false
-      this.loginForm.get('digitalSignature')?.setValue(data.subjectDN)
+      // this.loginForm.get('digitalSignature')?.setValue(data.subjectDN);
       this.loginForm.get('serial')?.setValue(data.serialNumber)
       this.loginForm.get('provider')?.setValue(data.issuerDN)
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.loginForm.get('nameCert')?.setValue(data.subjectDN)
       this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
-      this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
       this.loginForm.get('credentialId')?.setValue(data.credentialId)
+      this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
   }
 

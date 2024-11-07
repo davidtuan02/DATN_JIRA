@@ -14,9 +14,9 @@ span.hyper-link {
   }
 }
 
-::ng-deep .ant-dropdown-menu {
-  border-radius: 8px !important;
-  width: 170px !important;
+.ant-dropdown-menu {
+  border-radius: 8px;
+  width: 170px;
 
   .icon {
     width: 20px !important;

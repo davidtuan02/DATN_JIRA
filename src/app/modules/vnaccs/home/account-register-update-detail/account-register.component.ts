@@ -29,8 +29,9 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { debounceTime, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
-import * as forge from "node-forge"
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import * as forge from 'node-forge'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -55,7 +56,8 @@ declare function initPlugin(comp: any): void
     NzModalModule,
     RouterLink,
     NzRadioModule,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ]
 })
 export class AccountRegisterComponent {
@@ -296,7 +298,7 @@ export class AccountRegisterComponent {
       userCode: [''],
       representativeName: ['', [Validators.required]],
       representativeIdType: [2],
-      representativeIdNo: ['', [Validators.required]],
+      representativeIdNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
       address: ['', [Validators.required]],
       fieldOfActivity: [null, [Validators.required]],
       proposal: [''],
@@ -339,22 +341,22 @@ export class AccountRegisterComponent {
   loadFormValidateUserId() {
     this.formValidateUserId = this.fb.group(
       {
-        fullName: ['hehe', [Validators.required]],
+        fullName: ['', [Validators.required]],
         userId: [''],
         email: ['', [Validators.required, Validators.email]],
         fieldOfActivity: [null, [Validators.required]],
-        idType: [2],
-        idNo: ['', [Validators.required]],
-        customsEffectiveDate: [''],
-        customsExpiryDate: [''],
+        idType: [null, [Validators.required]],
+        idNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
+        customsEffectiveDate: ['', [Validators.required]],
+        customsExpiryDate: ['', [Validators.required]],
         digitalSignatureType: [this.radioValue],
-        digitalSignature: [''],
-        nameCert: [''],
-        serial: [''],
-        provider: [''],
-        effectiveDate: [''],
-        expiryDate: [''],
-        publicKey: [''],
+        digitalSignature: ['', [Validators.required]],
+        nameCert: ['', [Validators.required]],
+        serial: ['', [Validators.required]],
+        provider: ['', [Validators.required]],
+        effectiveDate: ['', [Validators.required]],
+        expiryDate: ['', [Validators.required]],
+        publicKey: ['', [Validators.required]],
         credentialId: [''],
         taxCodeCTS: ['']
       },
@@ -369,22 +371,39 @@ export class AccountRegisterComponent {
       const fromDate = formGroup.get(fromDateField)?.value
       const toDate = formGroup.get(toDateField)?.value
 
-      if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+      if (!fromDate || !toDate) {
+        return null
+      }
+
+      if (new Date(fromDate) > new Date(toDate)) {
         formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
       } else {
         formGroup.get(fromDateField)?.setErrors(null)
       }
+      return null
     }
   }
 
   getFromDateError(): string | undefined {
     const control = this.formValidateUserId.get('customsEffectiveDate')
     if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Thời gian hiệu lực khai báo hải quan không được để trống'
+      }
       if (control.errors?.['dateRangeInvalid']) {
         return 'Ngày hiệu lực phải nhỏ hơn hoặc bằng ngày hết hiệu lực'
       }
     }
+    return undefined
+  }
 
+  getExpiryDateValidateError(): string | undefined {
+    const control = this.formValidateUserId.get('customsExpiryDate')
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Thời gian hết hiệu lực khai báo hải quan không được để trống'
+      }
+    }
     return undefined
   }
 
@@ -438,7 +457,10 @@ export class AccountRegisterComponent {
     const control = this.formValidateUserId.get('idNo')
     if (control?.touched) {
       if (control.errors?.['required']) {
-        return 'Số CMND/CCCD/ Hộ chiếu không được để trống'
+        return 'Số CMND/CCCD/Hộ chiếu không được để trống'
+      }
+      if (control.errors?.['pattern']) {
+        return 'CMND/CCCD/Hộ chiếu bao gồm chữ hoa, chữ thường, số'
       }
     }
 
@@ -450,6 +472,17 @@ export class AccountRegisterComponent {
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Lĩnh vực hoạt động không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getIdTypeValidateError(): string | undefined {
+    const control = this.formValidateUserId.get('idType')
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Loại giấy tờ không được để trống'
       }
     }
 
@@ -495,47 +528,27 @@ export class AccountRegisterComponent {
   }
 
   filterList(searchText: string) {
-    if (!searchText.toLowerCase().trim()) {
+    const trimmedSearchText = searchText.toLowerCase().trim()
+    if (!trimmedSearchText) {
       this.dataTable = this.backupDataTable
     } else {
-      this.dataTable = this.dataTable.filter(
+      const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
+      this.dataTable = this.backupDataTable.filter(
         (data) =>
-          data.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-          data.idNo.toLowerCase().includes(searchText.toLowerCase()) ||
-          data.email.toLowerCase().includes(searchText.toLowerCase())
+          regex.test(data.fullName.toLowerCase()) ||
+          regex.test(data.idNo.toLowerCase()) ||
+          regex.test(data.email.toLowerCase())
       )
     }
   }
 
   calculateTotal(): void {
-    const freeSoftwareValue = +this.form.value?.freeSoftware || 0
-    const ediSoftwareValue = +this.form.value?.ediSoftware || 0
+    const freeSoftwareValue = +this.form.get('freeSoftware')?.value || 0
+    const ediSoftwareValue = +this.form.get('ediSoftware')?.value || 0
+
     const total = freeSoftwareValue + ediSoftwareValue
+
     this.form.get('numberComputer')?.setValue(total)
-  }
-
-  allowOnlyNumbers(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode
-    if ((charCode >= 48 && charCode <= 57) || charCode === 46 || charCode === 8) {
-      return true
-    }
-    event.preventDefault()
-    return false
-  }
-
-  setDefaultValue(string: 'freeSoftware' | 'ediSoftware'): void {
-    if (string === 'freeSoftware') {
-      const currentValue = this.form.get('freeSoftware')?.value
-      if (!currentValue) {
-        this.form.get('freeSoftware')?.setValue('0')
-      }
-    } else {
-      const currentValue = this.form.get('ediSoftware')?.value
-      if (!currentValue) {
-        this.form.get('ediSoftware')?.setValue('0')
-      }
-    }
-    this.calculateTotal()
   }
 
   getFieldOfActivityError(): string | undefined {
@@ -566,9 +579,52 @@ export class AccountRegisterComponent {
       if (control.errors?.['required']) {
         return 'Số CMND/CCCD/ Hộ chiếu không được để trống'
       }
+      if (control.errors?.['pattern']) {
+        return 'Số CMND/CCCD/Hộ chiếu bao gồm chữ hoa, chữ thường, số'
+      }
     }
 
     return undefined
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode
+    const inputElement = event.target as HTMLInputElement
+    const currentValue = inputElement.value
+
+    if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
+      return true
+    }
+    event.preventDefault()
+    return false
+  }
+
+  formatNumber(event: Event, controlName: 'freeSoftware' | 'ediSoftware'): void {
+    const inputElement = event.target as HTMLInputElement
+    let inputValue = inputElement.value
+
+    inputValue = inputValue.replace(/\./g, '')
+
+    let numericValue = parseInt(inputValue, 10)
+    if (isNaN(numericValue)) {
+      numericValue = 0
+    }
+
+    this.form.get(controlName)?.setValue(numericValue)
+
+    inputElement.value = numericValue.toLocaleString('de-DE')
+
+    this.calculateTotal()
+  }
+
+  setDefaultValue(controlName: 'freeSoftware' | 'ediSoftware'): void {
+    const currentValue = this.form.get(controlName)?.value
+
+    // Set default to "0" if the field is empty or contains only zeros
+    if (!currentValue || currentValue === '0' || currentValue === '0.') {
+      this.form.get(controlName)?.setValue('0')
+    }
+    this.calculateTotal()
   }
 
   //allow Aa-Za, 0-9
@@ -599,12 +655,15 @@ export class AccountRegisterComponent {
 
   showModalUserId(mode: 'add' | 'view' | 'edit', data: any, index: any) {
     this.isVisible = true
+    console.log(this.formValidateUserId.value)
     this.formValidateUserId.reset()
     this.formValidateUserId.enable()
+
     if (mode === 'add') {
       this.modalTitleSender = 'Thêm mới người khai hải quan'
       this.mode = 'add'
       this.formValidateUserId.reset()
+      this.formValidateUserId.get('idType')?.setValue(2)
       this.disableForm()
     }
     if (mode === 'edit') {
@@ -650,6 +709,18 @@ export class AccountRegisterComponent {
 
   submitValidateUserId() {
     this.formValidateUserId.markAllAsTouched()
+    const rawFormData = this.formValidateUserId.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (!this.formValidateUserId.invalid) {
       if (this.mode === 'add') {
         this.validateUserId()
@@ -668,7 +739,7 @@ export class AccountRegisterComponent {
 
   showModalCTS() {
     this.isVisibleModalCTS = true
-    this.msAcc = ''
+    this.getCTSForm.reset()
     this.listOfData = []
   }
 
@@ -763,7 +834,7 @@ export class AccountRegisterComponent {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

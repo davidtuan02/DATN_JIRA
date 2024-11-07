@@ -193,12 +193,6 @@
         >
           <thead>
             <tr>
-              <th
-                nzWidth="30px"
-                [nzChecked]="checked"
-                [nzIndeterminate]="indeterminate"
-                (nzCheckedChange)="onAllChecked($event)"
-              ></th>
               <th nzAlign="center" nzWidth="60px" style="font-size: 14px">STT</th>
               <th nzAlign="center" nzWidth="250px" style="font-size: 14px">Loại đăng ký</th>
               <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Số tiếp nhận</th>
@@ -216,7 +210,6 @@
               *ngFor="let data of basicTable.data; let index = index; let odd = odd"
               [ngStyle]="{ 'background-color': odd ? '#f7f8f8' : 'white' }"
             >
-              <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
               <td nzAlign="center">
                 {{ (paginate.page - 1) * paginate.size + index + 1 }}
               </td>

@@ -129,6 +129,18 @@ export class SendCustomComponent {
 
   submit() {
     this.form.markAllAsTouched()
+    const rawFormData = this.getCTSForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (!this.form.invalid) {
       this.sign()
     } else {
@@ -266,7 +278,7 @@ export class SendCustomComponent {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Tài khoản MySign không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined

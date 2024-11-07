@@ -1,6 +1,10 @@
 <div *ngIf="isLogin" class="menu-container">
   <div class="item" style="cursor: pointer">
-    <div class="item-content" (click)="handleNavigate('accountInfo')">
+    <div
+      class="item-content"
+      (click)="handleNavigate('accountInfo')"
+      [ngClass]="{ selected: selectedItem === 'accountInfo' }"
+    >
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M8.15722 19.8215V16.7547C8.1572 15.9747 8.79312 15.3409 9.58101 15.3356H12.4671C13.2587 15.3356 13.9005 15.971 13.9005 16.7547V16.7547V19.831C13.9003 20.4932 14.4343 21.0345 15.103 21.05H17.0271C18.9451 21.05 20.5 19.5107 20.5 17.6119V17.6119V8.88788C20.4898 8.14088 20.1355 7.4394 19.538 6.98308L12.9577 1.73535C11.8049 0.821615 10.1662 0.821615 9.01342 1.73535L2.46203 6.99261C1.86226 7.44707 1.50739 8.14972 1.5 8.89741V17.6119C1.5 19.5107 3.05488 21.05 4.97291 21.05H6.89696C7.58235 21.05 8.13797 20.5 8.13797 19.8215V19.8215"
@@ -13,7 +17,12 @@
       <span>Xem thông tin tài khoản</span>
     </div>
   </div>
-  <div class="item item-2" style="cursor: pointer" (click)="handleNavigate('registerAcc')">
+  <div
+    class="item item-2"
+    style="cursor: pointer"
+    (click)="handleNavigate('registerAcc')"
+    [ngClass]="{ selected: selectedItem === 'registerAcc' }"
+  >
     <div class="item-content custom-item-1">
       <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -28,9 +37,12 @@
     </div>
   </div>
   <div
+    #buttonDiv
     class="item item-combobox"
     style="cursor: pointer"
     nz-dropdown
+    nzTrigger="click"
+    [ngClass]="{ selected: selectedItem === 'edit' }"
     [nzDropdownMenu]="menu"
     [nzPlacement]="'bottomCenter'"
   >
@@ -54,7 +66,12 @@
       />
     </svg>
   </div>
-  <div class="item" style="cursor: pointer" (click)="handleNavigate('search')">
+  <div
+    class="item"
+    style="cursor: pointer"
+    (click)="handleNavigate('search')"
+    [ngClass]="{ selected: selectedItem === 'search' }"
+  >
     <div class="item-content">
       <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -74,7 +91,7 @@
 
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu nzSelectable>
-    <li nz-menu-item (click)="handleNavigate('editAdminAcc')">
+    <li nz-menu-item (click)="handleNavigate('editAdminAcc')" [ngClass]="{ selected: selectedItem === 'edit' }">
       <div class="flex items-center justify-between">
         <span>
           <svg
@@ -109,7 +126,7 @@
         <span style="font-size: 14px"> Đăng ký thay đổi tài khoản quản trị </span>
       </div>
     </li>
-    <li nz-menu-item (click)="handleNavigate('editAcc')">
+    <li nz-menu-item (click)="handleNavigate('editAcc')" [ngClass]="{ selected: selectedItem === 'edit' }">
       <div class="flex items-center justify-between">
         <span>
           <svg

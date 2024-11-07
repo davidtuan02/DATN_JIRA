@@ -30,9 +30,10 @@ import { DialogService } from '../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
 import { ForgotPasswordService } from './forgot-password.service'
 import { clearStore } from '../../../shared/utilities/system.utils'
-import {AutoTrimDirective} from "../../../shared/directives/trim.directive";
-import * as forge from "node-forge";
-declare function initPlugin(comp: any):void
+import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import * as forge from 'node-forge'
+declare function initPlugin(comp: any): void
+
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
@@ -143,6 +144,18 @@ export class ForgotPasswordComponent implements OnInit {
 
   onSubmit() {
     this.loginForm.markAllAsTouched()
+    const rawFormData = this.loginForm.getRawValue()
+    if (
+      !rawFormData.digitalSignature ||
+      !rawFormData.nameCert ||
+      !rawFormData.serial ||
+      !rawFormData.provider ||
+      !rawFormData.effectiveDate ||
+      !rawFormData.expiryDate ||
+      !rawFormData.publicKey
+    ) {
+      return
+    }
     if (this.loginForm.valid) {
       this.forgotPassword()
     } else {
@@ -271,7 +284,6 @@ export class ForgotPasswordComponent implements OnInit {
     }
   }
 
-
   showModalDownload() {
     this.isVisible = false
     this.isVisibleDownload = true
@@ -320,9 +332,8 @@ export class ForgotPasswordComponent implements OnInit {
           this.listOfData = res.data
         }
       })
-    }
-    else {
-      console.log("Form is invalid!")
+    } else {
+      console.log('Form is invalid!')
     }
   }
 

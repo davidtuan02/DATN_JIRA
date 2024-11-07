@@ -1,5 +1,11 @@
 @import '../../../shared/styles/variable';
 
+.ant-dropdown-menu {
+  width: 100% !important;
+  min-width: auto;
+  border-radius: 8px;
+}
+
 .menu-container {
   display: flex;
   background-color: #c6d0e6;
@@ -11,13 +17,14 @@
   font-weight: 700;
   font-style: normal;
   border-radius: 8px;
+  overflow: hidden;
   color: $primary-color;
 
   .item {
     width: 100%;
     font-size: 16px;
     display: flex;
-    height: 46px;
+    height: 100%;
     align-items: center;
 
     .item-content {
@@ -33,6 +40,15 @@
       align-items: center;
       gap: 8px;
     }
+
+    &:hover {
+      background-color: #1944a7;
+      color: white;
+    }
+  }
+  .item.selected {
+    background-color: #1944a7;
+    color: white;
   }
   .item-2 {
     border-left: 1px solid #1944a7;

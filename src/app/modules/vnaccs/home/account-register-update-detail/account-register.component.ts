@@ -346,7 +346,7 @@ export class AccountRegisterComponent {
         email: ['', [Validators.required, Validators.email]],
         fieldOfActivity: [null, [Validators.required]],
         idType: [null, [Validators.required]],
-        idNo: ['', [Validators.required]],
+        idNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
         customsEffectiveDate: ['', [Validators.required]],
         customsExpiryDate: ['', [Validators.required]],
         digitalSignatureType: [this.radioValue],
@@ -459,6 +459,9 @@ export class AccountRegisterComponent {
       if (control.errors?.['required']) {
         return 'Số CMND/CCCD/Hộ chiếu không được để trống'
       }
+      if (control.errors?.['pattern']) {
+        return 'CMND/CCCD/Hộ chiếu bao gồm chữ hoa, chữ thường, số'
+      }
     }
 
     return undefined
@@ -540,34 +543,12 @@ export class AccountRegisterComponent {
   }
 
   calculateTotal(): void {
-    const freeSoftwareValue = +this.form.value?.freeSoftware || 0
-    const ediSoftwareValue = +this.form.value?.ediSoftware || 0
+    const freeSoftwareValue = +this.form.get('freeSoftware')?.value || 0
+    const ediSoftwareValue = +this.form.get('ediSoftware')?.value || 0
+
     const total = freeSoftwareValue + ediSoftwareValue
+
     this.form.get('numberComputer')?.setValue(total)
-  }
-
-  allowOnlyNumbers(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode
-    if ((charCode >= 48 && charCode <= 57) || charCode === 46 || charCode === 8) {
-      return true
-    }
-    event.preventDefault()
-    return false
-  }
-
-  setDefaultValue(string: 'freeSoftware' | 'ediSoftware'): void {
-    if (string === 'freeSoftware') {
-      const currentValue = this.form.get('freeSoftware')?.value
-      if (!currentValue) {
-        this.form.get('freeSoftware')?.setValue('0')
-      }
-    } else {
-      const currentValue = this.form.get('ediSoftware')?.value
-      if (!currentValue) {
-        this.form.get('ediSoftware')?.setValue('0')
-      }
-    }
-    this.calculateTotal()
   }
 
   getFieldOfActivityError(): string | undefined {
@@ -606,17 +587,44 @@ export class AccountRegisterComponent {
     return undefined
   }
 
-  formatNumber(event: any) {
-    let inputValue = event.target.value
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode
+    const inputElement = event.target as HTMLInputElement
+    const currentValue = inputElement.value
 
-    // Remove non-numeric characters (except the dot)
-    inputValue = inputValue.replace(/[^0-9]/g, '')
+    if ((charCode >= 48 && charCode <= 57) || charCode === 8 || charCode === 46) {
+      return true
+    }
+    event.preventDefault()
+    return false
+  }
 
-    // Add thousand separator (dot or comma based on your locale)
-    inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  formatNumber(event: Event, controlName: 'freeSoftware' | 'ediSoftware'): void {
+    const inputElement = event.target as HTMLInputElement
+    let inputValue = inputElement.value
 
-    // Update the input field with the formatted value
-    event.target.value = inputValue
+    inputValue = inputValue.replace(/\./g, '')
+
+    let numericValue = parseInt(inputValue, 10)
+    if (isNaN(numericValue)) {
+      numericValue = 0
+    }
+
+    this.form.get(controlName)?.setValue(numericValue)
+
+    inputElement.value = numericValue.toLocaleString('de-DE')
+
+    this.calculateTotal()
+  }
+
+  setDefaultValue(controlName: 'freeSoftware' | 'ediSoftware'): void {
+    const currentValue = this.form.get(controlName)?.value
+
+    // Set default to "0" if the field is empty or contains only zeros
+    if (!currentValue || currentValue === '0' || currentValue === '0.') {
+      this.form.get(controlName)?.setValue('0')
+    }
+    this.calculateTotal()
   }
 
   //allow Aa-Za, 0-9

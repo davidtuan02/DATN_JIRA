@@ -21,6 +21,7 @@
           <nz-input-group style="border-radius: 8px">
             <input
               type="text"
+              nzAllowClear
               nz-input
               placeholder="Nhập tên người đại diện"
               maxlength="50"
@@ -126,7 +127,7 @@
               maxlength="4"
               formControlName="freeSoftware"
               (blur)="setDefaultValue('freeSoftware')"
-              (input)="formatNumber($event)"
+              (input)="formatNumber($event, 'freeSoftware')"
               (keypress)="allowOnlyNumbers($event)"
             />
           </nz-input-group>
@@ -143,6 +144,7 @@
               formControlName="ediSoftware"
               maxlength="4"
               (blur)="setDefaultValue('ediSoftware')"
+              (input)="formatNumber($event, 'ediSoftware')"
               (keypress)="allowOnlyNumbers($event)"
             />
           </nz-input-group>
@@ -180,7 +182,7 @@
         >Danh sách người khai hải quan (User ID) ({{ dataTable.length }})</span
       >
     </div>
-    <div class="flex items-center justify-between">
+    <div>
       <nz-row nzGutter="16">
         <nz-col nzSpan="8">
           <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch">
@@ -194,120 +196,128 @@
             />
           </nz-input-group>
         </nz-col>
+        <nz-col nzSpan="16">
+          <div class="flex justify-content-end gap-[16px] items-center mb-[5px]">
+            <button
+              *ngIf="modeScreen === 'update' || modeScreen === 'register'"
+              type="submit"
+              class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+              (click)="showModalUserId('add', null, null)"
+              style="
+                height: 40px;
+                width: 120px;
+                background-color: #1944a7 !important;
+                font-size: 14px;
+                border-radius: 8px;
+              "
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10.0023 6.93945V13.0448"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M13.0564 9.99215H6.94531"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M13.9061 1.66675H6.09654C3.37432 1.66675 1.66797 3.59348 1.66797 6.32105V13.6791C1.66797 16.4067 3.36638 18.3334 6.09654 18.3334H13.9061C16.6362 18.3334 18.3346 16.4067 18.3346 13.6791V6.32105C18.3346 3.59348 16.6362 1.66675 13.9061 1.66675Z"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Thêm mới
+            </button>
+
+            <!-- enable -->
+            <button
+              *ngIf="setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
+              (click)="deleteMany()"
+              nz-button
+              class="rounded font-bold text-white bg-red"
+              style="height: 40px; width: 44px; display: flex; justify-content: center; align-items: center"
+            >
+              <div style="width: 20px">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17.2567 5.19963H3.125"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <!-- disable -->
+            <button
+              *ngIf="!setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
+              [disabled]="true"
+              nz-button
+              class="rounded font-bold"
+              style="
+                height: 40px;
+                width: 44px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: pink;
+              "
+            >
+              <div style="width: 20px">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17.2567 5.19963H3.125"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </nz-col>
       </nz-row>
-      <div class="flex gap-[16px] items-center mb-[5px]">
-        <button
-          *ngIf="modeScreen === 'update' || modeScreen === 'register'"
-          type="submit"
-          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-          (click)="showModalUserId('add', null, null)"
-          style="height: 40px; width: 120px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M10.0023 6.93945V13.0448"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M13.0564 9.99215H6.94531"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M13.9061 1.66675H6.09654C3.37432 1.66675 1.66797 3.59348 1.66797 6.32105V13.6791C1.66797 16.4067 3.36638 18.3334 6.09654 18.3334H13.9061C16.6362 18.3334 18.3346 16.4067 18.3346 13.6791V6.32105C18.3346 3.59348 16.6362 1.66675 13.9061 1.66675Z"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          Thêm mới
-        </button>
-
-        <!-- enable -->
-        <button
-          *ngIf="setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
-          (click)="deleteMany()"
-          nz-button
-          class="rounded font-bold text-white bg-red"
-          style="height: 40px; width: 44px; display: flex; justify-content: center; align-items: center"
-        >
-          <div style="width: 20px">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M17.2567 5.19963H3.125"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </button>
-
-        <!-- disable -->
-        <button
-          *ngIf="!setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
-          [disabled]="true"
-          nz-button
-          class="rounded font-bold"
-          style="
-            height: 40px;
-            width: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: pink;
-          "
-        >
-          <div style="width: 20px">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M17.2567 5.19963H3.125"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </button>
-      </div>
     </div>
 
     <!-- table -->
@@ -691,7 +701,7 @@
                 maxlength="50"
               />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
           </nz-col>
@@ -702,7 +712,7 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
           </nz-col>
@@ -730,7 +740,7 @@
                 maxlength="50"
               />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
           </nz-col>
@@ -742,22 +752,14 @@
           <!-- lĩnh vực hoạt động -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ed5564">*</span></label>
-            <nz-select
-              nzSize="large"
-              nzMode="multiple"
-              nzPlaceHolder="-Chọn-"
-              formControlName="fieldOfActivity"
-              [nzSuffixIcon]="dropdownIcon"
-            >
+            <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
               @for (option of listOfOption; track option.value) {
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
               }
             </nz-select>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFieldOfActivityValidateError() }}
             </p>
-
-            <ng-template #dropdownIcon> hi </ng-template>
           </nz-col>
         </ng-container>
 
@@ -768,7 +770,7 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
           </nz-col>
@@ -787,7 +789,7 @@
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
               }
             </nz-select>
-            <p style="max-height: 10px" class="text-danger fs-14">
+            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFieldOfActivityValidateError() }}
             </p>
 
@@ -819,7 +821,7 @@
             >
             </nz-option>
           </nz-select>
-          <p style="max-height: 10px" class="text-danger fs-14">
+          <p *ngIf="getIdTypeValidateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getIdTypeValidateError() }}
           </p>
 
@@ -840,10 +842,9 @@
               placeholder="Nhập số CMND/CCCD/Hộ chiếu"
               maxlength="15"
               formControlName="idNo"
-              (keypress)="allowAlphaNumeric($event)"
             />
           </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
+          <p *ngIf="getIdNoValidateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getIdNoValidateError() }}
           </p>
         </nz-col>
@@ -868,7 +869,7 @@
             >
             </nz-date-picker>
           </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
+          <p *ngIf="getFromDateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getFromDateError() }}
           </p>
         </nz-col>
@@ -891,7 +892,7 @@
             >
             </nz-date-picker>
           </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
+          <p *ngIf="getExpiryDateValidateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getExpiryDateValidateError() }}
           </p>
         </nz-col>
@@ -1120,23 +1121,25 @@
       <div class="font-inter-500" style="font-size: 14px">
         <span>Tài khoản MySign <span style="color: #ed5564">*</span></span>
       </div>
-      <form nz-form [formGroup]="getCTSForm" class="flex gap-[25px] justify-between" style="height: 40px">
-        <nz-input-group nz-col nzSpan="8">
-          <input
-            type="text"
-            formControlName="msAcc"
-            placeholder="Nhập tài khoản MySign"
-            nz-input
-            style="width: 500px; border-radius: 8px"
-          />
-          <p style="max-height: 10px" class="text-danger fs-14">
+      <form nz-form [formGroup]="getCTSForm" class="flex gap-[25px] justify-between" style="height: auto">
+        <div class="flex flex-col">
+          <nz-input-group nz-col nzSpan="8">
+            <input
+              type="text"
+              formControlName="msAcc"
+              placeholder="Nhập tài khoản MySign"
+              nz-input
+              style="width: 500px; border-radius: 8px"
+            />
+          </nz-input-group>
+          <p *ngIf="getMsAccError()" style="max-height: 0" class="text-danger fs-14">
             {{ getMsAccError() }}
           </p>
-        </nz-input-group>
+        </div>
         <div class="flex gap-[14px]">
           <button
             class="text-white"
-            style="border-radius: 8px; background-color: #1944a7 !important; height: 100%"
+            style="border-radius: 8px; background-color: #1944a7 !important; height: 40px"
             (click)="getCTS()"
           >
             <div class="flex justify-center items-center gap-2" style="width: 218px">
@@ -1167,7 +1170,7 @@
           </button>
           <button
             (click)="showModalDownload()"
-            style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7; height: 100%"
+            style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7; height: 40px"
           >
             <div class="flex justify-center items-center gap-2" style="width: 218px">
               <div>
@@ -1312,13 +1315,50 @@
           <path d="M0 1.02197L190.003 1.02197" stroke="#BFBFBF" />
         </svg>
       </div>
-      <span style="margin-top: 10px; color: #000000">Sao chép đường dẫn và gửi đến điện thoại của bạn</span>
-      <nz-input-group [nzSuffix]="suffixCopy" style="border-radius: 8px; position: relative; width: 520px">
-        <input autoTrim type="text" nz-input id="copyInput" value="https://remotesigning.viettel.vn/mysign" readonly />
-      </nz-input-group>
+      <span style="margin-top: 10px; margin-bottom: 10px; color: #000000"
+        >Sao chép đường dẫn và gửi đến điện thoại của bạn</span
+      >
+      <div class="flex">
+        <nz-input-group style="border-radius: 8px; width: 400px">
+          <input
+            autoTrim
+            type="text"
+            nz-input
+            id="copyInput"
+            value="https://remotesigning.viettel.vn/mysign"
+            readonly
+          />
+        </nz-input-group>
+        <button
+          class="font-inter-600"
+          style="
+            color: #ffffff;
+            margin-left: -10px;
+            background-color: #1944a7;
+            width: 129px;
+            z-index: 9999;
+            border-radius: 8px;
+            font-size: 14px;
+          "
+          (click)="copyText()"
+        >
+          <div class="flex items-center justify-center gap-[8px]">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M20 13.125L20 5.99991C20 4.34304 18.6568 2.99989 17 2.99991L9.875 2.99999M14 21L7.25 21C6.00736 21 5 19.9926 5 18.75L5 8.99999C5 7.75735 6.00736 6.74999 7.25 6.74999L14 6.74999C15.2426 6.74999 16.25 7.75735 16.25 8.99999L16.25 18.75C16.25 19.9926 15.2426 21 14 21Z"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            Sao chép
+          </div>
+        </button>
+      </div>
       <div class="flex justify-center gap-[15px] mt-[25px]">
         <svg
           (click)="navigateToDownload('appstore')"
+          style="cursor: pointer"
           width="180"
           height="52"
           viewBox="0 0 180 52"
@@ -1425,6 +1465,7 @@
         </svg>
         <svg
           (click)="navigateToDownload('chplay')"
+          style="cursor: pointer"
           width="180"
           height="52"
           viewBox="0 0 180 52"

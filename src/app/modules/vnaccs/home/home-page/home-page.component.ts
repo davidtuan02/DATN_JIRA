@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core'
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzCarouselComponent, NzCarouselModule } from 'ng-zorro-antd/carousel'
@@ -17,6 +17,9 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 })
 export class HomePageComponent {
   @ViewChild('carousel') carousel!: NzCarouselComponent
+  currentTime: number = 0
+  videoDuration: number = 0
+  @ViewChild('videoRef', { static: true }) videoRef!: ElementRef<HTMLVideoElement>
   isLogin: boolean = false
   dataTable: any = []
   effect = 'scrollx'
@@ -37,9 +40,22 @@ export class HomePageComponent {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
+    this.videoRef.nativeElement.onloadedmetadata = () => {
+      this.videoDuration = this.videoRef.nativeElement.duration
+    }
   }
 
-  onVideoEnded(carousel: NzCarouselComponent) {
+  updateSlider(video: HTMLVideoElement) {
+    this.currentTime = video.currentTime
+  }
+
+  onSliderChange(event: any, video: HTMLVideoElement) {
+    const newTime = event.target.value
+    video.currentTime = newTime
+    this.currentTime = newTime
+  }
+
+  onVideoEnded(carousel: any) {
     carousel.next()
   }
 

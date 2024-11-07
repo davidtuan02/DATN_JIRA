@@ -1,8 +1,9 @@
 @import '../../../shared/styles/variable';
 
-::ng-deep .ant-dropdown-menu {
-  width: 100%;
+.ant-dropdown-menu {
+  width: 100% !important;
   min-width: auto;
+  border-radius: 8px;
 }
 
 .menu-container {

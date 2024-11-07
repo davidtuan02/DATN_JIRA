@@ -208,7 +208,7 @@ export class AccountRegisterComponent {
         }
       }
     }
-    console.log(this.modeScreen)
+    // console.log(this.modeScreen)
   }
 
   responseFromCustom: any

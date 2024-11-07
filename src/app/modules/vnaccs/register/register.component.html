@@ -388,7 +388,8 @@
             Đóng
           </button>
           <button
-            (click)="fromDetailToUpdate()"
+            *ngIf="modeScreen === 'detail'"
+            (click)="fromDetailToUpdate($event)"
             class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
             style="
               height: 40px;

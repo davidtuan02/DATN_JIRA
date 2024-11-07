@@ -22,7 +22,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
 import { NzTableModule } from 'ng-zorro-antd/table'
-import { ActivatedRoute, Router, RouteReuseStrategy, RouterLink } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouteReuseStrategy, RouterLink } from '@angular/router'
 import { NotificationService } from '../../../shared/services/notification.service'
 import { RegisterService } from './register.service'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
@@ -87,38 +87,7 @@ export class RegisterComponent implements OnInit {
   isVisibleDownload: boolean = false
   modalTitleDownload: string = 'Tải ứng dụng di động để đăng ký MySign'
 
-  listOfData = [
-    {
-      serialNumber: 'CT-001',
-      subjectDN: '123456789',
-      validFrom: '30/10/2024',
-      validTo: '01/01/2025'
-    },
-    {
-      serialNumber: 'CT-002',
-      subjectDN: '987654321',
-      validFrom: '01/02/2022',
-      validTo: '01/02/2023'
-    },
-    {
-      serialNumber: 'CT-003',
-      subjectDN: '456789123',
-      validFrom: '01/03/2022',
-      validTo: '01/03/2023'
-    },
-    {
-      serialNumber: 'CT-004',
-      subjectDN: '321654987',
-      validFrom: '01/04/2022',
-      validTo: '01/04/2023'
-    },
-    {
-      serialNumber: 'CT-005',
-      subjectDN: '789123456',
-      validFrom: '01/05/2022',
-      validTo: '01/05/2023'
-    }
-  ]
+  listOfData: any[] = []
 
   dataToEditOrView: any
 
@@ -137,6 +106,14 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        console.log('Navigation started', event)
+      }
+      if (event instanceof NavigationEnd) {
+        console.log('Navigation ended', event)
+      }
+    })
     const endpoint = this.router.url.split('/').pop() as 'register' | 'account-admin-update' | 'account-admin-detail'
     this.determineMode(endpoint)
   }
@@ -176,13 +153,6 @@ export class RegisterComponent implements OnInit {
   }
 
   determineMode(endpoint: string) {
-    const state = history.state
-    if (state && state.data) {
-      this.dataToEditOrView = state.data
-      if (this.dataToEditOrView) {
-        this.applyDataToEditOrView(this.dataToEditOrView)
-      }
-    }
     switch (endpoint) {
       case 'register': {
         this.modeScreen = 'register'
@@ -201,18 +171,20 @@ export class RegisterComponent implements OnInit {
         break
       }
     }
-    // console.log(this.modeScreen)
+    const state = history.state
+    if (state && state.data) {
+      this.dataToEditOrView = state.data
+      if (this.dataToEditOrView) {
+        this.applyDataToEditOrView(this.dataToEditOrView)
+      }
+    }
   }
 
-  fromDetailToUpdate() {
+  fromDetailToUpdate(event: Event) {
+    event.preventDefault()
     this.router.navigate(['/vnaccs/home/account-admin-update'], {
-      state: {
-        data: this.dataToEditOrView
-      }
+      state: { data: this.dataToEditOrView }
     })
-    // this.routeStateService.clearRouteStateAndNavigate('/vnaccs/home/account-admin-update', {
-    //   data: this.dataToEditOrView
-    // })
   }
 
   sendCustom() {

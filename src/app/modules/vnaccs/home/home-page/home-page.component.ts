@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core'
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzCarouselComponent, NzCarouselModule } from 'ng-zorro-antd/carousel'
@@ -15,7 +15,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
   standalone: true,
   imports: [NzButtonModule, TranslateModule, CommonModule, NzCarouselModule, NzToolTipModule]
 })
-export class HomePageComponent {
+export class HomePageComponent implements AfterViewInit {
   @ViewChild('carousel') carousel!: NzCarouselComponent
   currentTime: number = 0
   videoDuration: number = 0
@@ -40,8 +40,13 @@ export class HomePageComponent {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
-    this.videoRef.nativeElement.onloadedmetadata = () => {
-      this.videoDuration = this.videoRef.nativeElement.duration
+  }
+
+  ngAfterViewInit() {
+    if (this.videoRef?.nativeElement) {
+      this.videoRef.nativeElement.onloadedmetadata = () => {
+        this.videoDuration = this.videoRef.nativeElement.duration
+      }
     }
   }
 

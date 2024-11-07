@@ -1,8 +1,8 @@
-import {Routes} from '@angular/router'
-import {MainLayoutVnaccsComponent} from './layouts/main-layout/main-layout.component'
-import {ROUTERS} from './shared/constants/router.const'
-import {authGuard} from './core/auth.guard'
-import {LoginComponent} from './modules/vnaccs/login/login.component'
+import { Routes } from '@angular/router'
+import { MainLayoutVnaccsComponent } from './layouts/main-layout/main-layout.component'
+import { ROUTERS } from './shared/constants/router.const'
+import { authGuard } from './core/auth.guard'
+import { LoginComponent } from './modules/vnaccs/login/login.component'
 
 export const routes: Routes = [
   {
@@ -14,7 +14,7 @@ export const routes: Routes = [
     path: 'vnaccs',
     component: MainLayoutVnaccsComponent,
     children: [
-      {path: '', redirectTo: 'home', pathMatch: 'full'},
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         loadComponent: () => import('./modules/vnaccs/home/home.component').then((c) => c.HomeComponent),
@@ -53,7 +53,6 @@ export const routes: Routes = [
             path: 'account-admin-detail',
             loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
           },
-
           {
             path: 'search-custom',
             loadComponent: () => import('./modules/vnaccs/home/search/search.component').then((c) => c.SearchComponent)
@@ -66,7 +65,9 @@ export const routes: Routes = [
           {
             path: 'account-information',
             loadComponent: () =>
-              import('./modules/vnaccs/account-information/account-information.component').then(c => c.AccountInformationComponent)
+              import('./modules/vnaccs/account-information/account-information.component').then(
+                (c) => c.AccountInformationComponent
+              )
           }
         ]
         // canActivate: [authGuard]

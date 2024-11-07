@@ -17,7 +17,7 @@ import { ConfirmPopupComponent } from '../../../../shared/components/confirm-pop
 import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
-import * as forge from "node-forge"
+import * as forge from 'node-forge'
 declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-send-custom',
@@ -131,8 +131,7 @@ export class SendCustomComponent {
     this.form.markAllAsTouched()
     const rawFormData = this.getCTSForm.getRawValue()
     if (
-      !rawFormData.digitalSignature ||
-      !rawFormData.nameCert ||
+      (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
       !rawFormData.serial ||
       !rawFormData.provider ||
       !rawFormData.effectiveDate ||

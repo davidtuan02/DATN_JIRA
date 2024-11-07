@@ -711,8 +711,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.markAllAsTouched()
     const rawFormData = this.formValidateUserId.getRawValue()
     if (
-      !rawFormData.digitalSignature ||
-      !rawFormData.nameCert ||
+      (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
       !rawFormData.serial ||
       !rawFormData.provider ||
       !rawFormData.effectiveDate ||

@@ -141,8 +141,7 @@ export class UpdateSignatureComponent implements OnInit {
     this.loginForm.markAllAsTouched()
     const rawFormData = this.loginForm.getRawValue()
     if (
-      !rawFormData.digitalSignature ||
-      !rawFormData.nameCert ||
+      (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
       !rawFormData.serial ||
       !rawFormData.provider ||
       !rawFormData.effectiveDate ||

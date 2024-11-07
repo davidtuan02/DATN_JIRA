@@ -241,8 +241,7 @@ export class RegisterComponent implements OnInit {
     }
     const rawFormData = this.loginForm.getRawValue()
     if (
-      !rawFormData.digitalSignature ||
-      !rawFormData.nameCert ||
+      (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
       !rawFormData.serial ||
       !rawFormData.provider ||
       !rawFormData.effectiveDate ||

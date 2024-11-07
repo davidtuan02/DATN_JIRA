@@ -31,7 +31,13 @@ export class HomePageComponent implements AfterViewInit {
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private notification: NotificationService
-  ) {}
+  ) {
+    if (this.videoRef?.nativeElement) {
+      this.videoRef.nativeElement.onloadedmetadata = () => {
+        this.videoDuration = this.videoRef.nativeElement.duration
+      }
+    }
+  }
 
   ngOnInit() {
     this.getGuideVideoFile()
@@ -42,13 +48,7 @@ export class HomePageComponent implements AfterViewInit {
     })
   }
 
-  ngAfterViewInit() {
-    if (this.videoRef?.nativeElement) {
-      this.videoRef.nativeElement.onloadedmetadata = () => {
-        this.videoDuration = this.videoRef.nativeElement.duration
-      }
-    }
-  }
+  ngAfterViewInit() {}
 
   updateSlider(video: HTMLVideoElement) {
     this.currentTime = video.currentTime

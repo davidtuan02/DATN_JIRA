@@ -17,7 +17,8 @@ import { ConfirmPopupComponent } from '../../../../shared/components/confirm-pop
 import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
-
+import * as forge from "node-forge"
+declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-send-custom',
   templateUrl: './send-custom.component.html',
@@ -389,5 +390,54 @@ export class SendCustomComponent {
       this.form.get('credentialId')?.setValue(data.credentialId)
       this.form.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
+  }
+
+  async getVTCAInfo() {
+    initPlugin(this)
+  }
+
+  patchValueToForm(key: string, value: any) {
+    if (value) {
+      if (key === 'effectiveDate' || key === 'expiryDate') {
+        this.form.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+      } else this.form.get(key)?.setValue(value)
+    }
+  }
+
+  // Function to parse the certificate and get the public key
+  async getPublicKeyFromCertificate(base64Cert: string): Promise<any> {
+    try {
+      // Decode the base64-encoded certificate to DER format
+      const certDer = forge.util.decode64(base64Cert)
+      const certAsn1 = forge.asn1.fromDer(certDer)
+      const certificate = forge.pki.certificateFromAsn1(certAsn1)
+
+      // Get the public key
+      const publicKey = certificate.publicKey
+      return publicKey
+    } catch (error) {
+      console.error('Error extracting public key with node-forge:', error)
+      return null
+    }
+  }
+
+  convertDateFormat(dateStr: string): string {
+    // Parse the input date string in "dd/MM/yyyy HH:mm" format
+    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hour, minute)
+
+    // Format the date as "yyyyMMddHHmmss+0700"
+    const yyyy = date.getFullYear().toString()
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    const HH = date.getHours().toString().padStart(2, '0')
+    const mm = date.getMinutes().toString().padStart(2, '0')
+    const ss = date.getSeconds().toString().padStart(2, '0')
+
+    // Append the timezone offset in the "+0700" format
+    const timezoneOffset = '+0700' // adjust if necessary
+    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
 }

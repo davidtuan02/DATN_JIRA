@@ -263,8 +263,21 @@ export class SendCustomComponent {
     try {
       // Tách phần payload (phần thứ 2 của JWT)
       const base64Url = token.split('.')[1]
+
+      // Xử lý chuỗi Base64Url
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+
+      // Giải mã Base64 và phân tích JSON
       const decodedPayload = JSON.parse(window.atob(base64))
+
+      // Kiểm tra và lấy phần "sub" trước dấu ";"
+      if (decodedPayload.sub) {
+        const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
+        decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
+      }
+
+      // In payload ra console để kiểm tra
+      console.log(decodedPayload)
 
       return decodedPayload
     } catch (error) {

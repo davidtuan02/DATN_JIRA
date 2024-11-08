@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {DatePipe, NgIf} from "@angular/common";
-import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
-import {NzFormDirective} from "ng-zorro-antd/form";
-import {NzInputDirective, NzInputGroupComponent, NzInputGroupWhitSuffixOrPrefixDirective} from "ng-zorro-antd/input";
-import {NzRadioComponent, NzRadioGroupComponent} from "ng-zorro-antd/radio";
-import {STORAGE_KEYS} from "../../../../shared/constants/system.const";
-import {Router, RouterLink} from "@angular/router";
-import {AccountInformationService} from "../account-information.service";
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { DatePipe, NgIf } from '@angular/common'
+import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid'
+import { NzFormDirective } from 'ng-zorro-antd/form'
+import { NzInputDirective, NzInputGroupComponent, NzInputGroupWhitSuffixOrPrefixDirective } from 'ng-zorro-antd/input'
+import { NzRadioComponent, NzRadioGroupComponent } from 'ng-zorro-antd/radio'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import { Router, RouterLink } from '@angular/router'
+import { AccountInformationService } from '../account-information.service'
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 @Component({
   selector: 'app-admin-account-info',
   standalone: true,
@@ -25,16 +25,16 @@ import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
     NzRowDirective,
     ReactiveFormsModule,
     RouterLink,
-    AutoTrimDirective,
+    AutoTrimDirective
   ],
   providers: [DatePipe],
   templateUrl: './admin-account-info.component.html',
-  styleUrl: './admin-account-info.component.scss',
+  styleUrl: './admin-account-info.component.scss'
 })
 export class AdminAccountInfoComponent implements OnInit {
-  taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!;
-  token = localStorage.getItem(STORAGE_KEYS.TOKEN)!;
-  form: FormGroup;
+  taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!
+  token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
+  form: FormGroup
 
   constructor(
     private router: Router,
@@ -45,7 +45,7 @@ export class AdminAccountInfoComponent implements OnInit {
     this.form = this.fb.group({
       taxCode: [null],
       email: [null],
-      digitalSignatureType: ["1"],
+      digitalSignatureType: ['1'],
       digitalSignature: [null],
       serial: [null],
       provider: [null],
@@ -59,7 +59,7 @@ export class AdminAccountInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.decodeToken(this.token).sub;
+    const id = this.decodeToken(this.token).sub
     this.accountInfoService.getAdminInfo(id).subscribe((res: any) => {
       this.form.patchValue({
         taxCode: res.data.taxCode,
@@ -68,15 +68,15 @@ export class AdminAccountInfoComponent implements OnInit {
         digitalSignature: res.data.digitalSignature,
         serial: res.data.serial,
         provider: res.data.provider,
-        effectiveDate: this.datePipe.transform(res.data.effectiveDate, "dd/MM/yyyy"),
-        expiryDate: this.datePipe.transform(res.data.expiryDate, "dd/MM/yyyy"),
+        effectiveDate: this.datePipe.transform(res.data.effectiveDate, 'dd/MM/yyyy'),
+        expiryDate: this.datePipe.transform(res.data.expiryDate, 'dd/MM/yyyy'),
         publicKey: res.data.publicKey,
         nameCert: res.data.digitalSignature,
         taxCodeCTS: res.data.taxCodeCTS,
         credentialId: res.data.credentialId
       })
     })
-    this.form.disable();
+    this.form.disable()
   }
 
   decodeToken(token: string): any {
@@ -87,8 +87,21 @@ export class AdminAccountInfoComponent implements OnInit {
     try {
       // Tách phần payload (phần thứ 2 của JWT)
       const base64Url = token.split('.')[1]
+
+      // Xử lý chuỗi Base64Url
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+
+      // Giải mã Base64 và phân tích JSON
       const decodedPayload = JSON.parse(window.atob(base64))
+
+      // Kiểm tra và lấy phần "sub" trước dấu ";"
+      if (decodedPayload.sub) {
+        const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
+        decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
+      }
+
+      // In payload ra console để kiểm tra
+      console.log(decodedPayload)
 
       return decodedPayload
     } catch (error) {

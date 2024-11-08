@@ -1,24 +1,25 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 import {
   AbstractControl,
-  FormBuilder, FormControl,
+  FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators
-} from "@angular/forms";
-import {NzModalFooterDirective, NzModalRef} from "ng-zorro-antd/modal";
-import {PASSWORD_REGEX} from "../../../../shared/constants/regex.const";
-import {NzFormDirective} from "ng-zorro-antd/form";
-import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
-import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
-import {NgForOf, NgIf} from "@angular/common";
-import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
-import {NzIconDirective} from "ng-zorro-antd/icon";
-import {NzButtonComponent} from "ng-zorro-antd/button";
-import {HomeService} from "../home.service";
-import {STORAGE_KEYS} from "../../../../shared/constants/system.const";
-import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
+} from '@angular/forms'
+import { NzModalFooterDirective, NzModalRef } from 'ng-zorro-antd/modal'
+import { PASSWORD_REGEX } from '../../../../shared/constants/regex.const'
+import { NzFormDirective } from 'ng-zorro-antd/form'
+import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid'
+import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select'
+import { NgForOf, NgIf } from '@angular/common'
+import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input'
+import { NzIconDirective } from 'ng-zorro-antd/icon'
+import { NzButtonComponent } from 'ng-zorro-antd/button'
+import { HomeService } from '../home.service'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-provide-new-password',
@@ -43,17 +44,13 @@ import {AutoTrimDirective} from "../../../../shared/directives/trim.directive";
   styleUrl: './provide-new-password.component.scss'
 })
 export class ProvideNewPasswordComponent implements OnInit {
-  form: FormGroup = new FormGroup({});
-  listUserId: any = [];
-  passwordVisible: boolean = false;
-  rePasswordVisible: boolean = false;
+  form: FormGroup = new FormGroup({})
+  listUserId: any = []
+  passwordVisible: boolean = false
+  rePasswordVisible: boolean = false
 
-  constructor(
-    private fb: FormBuilder,
-    private ref: NzModalRef,
-    private homeService: HomeService
-  ) {
-    this.buildForm();
+  constructor(private fb: FormBuilder, private ref: NzModalRef, private homeService: HomeService) {
+    this.buildForm()
   }
 
   ngOnInit() {
@@ -64,27 +61,30 @@ export class ProvideNewPasswordComponent implements OnInit {
   }
 
   buildForm() {
-    this.form = this.fb.group({
-      userid: [null, Validators.required],
-      password: [null, Validators.compose([Validators.required, Validators.pattern(PASSWORD_REGEX)])],
-      rePassword: [null, Validators.compose([Validators.required])]
-    }, {validators: this.passwordMatchValidator})
+    this.form = this.fb.group(
+      {
+        userid: [null, Validators.required],
+        password: [null, Validators.compose([Validators.required, Validators.pattern(PASSWORD_REGEX)])],
+        rePassword: [null, Validators.compose([Validators.required])]
+      },
+      { validators: this.passwordMatchValidator }
+    )
   }
 
   get password(): FormControl {
-    return this.form.get('password') as FormControl;
+    return this.form.get('password') as FormControl
   }
 
   get rePassword(): FormControl {
-    return this.form.get("rePassword") as FormControl;
+    return this.form.get('rePassword') as FormControl
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const password = control.get('password')?.value;
-    const rePassword = control.get('rePassword')?.value;
+    const password = control.get('password')?.value
+    const rePassword = control.get('rePassword')?.value
 
     // Return error if passwords do not match
-    return password && rePassword && password !== rePassword ? {passwordMismatch: true} : null;
+    return password && rePassword && password !== rePassword ? { passwordMismatch: true } : null
   }
 
   onCloseModal() {
@@ -93,8 +93,8 @@ export class ProvideNewPasswordComponent implements OnInit {
 
   onUpdate() {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
+      this.form.markAllAsTouched()
+      return
     }
     this.ref.close(this.form.getRawValue())
   }

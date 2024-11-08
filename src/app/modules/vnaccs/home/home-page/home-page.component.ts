@@ -7,6 +7,8 @@ import { HomeService } from '../home.service'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { NotificationService } from '../../../../shared/services/notification.service'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import { saveAs } from 'file-saver'
+import { catchError, of } from 'rxjs'
 
 @Component({
   selector: 'app-home-page',
@@ -114,33 +116,40 @@ export class HomePageComponent implements AfterViewInit {
     })
   }
 
+  isDownloading: boolean = false
+
   downloadGuideFile() {
-    this.homeSrv.downloadGuideFile().subscribe((res: any) => {
-      if (res && res.message === 'OK') {
-        const base64Data = res.data
-        const binaryString = window.atob(base64Data)
+    // Disable button or show loading indicator to prevent double clicks
+    this.isDownloading = true // Track the download state (you need to define this in your component)
 
-        const byteArray = new Uint8Array(binaryString.length)
+    this.homeSrv
+      .downloadGuideFile()
+      .pipe(
+        catchError((error) => {
+          console.error('Error downloading file:', error)
+          // Notify the user about the error
+          alert('Failed to download file. Please try again later.')
+          return of(null) // Return null or any fallback value
+        })
+      )
+      .subscribe((res: any) => {
+        // Re-enable the button or hide the loading indicator
+        this.isDownloading = false
 
-        for (let i = 0; i < binaryString.length; i++) {
-          byteArray[i] = binaryString.charCodeAt(i)
+        if (res) {
+          try {
+            // Convert ArrayBuffer to Blob with MIME type (adjust as needed)
+
+            // Use FileSaver.js to save the file
+            saveAs(res, 'downloaded_file.zip') // Specify the file name
+          } catch (error) {
+            console.error('Error processing the file:', error)
+            alert('Error processing the downloaded file. Please try again later.')
+          }
         }
-
-        const blob = new Blob([byteArray], { type: 'application/octet-stream' })
-        const url = window.URL.createObjectURL(blob)
-
-        const a = document.createElement('a')
-        a.href = url
-
-        a.download = 'Hướng dẫn sử dụng.pdf'
-        document.body.appendChild(a)
-        a.click()
-
-        window.URL.revokeObjectURL(url)
-        a.remove()
-      }
-    })
+      })
   }
+
   downloadJDK() {
     const link = document.createElement('a')
     link.href = 'https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz'

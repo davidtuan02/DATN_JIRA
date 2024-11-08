@@ -655,7 +655,6 @@ export class AccountRegisterComponent {
 
   showModalUserId(mode: 'add' | 'view' | 'edit', data: any, index: any) {
     this.isVisible = true
-    console.log(this.formValidateUserId.value)
     this.formValidateUserId.reset()
     this.formValidateUserId.enable()
 
@@ -687,7 +686,6 @@ export class AccountRegisterComponent {
   }
 
   setValueForm(data: any) {
-    // console.log(data)
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)
@@ -696,10 +694,12 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('idNo')?.setValue(data?.idNo)
     this.formValidateUserId.get('customsEffectiveDate')?.setValue(data?.customsEffectiveDate)
     this.formValidateUserId.get('customsExpiryDate')?.setValue(data?.customsExpiryDate)
-    // this.formValidateUserId.get('digitalSignatureType')?.setValue(data?.digitalSignatureType?.toString())
     this.radioValue = data?.digitalSignatureType?.toString()
-    this.formValidateUserId.get('digitalSignature')?.setValue(data?.digitalSignature)
-    this.formValidateUserId.get('nameCert')?.setValue(data?.digitalSignature)
+    if (this.radioValue === '1') {
+      this.formValidateUserId.get('digitalSignature')?.setValue(data?.digitalSignature)
+    } else if (this.radioValue === '2') {
+      this.formValidateUserId.get('nameCert')?.setValue(data?.digitalSignature)
+    }
     this.formValidateUserId.get('serial')?.setValue(data?.serial)
     this.formValidateUserId.get('provider')?.setValue(data?.provider)
     this.formValidateUserId.get('effectiveDate')?.setValue(this.convertTimestampToDate(data?.effectiveDate))
@@ -757,18 +757,20 @@ export class AccountRegisterComponent {
 
   editUserId() {
     const body = {
-      userId: this.formValidateUserId.value.userId,
-      fullName: this.formValidateUserId.value.fullName,
-      email: this.formValidateUserId.value.email,
-      idType: this.formValidateUserId.value.idType,
-      idNo: this.formValidateUserId.value.idNo,
-      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.join(';'),
-      customsEffectiveDate: this.formValidateUserId.value.customsEffectiveDate,
-      customsExpiryDate: this.formValidateUserId.value.customsExpiryDate,
+      userId: this.formValidateUserId.getRawValue().userId,
+      fullName: this.formValidateUserId.getRawValue().fullName,
+      email: this.formValidateUserId.getRawValue().email,
+      idType: this.formValidateUserId.getRawValue().idType,
+      idNo: this.formValidateUserId.getRawValue().idNo,
+      fieldOfActivity: this.formValidateUserId.getRawValue().fieldOfActivity?.join(';'),
+      customsEffectiveDate: this.formValidateUserId.getRawValue().customsEffectiveDate,
+      customsExpiryDate: this.formValidateUserId.getRawValue().customsExpiryDate,
 
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
       digitalSignature:
-        this.radioValue === '1' ? this.form.getRawValue().digitalSignature : this.form.getRawValue().nameCert,
+        this.radioValue === '1'
+          ? this.formValidateUserId.getRawValue().digitalSignature
+          : this.formValidateUserId.getRawValue().nameCert,
       serial: this.formValidateUserId.getRawValue().serial,
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
@@ -791,14 +793,14 @@ export class AccountRegisterComponent {
     const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
 
     const body = {
-      userId: this.formValidateUserId.value.userId,
-      fullName: this.formValidateUserId.value.fullName,
-      email: this.formValidateUserId.value.email,
-      idType: this.formValidateUserId.value.idType,
-      idNo: this.formValidateUserId.value.idNo,
-      fieldOfActivity: this.formValidateUserId.value.fieldOfActivity?.join(';'),
-      customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.value.customsEffectiveDate),
-      customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.value.customsExpiryDate),
+      userId: this.formValidateUserId.getRawValue().userId,
+      fullName: this.formValidateUserId.getRawValue().fullName,
+      email: this.formValidateUserId.getRawValue().email,
+      idType: this.formValidateUserId.getRawValue().idType,
+      idNo: this.formValidateUserId.getRawValue().idNo,
+      fieldOfActivity: this.formValidateUserId.getRawValue().fieldOfActivity?.join(';'),
+      customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().customsEffectiveDate),
+      customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().customsExpiryDate),
       digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
       digitalSignature:
         this.radioValue === '1'
@@ -1118,9 +1120,23 @@ export class AccountRegisterComponent {
     }
 
     try {
+      // Tách phần payload (phần thứ 2 của JWT)
       const base64Url = token.split('.')[1]
+
+      // Xử lý chuỗi Base64Url
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+
+      // Giải mã Base64 và phân tích JSON
       const decodedPayload = JSON.parse(window.atob(base64))
+
+      // Kiểm tra và lấy phần "sub" trước dấu ";"
+      if (decodedPayload.sub) {
+        const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
+        decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
+      }
+
+      // In payload ra console để kiểm tra
+      console.log(decodedPayload)
 
       return decodedPayload
     } catch (error) {

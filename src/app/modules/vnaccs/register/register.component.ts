@@ -276,6 +276,11 @@ export class RegisterComponent implements OnInit {
       if (result) {
         if (this.modeScreen === 'update') {
           //update
+          // this.registerSrv.getCertInfo(this.loginForm.getRawValue().taxCode).subscribe((res: any) => {
+          //   if (res) {
+          //     console.log(res)
+          //   }
+          // })
           const body = {
             taxCode: this.loginForm.getRawValue().taxCode,
             digitalSignatureType: this.loginForm.getRawValue().digitalSignatureType,

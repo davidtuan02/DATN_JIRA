@@ -26,11 +26,24 @@
     display: flex;
     height: 100%;
     align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    svg {
+      transition: filter 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà cho SVG */
+    }
+
+    &:hover {
+      background-color: #385bad; /* Thay đổi nền thành xanh đậm khi hover */
+      color: white; /* Đổi màu chữ thành trắng khi hover */
+
+      svg {
+        filter: invert(1); /* Đảo ngược màu của SVG khi hover */
+      }
+    }
 
     .item-content {
       display: flex;
       align-items: center;
-      // justify-content: center;
       padding-left: 80px;
       gap: 8px;
     }
@@ -40,16 +53,17 @@
       align-items: center;
       gap: 8px;
     }
-
-    &:hover {
-      background-color: #1944a7;
-      color: white;
-    }
   }
+
   .item.selected {
     background-color: #1944a7;
     color: white;
+
+    svg {
+      filter: invert(1); /* Đảo ngược màu của SVG khi mục được chọn */
+    }
   }
+
   .item-2 {
     border-left: 1px solid #1944a7;
     border-right: 1px solid #1944a7;

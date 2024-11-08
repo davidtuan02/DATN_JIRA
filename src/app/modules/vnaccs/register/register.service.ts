@@ -21,7 +21,7 @@ export class RegisterService {
   }
 
   register(body: any) {
-    return this.api.post<any>(this.PREFIX_API + '/admin-account', body)
+    return this.api.post<any>(this.PREFIX_API + '/admin-account/register', body)
   }
 
   getCertInfo(param: any) {

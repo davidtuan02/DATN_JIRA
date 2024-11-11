@@ -1,104 +1,914 @@
-<div class="login-container flex flex-col w-100 pt-[46px] px-[200px] pb-[44px]">
-  <div class="flex justify-center items-center font-inter-600 color-primary" style="font-size: 24px">
-    <span *ngIf="modeScreen === 'register'">Đăng ký tài khoản quản trị</span>
-    <span *ngIf="modeScreen === 'update'">Sửa thông tin tài khoản quản trị</span>
-    <span *ngIf="modeScreen === 'detail'">Xem thông tin tài khoản quản trị</span>
+<div class="accre-container flex flex-column py-[60px]">
+  <div class="title flex justify-center">
+    <span
+      *ngIf="modeScreen === 'register' || modeScreen === 'detail'"
+      class="font-inter color-primary"
+      style="font-size: 20px"
+      >Đăng ký mới tài khoản: MST {{ taxCode }}</span
+    >
+    <span *ngIf="modeScreen === 'update'" class="font-inter color-primary" style="font-size: 20px"
+      >Sửa thông tin tài khoản: MST {{ taxCode }}</span
+    >
   </div>
-  <div class="flex flex-col">
-    <div class="flex justify-start font-inter mb-[10px]" style="font-size: 14px">
-      <span class="font-inter" style="font-size: 14px">Thông tin chung</span>
+  <form nz-form [formGroup]="form">
+    <div class="flex flex-start">
+      <span class="font-inter" style="font-size: 18px; color: #000000">Thông tin chung</span>
     </div>
-    <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="mt-[18px]">
+      <nz-row [nzGutter]="[20, 20]">
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Tên người đại diện <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input
+              type="text"
+              nzAllowClear
+              nz-input
+              placeholder="Nhập tên người đại diện"
+              maxlength="50"
+              formControlName="representativeName"
+            />
+          </nz-input-group>
+          <p *ngIf="getRepresentativeError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getRepresentativeError() }}
+          </p>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Loại giấy tờ người đại diện <span style="color: #ed5564">*</span></label>
+          <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
+            <nz-option
+              *ngFor="let option of optionRepresent"
+              [nzValue]="option.value"
+              [nzLabel]="option.label"
+              style="background-color: #1944a7"
+            >
+            </nz-option>
+          </nz-select>
+          <p *ngIf="getRepresentativeNameError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getRepresentativeNameError() }}
+          </p>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label"
+            >Số CMND/CCCD/Hộ chiếu người đại diện <span style="color: #ed5564">*</span></label
+          >
+          <nz-input-group style="border-radius: 8px">
+            <input
+              type="text"
+              nz-input
+              placeholder="Nhập số CMND/CCCD/Hộ chiếu"
+              maxlength="15"
+              formControlName="representativeIdNo"
+            />
+          </nz-input-group>
+          <p *ngIf="getIdNoError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getIdNoError() }}
+          </p>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Địa chỉ doanh nghiệp <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input
+              type="text"
+              nz-input
+              placeholder="Nhập địa chỉ doanh nghiệp"
+              maxlength="250"
+              formControlName="address"
+            />
+          </nz-input-group>
+          <p *ngIf="getBusinessAddressError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getBusinessAddressError() }}
+          </p>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label"
+            >Lĩnh vực hoạt động của doanh nghiệp <span style="color: #ed5564">*</span></label
+          >
+          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
+            @for (option of listOfOption; track option.value) {
+            <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+            }
+          </nz-select>
+          <p *ngIf="getFieldOfActivityError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getFieldOfActivityError() }}
+          </p>
+        </nz-col>
+        <nz-col nzSpan="24">
+          <label for="" class="custom-label">Đề xuất của doanh nghiệp</label>
+          <textarea
+            style="min-height: 100px; border-radius: 8px"
+            nz-input
+            nzPlaceHolder="Nhập đề xuất của doanh nghiệp"
+            maxlength="500"
+            formControlName="proposal"
+          >
+          </textarea>
+          <p style="max-height: 10px" class="text-danger fs-14"></p>
+        </nz-col>
+      </nz-row>
+    </div>
+    <div class="flex flex-start">
+      <span class="font-inter" style="font-size: 18px">Thông tin User code</span>
+    </div>
+    <div class="mt-[18px]">
+      <nz-row [nzGutter]="[16, 20]">
+        <nz-col nzSpan="8" *ngIf="modeScreen === 'update' || modeScreen === 'detail'">
+          <label for="" class="custom-label">User code <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input type="text" nz-input formControlName="userCode" />
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Phần mềm khai báo miễn phí <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input
+              type="text"
+              nz-input
+              placeholder="Nhập số lượng"
+              maxlength="4"
+              formControlName="freeSoftware"
+              (blur)="setDefaultValue('freeSoftware')"
+              (input)="formatNumber($event, 'freeSoftware')"
+              (keypress)="allowOnlyNumbers($event)"
+            />
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label"
+            >Phần mềm do bên thứ 3 hoặc tự xây dựng <span style="color: #ed5564">*</span></label
+          >
+          <nz-input-group style="border-radius: 8px">
+            <input
+              type="text"
+              nz-input
+              placeholder="Nhập số lượng"
+              formControlName="ediSoftware"
+              maxlength="4"
+              (blur)="setDefaultValue('ediSoftware')"
+              (input)="formatNumber($event, 'ediSoftware')"
+              (keypress)="allowOnlyNumbers($event)"
+            />
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Số lượng máy tính <span style="color: #ed5564">*</span></label>
+          <nz-input-group style="border-radius: 8px">
+            <input type="text" nz-input formControlName="numberComputer" />
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <label for="" class="custom-label">Ngày hết hiệu lực User code</label>
+          <nz-input-group style="border-radius: 8px">
+            <nz-date-picker
+              nzSize="large"
+              [nzFormat]="dateFormat"
+              [nzPlaceHolder]="'dd/mm/yyyy'"
+              [nzAllowClear]="true"
+              [nzDisabledDate]="disabledDate"
+              [nzSuffixIcon]="suffixDate"
+              class="custom-date-picker"
+              style="width: 100%"
+              formControlName="userCodeExpiryDate"
+            >
+            </nz-date-picker>
+          </nz-input-group>
+        </nz-col>
+      </nz-row>
+    </div>
+  </form>
+  <!-- table -->
+  <div class="flex flex-column mt-[16px]">
+    <div class="flex flex-start mb-[16px]">
+      <span class="font-inter color-primary" style="font-size: 18px"
+        >Danh sách người khai hải quan (User ID) ({{ dataTable.length }})</span
+      >
+    </div>
+    <div>
       <nz-row nzGutter="16">
-        <!-- Mã số thuế -->
+        <nz-col nzSpan="8">
+          <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch">
+            <input
+              type="text"
+              style="padding: 4px 12px"
+              [(ngModel)]="searchKey"
+              (ngModelChange)="onSearch($event)"
+              nz-input
+              placeholder="Nhập Họ tên, CCCD/CMND/Hộ chiếu, hoặc Email"
+            />
+          </nz-input-group>
+        </nz-col>
+        <nz-col nzSpan="16">
+          <div class="flex justify-content-end gap-[16px] items-center mb-[5px]">
+            <button
+              *ngIf="modeScreen === 'update' || modeScreen === 'register'"
+              type="submit"
+              class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+              (click)="showModalUserId('add', null, null)"
+              style="
+                height: 40px;
+                width: 120px;
+                background-color: #1944a7 !important;
+                font-size: 14px;
+                border-radius: 8px;
+              "
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10.0023 6.93945V13.0448"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M13.0564 9.99215H6.94531"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M13.9061 1.66675H6.09654C3.37432 1.66675 1.66797 3.59348 1.66797 6.32105V13.6791C1.66797 16.4067 3.36638 18.3334 6.09654 18.3334H13.9061C16.6362 18.3334 18.3346 16.4067 18.3346 13.6791V6.32105C18.3346 3.59348 16.6362 1.66675 13.9061 1.66675Z"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Thêm mới
+            </button>
+
+            <!-- enable -->
+            <button
+              *ngIf="setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
+              (click)="deleteMany()"
+              nz-button
+              class="rounded font-bold text-white bg-red"
+              style="height: 40px; width: 44px; display: flex; justify-content: center; align-items: center"
+            >
+              <div style="width: 20px">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17.2567 5.19963H3.125"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <!-- disable -->
+            <button
+              *ngIf="!setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
+              [disabled]="true"
+              nz-button
+              class="rounded font-bold"
+              style="
+                height: 40px;
+                width: 44px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: pink;
+              "
+            >
+              <div style="width: 20px">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17.2567 5.19963H3.125"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </nz-col>
+      </nz-row>
+    </div>
+
+    <!-- table -->
+    <div class="border rounded-lg mt-[27px]">
+      <nz-table
+        #basicTable
+        [nzData]="dataTable"
+        [nzShowPagination]="false"
+        [nzFrontPagination]="false"
+        nzTableLayout="fixed"
+        nzNoResult="Không tìm thấy bản ghi nào"
+        [nzScroll]="{ x: '1500px' }"
+      >
+        <thead>
+          <tr>
+            <th
+              nzWidth="30px"
+              [nzChecked]="checked"
+              [nzIndeterminate]="indeterminate"
+              (nzCheckedChange)="onAllChecked($event)"
+            ></th>
+            <th nzAlign="center" nzWidth="30px" style="font-size: 14px">STT</th>
+            <th *ngIf="modeScreen === 'update'" nzAlign="center" nzWidth="60px" style="font-size: 14px">User ID</th>
+            <th nzAlign="center" nzWidth="100px" style="font-size: 14px">Họ tên</th>
+            <th nzAlign="left" nzWidth="130px" style="font-size: 14px">Số CMND/CCCD/Hộ chiếu</th>
+            <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Email</th>
+            <th nzAlign="center" nzWidth="120px" style="font-size: 14px">Ngày hiệu lực khai Hải quan</th>
+            <th nzAlign="center" nzWidth="120px" style="font-size: 14px">Ngày hết hiệu lực khai Hải quan</th>
+            <th nzAlign="center" nzWidth="80px" style="font-size: 14px">Trạng thái</th>
+            <th nzAlign="center" nzWidth="60px" style="font-size: 14px">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let data of dataTable; let index = index; let odd = odd"
+            [ngStyle]="{ 'background-color': odd ? '#f7f8f8' : 'white' }"
+          >
+            <td [nzChecked]="setOfCheckedIndex.has(index)" (nzCheckedChange)="onItemChecked(index, $event)"></td>
+            <td nzAlign="center" style="font-size: 14px">
+              {{ (paginate.page - 1) * paginate.size + index + 1 }}
+            </td>
+            <!-- user ID  -->
+            <td *ngIf="modeScreen === 'update'" nzAlign="center" style="font-size: 14px">
+              <div class="flex items-center">
+                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.userId">
+                  {{ data.userId }}
+                </span>
+              </div>
+            </td>
+            <!-- ho ten -->
+            <td nzAlign="left" style="font-size: 14px">
+              <div class="flex items-center">
+                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.fullName">
+                  {{ data.fullName }}
+                </span>
+              </div>
+            </td>
+            <!-- cccd -->
+            <td nzgn="left" style="font-size: 14px">
+              <div class="flex items-center">
+                <span
+                  style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+                  class="cell-table"
+                  nz-tooltip
+                  [nzTooltipTitle]="data.idNo"
+                  >{{ data.idNo }}</span
+                >
+              </div>
+            </td>
+            <!-- mail -->
+            <td nzAlign="left" style="font-size: 14px">
+              <div class="flex items-center" style="overflow: hidden">
+                <span
+                  style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+                  class="cell-table"
+                  nz-tooltip
+                  [nzTooltipTitle]="data.email"
+                  >{{ data.email }}</span
+                >
+              </div>
+            </td>
+            <!-- ngay hieu luc  -->
+            <td nzAlign="center" style="font-size: 14px">
+              <!-- <div class="flex items-center"> -->
+              <span
+                class="cell-table"
+                nz-tooltip
+                [nzTooltipTitle]="data.customsEffectiveDate | date : 'dd/MM/yyyy hh:mm:ss'"
+                >{{ data.customsEffectiveDate | date : 'dd/MM/yyyy' }}</span
+              >
+              <!-- </div> -->
+            </td>
+            <!-- ngay het hieu luc  -->
+            <td nzAlign="center" style="font-size: 14px">
+              <!-- <div class="flex items-center"> -->
+              <span
+                class="cell-table"
+                nz-tooltip
+                [nzTooltipTitle]="data.customsExpiryDate | date : 'dd/MM/yyyy hh:mm:ss'"
+                >{{ data.customsExpiryDate | date : 'dd/MM/yyyy' }}</span
+              >
+              <!-- </div> -->
+            </td>
+            <!-- trang thai   -->
+            <td nzAlign="center" style="font-size: 14px">
+              <span
+                class="flex items-center justify-center py-[1px]"
+                style="line-height: 24px"
+                nz-tooltip
+                [nzTooltipTitle]="getStatusItemTable(data)"
+                [ngClass]="
+                  getStatusItemTable(data) === 'Có hiệu lực'
+                    ? 'effective'
+                    : getStatusItemTable(data) === 'Hết hiệu lực'
+                    ? 'expiry'
+                    : 'no-effective'
+                "
+                style="border-radius: 4px"
+              >
+                {{ getStatusItemTable(data) }}</span
+              >
+            </td>
+            <!-- thao tac  -->
+            <td nzAlign="center" style="font-size: 14px">
+              <div class="flex justify-center items-center gap-2">
+                <span
+                  nz-tooltip
+                  [nzTooltipTitle]="'Xem chi tiết'"
+                  style="cursor: pointer"
+                  (click)="showModalUserId('view', data, index)"
+                >
+                  <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5.74536 6.99992C5.74536 8.7777 7.20065 10.2242 8.9974 10.2242C10.786 10.2242 12.2413 8.7777 12.2413 6.99992C12.2413 5.21406 10.786 3.7676 8.9974 3.7676C7.20065 3.7676 5.74536 5.21406 5.74536 6.99992ZM13.7779 2.0383C15.2006 3.13729 16.412 4.74537 17.2819 6.75749C17.347 6.91103 17.347 7.08881 17.2819 7.23426C15.5421 11.2585 12.4446 13.6666 8.9974 13.6666H8.98927C5.55024 13.6666 2.45268 11.2585 0.712843 7.23426C0.647802 7.08881 0.647802 6.91103 0.712843 6.75749C2.45268 2.73325 5.55024 0.333252 8.98927 0.333252H8.9974C10.721 0.333252 12.3551 0.931232 13.7779 2.0383ZM8.99837 9.01026C10.1122 9.01026 11.0228 8.10521 11.0228 6.99814C11.0228 5.88299 10.1122 4.97794 8.99837 4.97794C8.90081 4.97794 8.80325 4.98602 8.71382 5.00218C8.6813 5.89107 7.94959 6.60218 7.04715 6.60218H7.0065C6.98211 6.73147 6.96585 6.86077 6.96585 6.99814C6.96585 8.10521 7.87642 9.01026 8.99837 9.01026Z"
+                      fill="#E9E165"
+                    />
+                  </svg>
+                </span>
+
+                <span
+                  *ngIf="modeScreen === 'update' || modeScreen === 'register'"
+                  nz-tooltip
+                  [nzTooltipTitle]="'Chỉnh sửa'"
+                  style="cursor: pointer"
+                  (click)="showModalUserId('edit', data, index)"
+                >
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12.8851 0.675361C14.0839 0.600438 15.266 1.01667 16.1568 1.8325C16.9726 2.72324 17.3888 3.90535 17.3223 5.11244V12.8877C17.3972 14.0948 16.9726 15.2769 16.1651 16.1677C15.2744 16.9835 14.0839 17.3997 12.8851 17.3248H5.10979C3.90269 17.3997 2.72057 16.9835 1.82982 16.1677C1.01399 15.2769 0.597752 14.0948 0.672675 12.8877V5.11244C0.597752 3.90535 1.01399 2.72324 1.82982 1.8325C2.72057 1.01667 3.90269 0.600438 5.10979 0.675361H12.8851ZM8.14833 13.0376L13.7509 7.41838C14.2587 6.90225 14.2587 6.06978 13.7509 5.56197L12.6687 4.47976C12.1526 3.96363 11.3201 3.96363 10.8039 4.47976L10.2462 5.04584C10.1629 5.12909 10.1629 5.27061 10.2462 5.35385C10.2462 5.35385 11.5698 6.66916 11.5948 6.70246C11.6864 6.80236 11.7446 6.93555 11.7446 7.0854C11.7446 7.38509 11.5032 7.63483 11.1952 7.63483C11.0537 7.63483 10.9205 7.57655 10.8289 7.48498L9.43868 6.10308C9.37208 6.03648 9.25553 6.03648 9.18893 6.10308L5.21801 10.074C4.94329 10.3487 4.78512 10.715 4.7768 11.1062L4.72685 13.0792C4.72685 13.1874 4.76015 13.2873 4.83507 13.3622C4.90999 13.4372 5.00989 13.4788 5.11811 13.4788H7.07444C7.47403 13.4788 7.85697 13.3206 8.14833 13.0376Z"
+                      fill="#085CB4"
+                    />
+                  </svg>
+                </span>
+
+                <span
+                  *ngIf="modeScreen === 'update' || modeScreen === 'register'"
+                  nz-tooltip
+                  [nzTooltipTitle]="'Xóa'"
+                  (click)="deleteItem(index)"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="cursor: pointer"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M16.9059 4.36922C17.2301 4.36922 17.5 4.63839 17.5 4.98088V5.29755C17.5 5.63171 17.2301 5.90921 16.9059 5.90921H3.09488C2.76988 5.90921 2.5 5.63171 2.5 5.29755V4.98088C2.5 4.63839 2.76988 4.36922 3.09488 4.36922H5.52464C6.01821 4.36922 6.44775 4.01839 6.55879 3.5234L6.68603 2.95507C6.88378 2.18091 7.53458 1.66675 8.27939 1.66675H11.7206C12.4573 1.66675 13.1154 2.18091 13.3059 2.91424L13.442 3.52256C13.5522 4.01839 13.9818 4.36922 14.4762 4.36922H16.9059ZM15.6715 15.9451C15.9252 13.581 16.3693 7.96435 16.3693 7.90769C16.3855 7.73602 16.3296 7.57352 16.2186 7.44269C16.0994 7.32019 15.9487 7.24769 15.7826 7.24769H4.22377C4.05681 7.24769 3.89796 7.32019 3.78774 7.44269C3.6759 7.57352 3.62079 7.73602 3.62889 7.90769C3.63038 7.9181 3.64632 8.11594 3.67296 8.4467C3.79132 9.91607 4.12097 14.0086 4.33399 15.9451C4.48474 17.3718 5.42082 18.2684 6.77672 18.3009C7.82302 18.3251 8.90094 18.3334 10.0032 18.3334C11.0414 18.3334 12.0958 18.3251 13.1745 18.3009C14.5774 18.2767 15.5127 17.3959 15.6715 15.9451Z"
+                      fill="#ED5564"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <!-- response info from custom  -->
+    <div
+      class="flex flex-column pt-[63px]"
+      *ngIf="responseFromCustom === 2 || responseFromCustom === 3 || responseFromCustom === 0"
+    >
+      <span class="font-inter" style="font-size: 18px">Thông tin phản hồi của Hải quan</span>
+      <nz-row nzGutter="20">
+        <nz-col nzSpan="8">
+          <span class="me-[14px] font-inter-400" style="font-size: 14px">Kết quả:</span
+          ><span
+            [ngClass]="responseFromCustom === 2 ? 'status-2' : responseFromCustom === 3 ? 'status-3' : 'status-0'"
+            style="padding: 4px; font-size: 14px; text-align: center; border-radius: 4px; line-height: 24px"
+            >{{ getResultResponseFromCustom() }}</span
+          >
+        </nz-col>
+        <nz-col nzSpan="8">
+          <span class="me-[14px] font-inter-400" style="font-size: 14px">Ngày phản hồi:</span
+          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.approvalTime | date : 'dd/MM/yyyy' }}</span>
+        </nz-col>
+      </nz-row>
+
+      <nz-row nzGutter="20">
+        <!-- <nz-col nzSpan="8">
+          <span class="me-[14px] font-inter-400" style="font-size: 14px">Đơn vị Hải quan phản hồi:</span
+          ><span class="font-inter" style="font-size: 14px">00P001 - Văn phòng tổng cục (Tổng cục Hải quan)</span>
+        </nz-col> -->
+        <nz-col nzSpan="8">
+          <span class="me-[14px] font-inter-400" style="font-size: 14px">Ghi nhận Hải quan:</span
+          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.customsDepartmentNote }}</span>
+        </nz-col>
+      </nz-row>
+    </div>
+
+    <!-- button -->
+    <nz-row nzSpan="24">
+      <div class="flex justify-center items-center gap-[10px] w-100 mt-[50px]">
+        <button
+          *ngIf="modeScreen === 'register'"
+          [routerLink]="['/vnaccs/home']"
+          type="button"
+          class="font-inter-600 flex items-center justify-center gap-[8px]"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: #f5f5f5;
+            color: #1944a7 !important;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M3.999 0.998047L1 4.00005L4 7.00005"
+              stroke="#699BF7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6 10H11C13 10 14 9 14 7C14 4 13 4 11 4H1"
+              stroke="#1944A7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Bỏ qua
+        </button>
+        <!-- <button
+          *ngIf="modeScreen === 'update'"
+          type="button"
+          class="font-inter-600 flex items-center justify-center gap-[8px]"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: #f5f5f5;
+            color: #1944a7 !important;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          Đóng
+        </button> -->
+        <button
+          *ngIf="modeScreen === 'detail' || modeScreen === 'update'"
+          [routerLink]="['/vnaccs/home/search-custom']"
+          type="button"
+          class="font-inter-600 flex items-center justify-center gap-[8px]"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: #f5f5f5;
+            color: #1944a7 !important;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          Đóng
+        </button>
+        <button
+          *ngIf="modeScreen === 'register'"
+          type="submit"
+          (click)="submit()"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
+        >
+          <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
+              fill="white"
+            />
+          </svg>
+          Đăng ký
+        </button>
+        <button
+          *ngIf="modeScreen === 'detail' && responseFromCustom === 1"
+          type="submit"
+          (click)="fromDetailToUpdate()"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
+        >
+          Chỉnh sửa
+        </button>
+        <button
+          *ngIf="modeScreen === 'detail' && responseFromCustom === 1"
+          [routerLink]="['/vnaccs/home/send-custom']"
+          type="submit"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="
+            height: 40px;
+            width: 145px;
+            background-color: white !important;
+            color: #3bb54a !important;
+            border: 0.5px solid #3bb54a;
+            font-size: 14px;
+            border-radius: 8px;
+          "
+        >
+          Gửi hải quan
+        </button>
+        <button
+          *ngIf="modeScreen === 'update'"
+          [routerLink]="['/vnaccs/home/account-update']"
+          type="submit"
+          (click)="submit()"
+          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
+        >
+          <!-- <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
+              fill="white"
+            />
+          </svg> -->
+          Lưu
+        </button>
+      </div>
+    </nz-row>
+  </div>
+</div>
+
+<!-- modal thêm người khai-->
+<nz-modal
+  [nzCentered]="true"
+  [(nzVisible)]="isVisible"
+  [nzMaskClosable]="false"
+  [nzBodyStyle]="{ height: 'auto', 'overflow-y': 'auto' }"
+  [nzStyle]="{ width: '1200px' }"
+  (nzOnCancel)="handleCancel()"
+  [nzMaskClosable]="false"
+  [nzOkLoading]="isOkLoading"
+  [nzFooter]="footerTemplate"
+>
+  <div *nzModalTitle class="font-inter-600" style="font-size: 18px">
+    {{ modalTitleSender }}
+  </div>
+
+  <div *nzModalContent class="d-flex flex-column gap-3 mt-[-25px]">
+    <form nz-form class="pt-[11px]" [formGroup]="formValidateUserId">
+      <div class="flex items-center justify-start mb-[3px]">
+        <span class="font-inter" style="font-size: 14px">Thông tin người khai</span>
+      </div>
+
+      <nz-row [nzGutter]="[16, 20]">
+        <ng-container *ngIf="mode === 'add'; else editOrViewMode">
+          <!-- Ho ten  -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
+            <nz-input-group style="border-radius: 8px">
+              <input
+                autoTrim
+                type="text"
+                nz-input
+                placeholder="Nhập họ tên"
+                formControlName="fullName"
+                maxlength="50"
+              />
+            </nz-input-group>
+            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getFullNameError() }}
+            </p>
+          </nz-col>
+
+          <!-- Email  -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
+            <nz-input-group style="border-radius: 8px">
+              <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
+            </nz-input-group>
+            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getEmailError() }}
+            </p>
+          </nz-col>
+        </ng-container>
+
+        <ng-template #editOrViewMode>
+          <!-- UserId -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">User ID <span style="color: #ed5564">*</span></label>
+            <nz-input-group style="border-radius: 8px">
+              <input autoTrim type="text" nz-input formControlName="userId" maxlength="50" />
+            </nz-input-group>
+          </nz-col>
+
+          <!-- Ho ten  -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
+            <nz-input-group style="border-radius: 8px">
+              <input
+                autoTrim
+                type="text"
+                nz-input
+                placeholder="Nhập họ tên"
+                formControlName="fullName"
+                maxlength="50"
+              />
+            </nz-input-group>
+            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getFullNameError() }}
+            </p>
+          </nz-col>
+        </ng-template>
+      </nz-row>
+
+      <nz-row [nzGutter]="[16, 20]">
+        <ng-container *ngIf="mode === 'add'; else editOrViewModeRow2">
+          <!-- lĩnh vực hoạt động -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ed5564">*</span></label>
+            <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
+              @for (option of listOfOption; track option.value) {
+              <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+              }
+            </nz-select>
+            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getFieldOfActivityValidateError() }}
+            </p>
+          </nz-col>
+        </ng-container>
+
+        <ng-template #editOrViewModeRow2>
+          <!-- Email  -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
+            <nz-input-group style="border-radius: 8px">
+              <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
+            </nz-input-group>
+            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getEmailError() }}
+            </p>
+          </nz-col>
+
+          <!-- lĩnh vực hoạt động -->
+          <nz-col nzSpan="12">
+            <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ed5564">*</span></label>
+            <nz-select
+              nzSize="large"
+              nzMode="multiple"
+              nzPlaceHolder="-Chọn-"
+              formControlName="fieldOfActivity"
+              [nzShowArrow]="true"
+            >
+              @for (option of listOfOption; track option.value) {
+              <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+              }
+            </nz-select>
+            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
+              {{ getFieldOfActivityValidateError() }}
+            </p>
+
+            <ng-template #iconSelect>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M19 8.5L12 15.5L5 8.5"
+                  stroke="#A5A5A5"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </ng-template>
+          </nz-col>
+        </ng-template>
+      </nz-row>
+
+      <nz-row [nzGutter]="[16, 20]">
+        <!-- loai giay to  -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
+          <label for="" class="custom-label">Loại giấy tờ <span style="color: #ed5564">*</span></label>
+          <nz-select nzAllowClear nzSize="large" formControlName="idType">
+            <nz-option
+              *ngFor="let option of optionRepresent"
+              [nzValue]="option.value"
+              [nzLabel]="option.label"
+              style="background-color: #1944a7"
+            >
+            </nz-option>
+          </nz-select>
+          <p *ngIf="getIdTypeValidateError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getIdTypeValidateError() }}
+          </p>
+
+          <!-- <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
+            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
+              style="background-color: #1944A7;">
+            </nz-option>
+          </nz-select> -->
+        </nz-col>
+        <!-- so cmnd/cccd  -->
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label">Số CMND/CCCD/Hộ chiếu <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
             <input
               autoTrim
               type="text"
               nz-input
-              formControlName="taxCode"
-              placeholder="Nhập mã số thuế"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 13);"
+              placeholder="Nhập số CMND/CCCD/Hộ chiếu"
+              maxlength="15"
+              formControlName="idNo"
             />
           </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
-            {{ getTaxCodeError() }}
+          <p *ngIf="getIdNoValidateError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getIdNoValidateError() }}
           </p>
         </nz-col>
+      </nz-row>
 
-        <!-- Email -->
+      <nz-row [nzGutter]="[16, 20]">
+        <!-- thời gian hiệu lực khai hải quan  -->
         <nz-col nzSpan="12">
-          <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
+          <label for="" class="custom-label"
+            >Thời gian hiệu lực khai báo hải quan <span style="color: #ed5564">*</span></label
+          >
           <nz-input-group style="border-radius: 8px">
-            <input
-              autoTrim
-              type="text"
-              nz-input
-              formControlName="email"
-              placeholder="Nhập email"
-              oninput="if(this.value.length > 150) this.value = this.value.slice(0, 150);"
-            />
+            <nz-date-picker
+              nzSize="large"
+              [nzFormat]="dateFormat"
+              [nzPlaceHolder]="'dd/mm/yyyy'"
+              [nzAllowClear]="true"
+              [nzSuffixIcon]="suffixDate"
+              class="custom-date-picker"
+              style="width: 100%"
+              formControlName="customsEffectiveDate"
+            >
+            </nz-date-picker>
           </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
-            {{ getEmailError() }}
+          <p *ngIf="getFromDateError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getFromDateError() }}
+          </p>
+        </nz-col>
+
+        <!-- thòi gian hét hiệu lực  -->
+        <nz-col nzSpan="12">
+          <label for="" class="custom-label"
+            >Thời gian hết hiệu lực khai báo hải quan <span style="color: #ed5564">*</span></label
+          >
+          <nz-input-group style="border-radius: 8px">
+            <nz-date-picker
+              nzSize="large"
+              [nzFormat]="dateFormat"
+              [nzPlaceHolder]="'dd/mm/yyyy'"
+              [nzAllowClear]="true"
+              [nzSuffixIcon]="suffixDate"
+              class="custom-date-picker"
+              style="width: 100%"
+              formControlName="customsExpiryDate"
+            >
+            </nz-date-picker>
+          </nz-input-group>
+          <p *ngIf="getExpiryDateValidateError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getExpiryDateValidateError() }}
           </p>
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16" *ngIf="modeScreen === 'register'">
-        <!-- Mật khẩu -->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Mật khẩu <span style="color: #ed5564">*</span></label>
-          <nz-input-group [nzSuffix]="suffixPassword" style="border-radius: 8px">
-            <input
-              [type]="passwordVisible ? 'text' : 'password'"
-              nz-input
-              formControlName="adminPassword"
-              placeholder="Nhập mật khẩu"
-              oninput="if(this.value.length > 1503) this.value = this.value.slice(0, 50);"
-              minlength="8"
-              maxlength="50"
-            />
-          </nz-input-group>
-          <p style="max-height: 25px" class="text-danger fs-14">
-            {{ getPassError() }}
-          </p>
-        </nz-col>
-
-        <!-- Xác nhận lại mật khẩu -->
-        <nz-col nzSpan="12">
-          <label for="" class="custom-label">Xác nhận lại mật khẩu <span style="color: #ed5564">*</span></label>
-          <nz-input-group [nzSuffix]="suffixConfirmPassword" style="border-radius: 8px">
-            <input
-              [type]="confirmPasswordVisible ? 'text' : 'password'"
-              nz-input
-              autoTrim
-              formControlName="confirmPassword"
-              placeholder="Xác nhận lại mật khẩu"
-              minlength="8"
-              maxlength="50"
-              oninput="if(this.value.length > 50) this.value = this.value.slice(0, 50);"
-            />
-          </nz-input-group>
-          <p style="max-height: 10px" class="text-danger fs-14">
-            {{ getConfirmPassError() }}
-          </p>
-        </nz-col>
-      </nz-row>
-
-      <div class="flex items-center justify-start font-inter" style="font-size: 14px">
+      <div class="flex items-center justify-start mt-[18px] mb-[3px]">
         <span class="font-inter" style="font-size: 14px">Thông tin chữ ký số</span>
       </div>
 
-      <nz-row nzGutter="16">
+      <nz-row [nzGutter]="[16, 20]">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
             <div class="flex flex-col gap-[10px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
-              <nz-radio-group [(ngModel)]="radioValue" formControlName="digitalSignatureType" style="font-size: 14px">
+              <nz-radio-group style="font-size: 14px" [(ngModel)]="radioValue" formControlName="digitalSignatureType">
                 <label nz-radio nzValue="1">Usb token</label>
                 <label nz-radio nzValue="2">Viettel - Mysign</label>
               </nz-radio-group>
@@ -109,7 +919,7 @@
                 type="button"
                 class="text-white button flex justify-center"
                 style="width: 258px; border-radius: 8px; background-color: #1944a7 !important"
-                (click)="radioValue === '2' ? showModal() : getVTCAInfo()"
+                (click)="radioValue === '2' ? showModalCTS() : getVTCAInfo()"
               >
                 <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px">
                   <div class="svg">
@@ -144,10 +954,10 @@
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
             <label for="" class="custom-label">Chữ ký số <span style="color: #ed5564">*</span></label>
-            <!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
-            <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
-            <!--              </nz-option>-->
-            <!--            </nz-select>-->
+<!--            <nz-select nzPlaceHolder="-Chọn-" nzSize="large" formControlName="digitalSignature">-->
+<!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
+<!--              </nz-option>-->
+<!--            </nz-select>-->
             <nz-input-group style="border-radius: 8px">
               <input autoTrim text nz-input maxlength="13" formControlName="digitalSignature" />
             </nz-input-group>
@@ -160,7 +970,7 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px">
-              <input autoTrim text nz-input maxlength="13" formControlName="nameCert" />
+              <input text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
             <p style="max-height: 10px" class="text-danger fs-14"></p>
           </nz-col>
@@ -172,7 +982,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input autoTrim text nz-input formControlName="serial" />
+            <input text nz-input formControlName="serial" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -181,7 +991,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Nhà cung cấp chữ ký số <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
-            <input autoTrim text nz-input formControlName="provider" />
+            <input text nz-input formControlName="provider" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -191,8 +1001,8 @@
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input autoTrim text nz-input formControlName="effectiveDate" />
+          <nz-input-group [nzSuffix]="suffixDate" style="border-radius: 8px">
+            <input text nz-input formControlName="effectiveDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -278,7 +1088,7 @@
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hết hiệu lực <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px" [nzSuffix]="suffixDate">
-            <input autoTrim text nz-input formControlName="expiryDate" />
+            <input text nz-input formControlName="expiryDate" />
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
@@ -287,157 +1097,29 @@
       <!-- Khóa công khai -->
       <nz-row nzSpan="24">
         <label for="" class="custom-label">Khóa công khai <span style="color: #ed5564">*</span></label>
-        <textarea style="min-height: 100px; border-radius: 8px" formControlName="publicKey" nz-input> </textarea>
+        <textarea style="min-height: 100px; border-radius: 8px" nz-input formControlName="publicKey"> </textarea>
         <p style="max-height: 10px" class="text-danger fs-14"></p>
-      </nz-row>
-
-      <nz-row nzSpan="24">
-        <!-- register  -->
-        <div class="flex justify-center items-center gap-[10px] w-100 mt-[30px]">
-          <button
-            *ngIf="modeScreen === 'register'"
-            [routerLink]="['/vnaccs']"
-            type="button"
-            class="font-inter-600"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: #f5f5f5;
-              color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            Đóng
-          </button>
-          <button
-            *ngIf="modeScreen === 'register'"
-            type="submit"
-            class="font-inter-600 text-white"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            Đăng ký
-          </button>
-
-          <!-- update  -->
-
-          <button
-            *ngIf="modeScreen === 'update'"
-            [routerLink]="['/vnaccs/home/search-custom']"
-            type="button"
-            class="font-inter-600 flex items-center justify-center gap-[8px]"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: #f5f5f5;
-              color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M1.9 14L0.5 12.6L6.1 7L0.5 1.4L1.9 0L7.5 5.6L13.1 0L14.5 1.4L8.9 7L14.5 12.6L13.1 14L7.5 8.4L1.9 14Z"
-                fill="#1944A7"
-              />
-            </svg>
-            Đóng
-          </button>
-          <button
-            *ngIf="modeScreen === 'update'"
-            type="submit"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-            style="
-              height: 40px;
-              width: 170px;
-              background-color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
-                fill="white"
-              />
-            </svg>
-            Cập nhật
-          </button>
-
-          <!-- detail -->
-          <button
-            *ngIf="modeScreen === 'detail'"
-            [routerLink]="['/vnaccs/home/search-custom']"
-            type="button"
-            class="font-inter-600 flex items-center justify-center gap-[8px]"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: #f5f5f5;
-              color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            Đóng
-          </button>
-          <button
-            *ngIf="modeScreen === 'detail'"
-            (click)="fromDetailToUpdate($event)"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: #1944a7 !important;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            Chỉnh sửa
-          </button>
-          <button
-            *ngIf="modeScreen === 'detail' && requestStatus === 1"
-            (click)="sendCustom()"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-            style="
-              height: 40px;
-              width: 145px;
-              background-color: white !important;
-              color: #3bb54a !important;
-              border: 0.5px solid #3bb54a;
-              font-size: 14px;
-              border-radius: 8px;
-            "
-          >
-            Gửi hải quan
-          </button>
-        </div>
       </nz-row>
     </form>
   </div>
-</div>
+</nz-modal>
 
-<!-- modal lấy chứng thư số-->
+<!-- modal lấy chứng thư số  -->
 <nz-modal
   [nzCentered]="true"
-  [(nzVisible)]="isVisible"
-  [nzBodyStyle]="{ height: 'auto' }"
-  [nzStyle]="{ width: '1200px', 'border-radius': '8px' }"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOk()"
-  nzMaskClosable="false"
+  [(nzVisible)]="isVisibleModalCTS"
+  [nzBodyStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
+  [nzStyle]="{ width: '1200px' }"
+  (nzOnCancel)="handleCancelCTS()"
+  [nzMaskClosable]="false"
   [nzOkLoading]="isOkLoading"
-  [nzFooter]="footerTemplate"
+  [nzFooter]="footerCTSTemplate"
 >
-  <div *nzModalTitle class="font-inter-600" style="font-size: 18px">{{ modalTitle }}</div>
+  <div *nzModalTitle class="font-inter-600" style="font-size: 18px">
+    {{ modalTitleGetCTS }}
+  </div>
 
-  <div *nzModalContent class="d-flex flex-column gap-[12px] mt-[-10px]">
+  <div *nzModalContent class="d-flex flex-column gap-3 mt-[-10px]">
     <div class="flex flex-column">
       <div class="font-inter-500" style="font-size: 14px">
         <span>Tài khoản MySign <span style="color: #ed5564">*</span></span>
@@ -534,75 +1216,77 @@
       <div class="font-inter" style="font-size: 14px; margin-bottom: 12px">
         <span>Danh sách chứng thư số</span>
       </div>
-      <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false" nzTableLayout="fixed">
-        <thead>
-          <tr>
-            <th nzWidth="70px" nzAlign="center" class="font-inter">STT</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Tên chứng thư</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Số seri</th>
-            <th nzWidth="200px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
-            <th nzWidth="170px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
-            <th nzWidth="100px" nzAlign="center" class="font-inter">Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of listOfData; let i = index">
-            <td nzAlign="center">{{ i + 1 }}</td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center">
-                <span
-                  nzEllipsis
-                  style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
-                  class="cell-table"
-                  nz-tooltip
-                  [nzTooltipTitle]="data.serialNumber"
-                  >{{ data.serialNumber }}</span
+      <div style="overflow-y: auto">
+        <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false" nzTableLayout="fixed">
+          <thead>
+            <tr>
+              <th nzWidth="70px" nzAlign="center" class="font-inter">STT</th>
+              <th nzWidth="150px" nzAlign="center" class="font-inter">Tên chứng thư</th>
+              <th nzWidth="150px" nzAlign="center" class="font-inter">Số seri</th>
+              <th nzWidth="200px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
+              <th nzWidth="150px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
+              <th nzWidth="170px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
+              <th nzWidth="100px" nzAlign="center" class="font-inter">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of listOfData; let i = index">
+              <td nzAlign="center">{{ i + 1 }}</td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center">
+                  <span
+                    nzEllipsis
+                    style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+                    class="cell-table"
+                    nz-tooltip
+                    [nzTooltipTitle]="data.serialNumber"
+                    >{{ data.serialNumber }}</span
+                  >
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validFrom)">{{
+                    formatDateFromString(data.validFrom)
+                  }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center" style="overflow: hidden">
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validTo)">{{
+                    formatDateFromString(data.validTo)
+                  }}</span>
+                </div>
+              </td>
+              <td nzAlign="center">
+                <button
+                  (click)="applyData(data)"
+                  class="font-inter-600 text-white"
+                  style="
+                    border-radius: 8px;
+                    background-color: #1944a7 !important;
+                    width: 77px;
+                    height: 34px;
+                    font-size: 14px;
+                  "
                 >
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validFrom)">{{
-                  formatDateFromString(data.validFrom)
-                }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validTo)">{{
-                  formatDateFromString(data.validTo)
-                }}</span>
-              </div>
-            </td>
-            <td nzAlign="center">
-              <button
-                (click)="applyData(data)"
-                class="font-inter-600 text-white"
-                style="
-                  border-radius: 8px;
-                  background-color: #1944a7 !important;
-                  width: 77px;
-                  height: 34px;
-                  font-size: 14px;
-                "
-              >
-                Chọn
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+                  Chọn
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
     </div>
   </div>
 </nz-modal>
@@ -954,23 +1638,160 @@
   </svg>
 </ng-template>
 
+<!-- footer modal add  -->
 <ng-template #footerTemplate>
-  <button
-    style="
-      height: 40px;
-      width: 145px;
-      background-color: #f5f5f5;
-      border-radius: 8px;
-      color: #1944a7;
-      font-size: 14px;
-      margin-bottom: 5px;
-      margin-top: 5px;
-    "
-    class="font-inter-600"
-    (click)="handleCancel()"
+  <div class="flex h-[40px] justify-end px-2 gap-[11px] pt-[6px] my-[5px]">
+    <button
+      type="button"
+      class="font-inter-600"
+      style="
+        height: 40px;
+        width: 145px;
+        background-color: #f5f5f5;
+        color: #1944a7 !important;
+        font-size: 14px;
+        border-radius: 8px;
+      "
+      (click)="handleCancel()"
+    >
+      Đóng
+    </button>
+    <button
+      type="submit"
+      class="font-inter-600 text-white"
+      *ngIf="mode === 'add' || mode === 'edit'"
+      style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
+      (click)="submitValidateUserId()"
+    >
+      Lưu
+    </button>
+  </div>
+</ng-template>
+
+<!-- footer modal CTS  -->
+<ng-template #footerCTSTemplate>
+  <div class="flex h-[40px] justify-end px-2 gap-[11px] pt-[6px] my-[5px]">
+    <button
+      type="button"
+      class="font-inter-600"
+      style="
+        height: 40px;
+        width: 145px;
+        background-color: #f5f5f5;
+        color: #1944a7 !important;
+        font-size: 14px;
+        border-radius: 8px;
+      "
+      (click)="handleCancelCTS()"
+    >
+      Đóng
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #suffixDate>
+  <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M2.625 7.83688H17.4783"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.7493 11.0915H13.757"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M10.054 11.0915H10.0617"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.34308 11.0915H6.3508"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.7493 14.3303H13.757"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M10.054 14.3303H10.0617"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.34308 14.3303H6.3508"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.4173 1.66675V4.40906"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.68288 1.66675V4.40906"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M13.5788 2.98267H6.52268C4.07544 2.98267 2.54688 4.34594 2.54688 6.85185V14.3932C2.54688 16.9385 4.07544 18.3333 6.52268 18.3333H13.571C16.026 18.3333 17.5468 16.9622 17.5468 14.4563V6.85185C17.5546 4.34594 16.0337 2.98267 13.5788 2.98267Z"
+      stroke="#A5A5A5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</ng-template>
+
+<ng-template #prefixSearch>
+  <svg
+    style="margin-left: 17px"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    Đóng
-  </button>
+    <circle
+      cx="8.49047"
+      cy="8.48143"
+      r="7.49047"
+      stroke="#96A0B5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.6992 14.0803L16.6359 17.0094"
+      stroke="#96A0B5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
 </ng-template>
 
 <ng-template #footerDownloadTemplate>
@@ -981,152 +1802,4 @@
   >
     Đóng
   </button>
-</ng-template>
-
-<ng-template #suffixPassword>
-  <svg
-    style="cursor: pointer"
-    *ngIf="!passwordVisible"
-    (click)="passwordVisible = !passwordVisible"
-    width="20"
-    height="20"
-    viewBox="0 0 20 18"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M7.76094 11.3668C7.18594 10.7928 6.83594 10.0128 6.83594 9.1378C6.83594 7.3848 8.24794 5.9718 9.99994 5.9718C10.8669 5.9718 11.6649 6.3228 12.2299 6.8968"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M13.1073 9.69891C12.8753 10.9889 11.8593 12.0069 10.5703 12.2409"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M4.655 14.4723C3.068 13.2263 1.724 11.4063 0.75 9.13729C1.734 6.85829 3.087 5.02829 4.684 3.77229C6.271 2.51629 8.102 1.83429 10 1.83429C11.909 1.83429 13.739 2.52629 15.336 3.79129"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M17.4487 5.99081C18.1367 6.90481 18.7417 7.95981 19.2507 9.13681C17.2837 13.6938 13.8077 16.4388 10.0008 16.4388C9.13775 16.4388 8.28675 16.2988 7.46875 16.0258"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M17.8912 1.2496L2.11719 17.0236"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-
-  <svg
-    *ngIf="passwordVisible"
-    (click)="passwordVisible = !passwordVisible"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
-      stroke="#B3B3B3"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-      stroke="#B3B3B3"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-</ng-template>
-
-<ng-template #suffixConfirmPassword>
-  <svg
-    style="cursor: pointer"
-    *ngIf="!confirmPasswordVisible"
-    (click)="confirmPasswordVisible = !confirmPasswordVisible"
-    width="20"
-    height="20"
-    viewBox="0 0 20 18"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M7.76094 11.3668C7.18594 10.7928 6.83594 10.0128 6.83594 9.1378C6.83594 7.3848 8.24794 5.9718 9.99994 5.9718C10.8669 5.9718 11.6649 6.3228 12.2299 6.8968"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M13.1073 9.69891C12.8753 10.9889 11.8593 12.0069 10.5703 12.2409"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M4.655 14.4723C3.068 13.2263 1.724 11.4063 0.75 9.13729C1.734 6.85829 3.087 5.02829 4.684 3.77229C6.271 2.51629 8.102 1.83429 10 1.83429C11.909 1.83429 13.739 2.52629 15.336 3.79129"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M17.4487 5.99081C18.1367 6.90481 18.7417 7.95981 19.2507 9.13681C17.2837 13.6938 13.8077 16.4388 10.0008 16.4388C9.13775 16.4388 8.28675 16.2988 7.46875 16.0258"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M17.8912 1.2496L2.11719 17.0236"
-      stroke="#A5A5A5"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-
-  <svg
-    *ngIf="confirmPasswordVisible"
-    (click)="confirmPasswordVisible = !confirmPasswordVisible"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
-      stroke="#B3B3B3"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-      stroke="#B3B3B3"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
 </ng-template>

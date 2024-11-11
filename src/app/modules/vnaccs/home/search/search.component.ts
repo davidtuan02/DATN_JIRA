@@ -212,7 +212,8 @@ export class SearchComponent {
             if (res && res.errorCode == 0) {
               this.router.navigate(['/vnaccs/home/account-admin-detail'], {
                 state: {
-                  data: res.data
+                  data: res.data,
+                  requestStatus: data.requestStatus
                 }
               })
             }

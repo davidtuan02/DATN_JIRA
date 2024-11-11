@@ -151,15 +151,17 @@ export class HomePageComponent implements AfterViewInit {
   }
 
   downloadJDK() {
-    const link = document.createElement('a')
-    link.href = 'https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz'
-    link.target = '_blank'
-    link.download = 'JDK.zip'
-
-    document.body.appendChild(link)
-
-    link.click()
-
-    document.body.removeChild(link)
+    this.homeSrv.getJDK().subscribe((res: any) => {
+      if (res && res.code == 200 && res.data) {
+        const version = res.data
+        const link = document.createElement('a')
+        link.href = `https://download.oracle.com/java/${version}/latest/jdk-${version}_linux-aarch64_bin.tar.gz`
+        link.target = '_blank'
+        link.download = 'JDK.zip'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+    })
   }
 }

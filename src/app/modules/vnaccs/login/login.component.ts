@@ -200,20 +200,6 @@ export class LoginComponent implements OnInit {
         this.authService.setTaxCode(this.loginForm.value.taxCode)
       }
     })
-
-    // this.router.navigate(['vnaccs'])
-    // this.authService.setLoginStatus(true)
-    // localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
-    // sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.get('taxCode')?.value)
-    // this.authService.setTaxCode(this.loginForm.get('taxCode')?.value)
-    // localStorage.setItem(
-    //   STORAGE_KEYS.TOKEN,
-    //   'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    // )
-    // sessionStorage.setItem(
-    //   STORAGE_KEYS.TOKEN,
-    //   'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MCIsImlhdCI6MTczMDM1OTEyNywiZXhwIjoxNzMwNDQ1NTI3fQ.q91dMVaSfX-O2cOIvyOiLelF0bQX_qk91c78oAVsBRGy8bzI3Mr14vZG53Yf85vMU4NmEfMZCR90WIcCuhheUw'
-    // )
   }
 
   formatDateFromString = (dateString: string): string | null => {

@@ -93,6 +93,7 @@ export class RegisterComponent implements OnInit {
 
   modeScreen!: 'register' | 'update' | 'detail'
   getCTSForm!: FormGroup
+  requestStatus!: number
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -153,6 +154,18 @@ export class RegisterComponent implements OnInit {
   }
 
   determineMode(endpoint: string) {
+    const state = history.state
+    if (state) {
+      if (state.data) {
+        this.dataToEditOrView = state.data
+        if (this.dataToEditOrView) {
+          this.applyDataToEditOrView(this.dataToEditOrView)
+        }
+      }
+      if (state.requestStatus) {
+        this.requestStatus = state.requestStatus
+      }
+    }
     switch (endpoint) {
       case 'register': {
         this.modeScreen = 'register'
@@ -169,13 +182,6 @@ export class RegisterComponent implements OnInit {
         this.modeScreen = 'detail'
         this.loginForm.disable()
         break
-      }
-    }
-    const state = history.state
-    if (state && state.data) {
-      this.dataToEditOrView = state.data
-      if (this.dataToEditOrView) {
-        this.applyDataToEditOrView(this.dataToEditOrView)
       }
     }
   }
@@ -276,11 +282,6 @@ export class RegisterComponent implements OnInit {
       if (result) {
         if (this.modeScreen === 'update') {
           //update
-          // this.registerSrv.getCertInfo(this.loginForm.getRawValue().taxCode).subscribe((res: any) => {
-          //   if (res) {
-          //     console.log(res)
-          //   }
-          // })
           const body = {
             taxCode: this.loginForm.getRawValue().taxCode,
             digitalSignatureType: this.loginForm.getRawValue().digitalSignatureType,
@@ -294,7 +295,6 @@ export class RegisterComponent implements OnInit {
             taxCodeCTS: this.loginForm.getRawValue().taxCode
             // credentialId: '001301020532_5181042_20241017083237'
           }
-          // console.log(this.dataToEditOrView)
           if (this.dataToEditOrView.requestId) {
             this.registerSrv.update(this.dataToEditOrView.requestId, body).subscribe((res: any) => {
               if (res && res.success) {
@@ -305,7 +305,7 @@ export class RegisterComponent implements OnInit {
           } else {
             this.registerSrv.updateFirst(this.dataToEditOrView.id, body).subscribe((res: any) => {
               if (res && res.success) {
-                this.router.navigate(['vnaccs/home'])
+                this.router.navigate(['vnaccs/home/search-custom'])
                 this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
               }
             })
@@ -331,7 +331,7 @@ export class RegisterComponent implements OnInit {
           }
           this.registerSrv.register(body).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              this.router.navigate(['vnaccs/home'])
+              this.router.navigate(['vnaccs/home/search-custom'])
               this.notification.success('Đăng ký tài khoản quản trị thành công')
             }
           })

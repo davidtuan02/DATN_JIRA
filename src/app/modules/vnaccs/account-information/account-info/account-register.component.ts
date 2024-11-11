@@ -16,7 +16,7 @@ import { NzButtonComponent, NzButtonModule, NzButtonSize } from 'ng-zorro-antd/b
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
 import { CommonModule, DatePipe } from '@angular/common'
-import { AccountRegisterService } from './account-register.service'
+import { AccountInfoService } from './account-register.service'
 import { NzSelectSizeType } from 'ng-zorro-antd/select'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
@@ -36,7 +36,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon'
 declare function initPlugin(comp: any): void
 
 @Component({
-  selector: 'app-account-register',
+  selector: 'app-account-info',
   templateUrl: './account-register.component.html',
   styleUrls: ['./account-register.component.scss'],
   standalone: true,
@@ -148,7 +148,7 @@ export class AccountRegisterComponent {
   getCTSForm!: FormGroup
 
   constructor(
-    private accReSrv: AccountRegisterService,
+    private accReSrv: AccountInfoService,
     private fb: FormBuilder,
     private notification: NotificationService,
     private dialogService: DialogService,
@@ -705,8 +705,6 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('effectiveDate')?.setValue(this.convertTimestampToDate(data?.effectiveDate))
     this.formValidateUserId.get('expiryDate')?.setValue(this.convertTimestampToDate(data?.expiryDate))
     this.formValidateUserId.get('publicKey')?.setValue(data?.publicKey)
-    this.formValidateUserId.get('credentialId')?.setValue(data?.credentialId)
-    this.formValidateUserId.get('taxCodeCTS')?.setValue(data?.taxCodeCTS)
   }
 
   submitValidateUserId() {
@@ -777,25 +775,18 @@ export class AccountRegisterComponent {
       provider: this.formValidateUserId.getRawValue().provider,
       effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
       expiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().expiryDate),
-      publicKey: this.formValidateUserId.getRawValue().publicKey,
-      credentialId: this.formValidateUserId.getRawValue().credentialId,
-      taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS
+      publicKey: this.formValidateUserId.getRawValue().publicKey
     }
-    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
-      if (res) {
-        console.log(res)
-        this.dataTable = this.dataTable.map((ele: any, index: any) => {
-          if (index !== this.indexToEdit) {
-            return ele
-          } else {
-            return body
-          }
-        })
-
-        this.isVisible = false
-        this.cdr.detectChanges()
+    this.dataTable = this.dataTable.map((ele: any, index: any) => {
+      if (index !== this.indexToEdit) {
+        return ele
+      } else {
+        return body
       }
     })
+
+    this.isVisible = false
+    this.cdr.detectChanges()
   }
 
   validateUserId() {
@@ -824,6 +815,7 @@ export class AccountRegisterComponent {
       credentialId: this.formValidateUserId.getRawValue().credentialId,
       taxCode: taxCode
     }
+    // console.log(this.formValidateUserId.value.fullName)
 
     this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
       if (res) {
@@ -831,7 +823,7 @@ export class AccountRegisterComponent {
           this.isVisible = false
           //add data to table
           this.dataTable = [...this.dataTable, body]
-          console.log(this.dataTable)
+          // console.log(this.dataTable)
           this.backupDataTable = this.dataTable
           this.cdr.detectChanges()
         }
@@ -1094,6 +1086,7 @@ export class AccountRegisterComponent {
                 }
               })
             } else if (this.modeScreen === 'update') {
+              // console.log(this.dataFromSearch.requestId)
               if (this.dataFromSearch.requestId) {
                 this.accReSrv.update(this.dataFromSearch.requestId, body).subscribe((res: any) => {
                   if (res) {
@@ -1107,10 +1100,10 @@ export class AccountRegisterComponent {
                 //update first
                 this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
                   if (res) {
-                    if (res.success) {
-                      this.notification.success(res.message)
-                      this.router.navigate(['/vnaccs/home/search-custom'])
-                    }
+                    console.log(res)
+                    console.log(res.message)
+                    this.notification.success(res.message)
+                    this.router.navigate(['/vnaccs/home/search-custom'])
                   }
                 })
               }

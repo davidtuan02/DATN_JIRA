@@ -77,3 +77,19 @@ nz-date-picker.ng-dirty.ng-invalid {
   padding-top: 24px !important;
   padding-bottom: 12px !important;
 }
+
+::ng-deep .ant-input::placeholder {
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+::ng-deep .ant-select-selection-placeholder {
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}

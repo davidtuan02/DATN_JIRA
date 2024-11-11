@@ -29,12 +29,12 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 
     svg {
-      transition: filter 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà cho SVG */
+      transition: filter 0.3s ease;
     }
 
     &:hover {
-      background-color: #385bad; /* Thay đổi nền thành xanh đậm khi hover */
-      color: white; /* Đổi màu chữ thành trắng khi hover */
+      background-color: #385bad;
+      color: white;
 
       svg {
         filter: invert(1); /* Đảo ngược màu của SVG khi hover */
@@ -52,6 +52,10 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      height: 45px;
+      width: 100%;
+      border-right: 1px solid rgba(25, 68, 167, 0.25);
+      border-left: 1px solid rgba(25, 68, 167, 0.25);
     }
   }
 
@@ -60,25 +64,23 @@
     color: white;
 
     svg {
-      filter: invert(1); /* Đảo ngược màu của SVG khi mục được chọn */
+      filter: invert(1);
     }
   }
 
-  .item-2 {
-    border-left: 1px solid #1944a7;
-    border-right: 1px solid #1944a7;
-  }
   .item-combobox {
     display: flex;
     align-items: center;
     gap: 50px;
-    border-right: 1px solid #1944a7;
 
     .custom-item-2 {
       padding-left: 80px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 30px;
+      height: 45px;
+      width: 100%;
+      border-right: 1px solid rgba(25, 68, 167, 0.25);
     }
   }
 }
@@ -187,7 +189,6 @@
       .item-content {
         display: flex;
         align-items: center;
-        // justify-content: center;
         padding-left: 80px;
         gap: 8px;
       }
@@ -196,23 +197,26 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
+        border-left: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
-    .item-2 {
-      border-left: 1px solid #1944a7;
-      border-right: 1px solid #1944a7;
-    }
+
     .item-combobox {
       display: flex;
       align-items: center;
       gap: 50px;
-      border-right: 1px solid #1944a7;
 
       .custom-item-2 {
         padding-left: 80px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 30px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
   }
@@ -322,8 +326,7 @@
       .item-content {
         display: flex;
         align-items: center;
-        // justify-content: center;
-        padding-left: 60px;
+        padding-left: 40px;
         gap: 8px;
       }
 
@@ -331,23 +334,26 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
+        border-left: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
-    .item-2 {
-      border-left: 1px solid #1944a7;
-      border-right: 1px solid #1944a7;
-    }
+
     .item-combobox {
       display: flex;
       align-items: center;
       gap: 30px;
-      border-right: 1px solid #1944a7;
 
       .custom-item-2 {
-        padding-left: 60px;
+        padding-left: 50px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 30px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
   }
@@ -466,23 +472,26 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
+        border-left: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
-    .item-2 {
-      border-left: 1px solid #1944a7;
-      border-right: 1px solid #1944a7;
-    }
+
     .item-combobox {
       display: flex;
       align-items: center;
       gap: 10px !important;
-      border-right: 1px solid #1944a7;
 
       .custom-item-2 {
-        padding-left: 35px !important;
+        padding-left: 40px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 30px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
   }
@@ -601,23 +610,26 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
+        border-left: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
-    .item-2 {
-      border-left: 1px solid #1944a7;
-      border-right: 1px solid #1944a7;
-    }
+
     .item-combobox {
       display: flex;
       align-items: center;
       gap: 10px !important;
-      border-right: 1px solid #1944a7;
 
       .custom-item-2 {
-        padding-left: 15px !important;
+        padding-left: 80px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 30px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
   }
@@ -735,24 +747,26 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
+        border-left: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
-    .item-2 {
-      border-left: 1px solid #1944a7;
-      border-right: 1px solid #1944a7;
-    }
+
     .item-combobox {
       display: flex;
       align-items: center;
       gap: 30px;
-      border-right: 1px solid #1944a7;
 
       .custom-item-2 {
-        width: 175px;
-        padding-left: 18px !important;
+        padding-left: 80px;
         display: flex;
         align-items: center;
-        gap: 8px !important;
+        gap: 30px;
+        height: 45px;
+        width: 100%;
+        border-right: 1px solid rgba(25, 68, 167, 0.25);
       }
     }
   }

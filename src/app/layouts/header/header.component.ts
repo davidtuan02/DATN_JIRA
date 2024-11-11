@@ -70,11 +70,15 @@ export class HeaderVnaccsComponent implements OnInit {
   }
 
   logout() {
-    clearStore()
-    this.authService.setLoginStatus(false)
-    this.authService.setTaxCode('')
-    localStorage.removeItem(STORAGE_KEYS.TAX_CODE)
-    this.router.navigate(['/vnaccs/login'])
+    this.headerSrv.logout().subscribe((res: any) => {
+      if (res && res.success) {
+        clearStore()
+        this.authService.setLoginStatus(false)
+        this.authService.setTaxCode('')
+        localStorage.removeItem(STORAGE_KEYS.TAX_CODE)
+        this.router.navigate(['/vnaccs/login'])
+      }
+    })
   }
 
   handleClick(option: string) {

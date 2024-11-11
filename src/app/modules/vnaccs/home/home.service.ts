@@ -27,6 +27,10 @@ export class HomeService {
     )
   }
 
+  getJDK() {
+    return this.api.get<any>(this.PREFIX_API + '/getVersionJdk')
+  }
+
   streamVideo(body: any) {
     return this.api.post<any>(this.PREFIX_API + '/stream-video', body)
   }
@@ -46,7 +50,9 @@ export class HomeService {
   }
 
   downloadGuideFile() {
-    return this.http.get(this.PREFIX_API + '/getGuideFile', { responseType: 'blob' })
+    return this.http.get('https://api-service.techasians.com/customs-gov/admin-service/api/file/getGuideFile', {
+      responseType: 'blob'
+    })
   }
 
   getAllNotiFile() {

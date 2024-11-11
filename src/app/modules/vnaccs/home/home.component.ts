@@ -109,13 +109,11 @@ export class HomeComponent implements OnInit {
               })
             }
           })
-          // this.router.navigate(['/vnaccs/home/account-update'])
           break
         }
         case 'editAdminAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              // console.log(res.data)
               this.router.navigate(['/vnaccs/home/account-admin-update'], {
                 state: {
                   data: res.data,
@@ -132,11 +130,9 @@ export class HomeComponent implements OnInit {
               this.router.navigate(['/vnaccs/home/account-register'])
             }
           })
-          // this.router.navigate(['/vnaccs/home/account-register'])
           break
         }
         case 'accountInfo': {
-          // console.log(res.data)
           this.router.navigate(['/vnaccs/home/account-information'])
           break
         }
@@ -150,9 +146,10 @@ export class HomeComponent implements OnInit {
 
   onClickNewPassword() {
     const modal = this.modalService.create({
-      nzTitle: 'Cấp mới mật khẩu cho người sử dụng',
+      nzTitle: 'Đổi mật khẩu cho người sử dụng',
       nzContent: ProvideNewPasswordComponent,
-      nzFooter: null
+      nzFooter: null,
+      nzCentered: true
     })
     modal.afterClose.subscribe((rf) => {
       if (rf) {

@@ -127,7 +127,7 @@ export class RegisterComponent implements OnInit {
           '',
           [
             Validators.pattern(
-              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])([^\s])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]{};':"\\|,.<>\/?]{7,}$/
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_~`])([^\s])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]{};':"\\|,.<>\/?~`]{7,}$/
             )
           ]
         ],
@@ -215,6 +215,18 @@ export class RegisterComponent implements OnInit {
     this.loginForm.get('expiryDate')?.setValue(this.formatDateToDDMMYYYY(data.expiryDate))
     this.loginForm.get('publicKey')?.setValue(data.publicKey)
     this.loginForm.get('nameCert')?.setValue(data.digitalSignature)
+  }
+
+  onRadioChange(value: string | number): void {
+    this.loginForm.get('digitalSignature')?.reset()
+    this.loginForm.get('serial')?.reset()
+    this.loginForm.get('provider')?.reset()
+    this.loginForm.get('effectiveDate')?.reset()
+    this.loginForm.get('expiryDate')?.reset()
+    this.loginForm.get('publicKey')?.reset()
+    this.loginForm.get('nameCert')?.reset()
+    this.loginForm.get('taxCodeCTS')?.reset()
+    this.loginForm.get('credentialId')?.reset()
   }
 
   disableForm() {

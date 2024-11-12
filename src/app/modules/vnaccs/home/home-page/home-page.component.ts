@@ -122,32 +122,19 @@ export class HomePageComponent implements AfterViewInit {
     // Disable button or show loading indicator to prevent double clicks
     this.isDownloading = true // Track the download state (you need to define this in your component)
 
-    this.homeSrv
-      .downloadGuideFile()
-      .pipe(
-        catchError((error) => {
-          console.error('Error downloading file:', error)
-          // Notify the user about the error
-          alert('Failed to download file. Please try again later.')
-          return of(null) // Return null or any fallback value
-        })
-      )
-      .subscribe((res: any) => {
-        // Re-enable the button or hide the loading indicator
-        this.isDownloading = false
+    this.homeSrv.downloadGuideFile().subscribe((res: any) => {
+      // Re-enable the button or hide the loading indicator
+      this.isDownloading = false
 
-        if (res) {
-          try {
-            // Convert ArrayBuffer to Blob with MIME type (adjust as needed)
-
-            // Use FileSaver.js to save the file
-            saveAs(res, 'downloaded_file.zip') // Specify the file name
-          } catch (error) {
-            console.error('Error processing the file:', error)
-            alert('Error processing the downloaded file. Please try again later.')
-          }
+      if (res) {
+        try {
+          saveAs(res, 'FILE_HUONG_DAN.zip')
+        } catch (error) {
+          console.error('Error processing the file:', error)
+          alert('Error processing the downloaded file. Please try again later.')
         }
-      })
+      }
+    })
   }
 
   downloadJDK() {

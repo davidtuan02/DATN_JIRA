@@ -190,6 +190,8 @@ export class AccountRegisterComponent {
           this.modeScreen = 'update'
           this.getDataToEditAcc()
           this.form.enable()
+          this.form.get('numberComputer')?.disable()
+          this.form.get('userCode')?.disable()
           break
         }
         case 'account-admin-update': {

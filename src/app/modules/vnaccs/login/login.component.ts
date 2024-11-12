@@ -343,8 +343,6 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
       this.loginForm.get('credentialId')?.setValue(data.credentialId)
       this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
-      // this.loginForm.enable()
-      // this.disableForm();
     }
   }
 

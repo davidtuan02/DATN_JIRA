@@ -126,9 +126,13 @@ input {
   }
 }
 
-@media only screen and (max-width: 1500px) {
+@media only screen and (max-width: 1502px) {
   .button {
     width: 138px !important;
+
+    .button-content {
+      padding: 8px 0;
+    }
 
     .login-container {
       padding-left: 150px !important;
@@ -147,6 +151,7 @@ input {
     .button-content {
       width: 140px !important;
       height: 40px !important;
+      padding: 8px 0;
 
       .svg {
         svg {

@@ -34,7 +34,7 @@
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Loại giấy tờ người đại diện <span style="color: #ed5564">*</span></label>
-          <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
+          <nz-select nzAllowClear [nzPlaceHolder]="'-Chọn-'" nzSize="large" formControlName="representativeIdType">
             <nz-option
               *ngFor="let option of optionRepresent"
               [nzValue]="option.value"
@@ -97,8 +97,8 @@
           <textarea
             style="min-height: 100px; border-radius: 8px"
             nz-input
-            nzPlaceHolder="Nhập đề xuất của doanh nghiệp"
             maxlength="500"
+            placeholder="Nhập đề xuất của doanh nghiệp"
             formControlName="proposal"
           >
           </textarea>
@@ -339,15 +339,29 @@
               [nzIndeterminate]="indeterminate"
               (nzCheckedChange)="onAllChecked($event)"
             ></th>
-            <th nzAlign="center" nzWidth="30px" style="font-size: 14px">STT</th>
-            <th *ngIf="modeScreen === 'update'" nzAlign="center" nzWidth="60px" style="font-size: 14px">User ID</th>
-            <th nzAlign="center" nzWidth="100px" style="font-size: 14px">Họ tên</th>
-            <th nzAlign="left" nzWidth="130px" style="font-size: 14px">Số CMND/CCCD/Hộ chiếu</th>
-            <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Email</th>
-            <th nzAlign="center" nzWidth="120px" style="font-size: 14px">Ngày hiệu lực khai Hải quan</th>
-            <th nzAlign="center" nzWidth="120px" style="font-size: 14px">Ngày hết hiệu lực khai Hải quan</th>
-            <th nzAlign="center" nzWidth="80px" style="font-size: 14px">Trạng thái</th>
-            <th nzAlign="center" nzWidth="60px" style="font-size: 14px">Thao tác</th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="30px" style="font-size: 14px">STT</th>
+            <th
+              *ngIf="modeScreen === 'update'"
+              nzAlign="center"
+              class="font-inter-700"
+              nzWidth="60px"
+              style="font-size: 14px"
+            >
+              User ID
+            </th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="100px" style="font-size: 14px">Họ tên</th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="130px" style="font-size: 14px">
+              Số CMND/CCCD/Hộ chiếu
+            </th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="100px" style="font-size: 14px">Email</th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="120px" style="font-size: 14px">
+              Ngày hiệu lực khai Hải quan
+            </th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="120px" style="font-size: 14px">
+              Ngày hết hiệu lực khai Hải quan
+            </th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="80px" style="font-size: 14px">Trạng thái</th>
+            <th nzAlign="center" class="font-inter-700" nzWidth="60px" style="font-size: 14px">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -376,7 +390,7 @@
               </div>
             </td>
             <!-- cccd -->
-            <td nzgn="left" style="font-size: 14px">
+            <td nzAlign="right" style="font-size: 14px">
               <div class="flex items-center">
                 <span
                   style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
@@ -571,21 +585,6 @@
           </svg>
           Bỏ qua
         </button>
-        <!-- <button
-          *ngIf="modeScreen === 'update'"
-          type="button"
-          class="font-inter-600 flex items-center justify-center gap-[8px]"
-          style="
-            height: 40px;
-            width: 145px;
-            background-color: #f5f5f5;
-            color: #1944a7 !important;
-            font-size: 14px;
-            border-radius: 8px;
-          "
-        >
-          Đóng
-        </button> -->
         <button
           *ngIf="modeScreen === 'detail' || modeScreen === 'update'"
           [routerLink]="['/vnaccs/home/search-custom']"
@@ -600,7 +599,7 @@
             border-radius: 8px;
           "
         >
-          Đóng
+          Quay lại
         </button>
         <button
           *ngIf="modeScreen === 'register'"
@@ -812,7 +811,7 @@
         <!-- loai giay to  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Loại giấy tờ <span style="color: #ed5564">*</span></label>
-          <nz-select nzAllowClear nzSize="large" formControlName="idType">
+          <nz-select nzAllowClear [nzPlaceHolder]="'-Chọn-'" nzSize="large" formControlName="idType">
             <nz-option
               *ngFor="let option of optionRepresent"
               [nzValue]="option.value"
@@ -953,11 +952,11 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
-            <label for="" class="custom-label">Chữ ký số <span style="color: #ed5564">*</span></label>
-<!--            <nz-select nzPlaceHolder="-Chọn-" nzSize="large" formControlName="digitalSignature">-->
-<!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
-<!--              </nz-option>-->
-<!--            </nz-select>-->
+            <label for="" class="custom-label">Chứng thư số <span style="color: #ed5564">*</span></label>
+            <!--            <nz-select nzPlaceHolder="-Chọn-" nzSize="large" formControlName="digitalSignature">-->
+            <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
+            <!--              </nz-option>-->
+            <!--            </nz-select>-->
             <nz-input-group style="border-radius: 8px">
               <input autoTrim text nz-input maxlength="13" formControlName="digitalSignature" />
             </nz-input-group>

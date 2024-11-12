@@ -59,6 +59,12 @@ export class HeaderVnaccsComponent implements OnInit {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEYS.TOKEN) {
+        this.authService.setLoginStatus(true)
+        this.cdr.detectChanges()
+      }
+    })
   }
 
   getUserInfo(taxCode: string) {

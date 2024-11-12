@@ -4,7 +4,7 @@
   </div>
   <div class="flex flex-col mt-[10px]">
     <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="32">
         <!-- Mã số thuế -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
@@ -42,7 +42,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="32">
         <!-- Mật khẩu mới-->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mật khẩu mới <span style="color: #ed5564">*</span></label>
@@ -83,7 +83,7 @@
         <span class="font-inter" style="font-size: 14px">Thông tin chữ ký số</span>
       </div>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="32">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
@@ -134,7 +134,7 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
-            <label for="" class="custom-label">Chữ ký số <span style="color: #ed5564">*</span></label>
+            <label for="" class="custom-label">Chứng thư số <span style="color: #ed5564">*</span></label>
             <!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
             <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
             <!--              </nz-option>-->
@@ -158,7 +158,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="32">
         <!-- Số seri -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
@@ -178,7 +178,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="32">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>

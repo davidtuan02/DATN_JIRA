@@ -180,7 +180,10 @@ export class ForgotPasswordComponent implements OnInit {
           newPassword: this.loginForm.value.newPassword,
           confirmNewPassword: this.loginForm.value.confirmPassword,
           digitalSignatureType: this.loginForm.value.digitalSignatureType,
-          digitalSignature: this.loginForm.getRawValue().taxCode,
+          digitalSignature:
+            this.radioValue === '1'
+              ? this.loginForm.getRawValue().digitalSignature
+              : this.loginForm.getRawValue().nameCert,
           serial: this.loginForm.getRawValue().serial,
           provider: this.loginForm.getRawValue().provider,
           effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),

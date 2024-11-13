@@ -414,10 +414,8 @@ export class AccountRegisterComponent {
     const validDate = this.convertComplexDateString(data.validFrom)
     const expireDate = this.convertComplexDateString(data.validTo)
     if (validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực')
     } else if (expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisibleModalCTS = false
@@ -759,6 +757,18 @@ export class AccountRegisterComponent {
     this.isVisibleDownload = false
   }
 
+  onRadioChange(value: any) {
+    this.formValidateUserId.get('digitalSignature')?.reset()
+    this.formValidateUserId.get('serial')?.reset()
+    this.formValidateUserId.get('provider')?.reset()
+    this.formValidateUserId.get('effectiveDate')?.reset()
+    this.formValidateUserId.get('expiryDate')?.reset()
+    this.formValidateUserId.get('publicKey')?.reset()
+    this.formValidateUserId.get('nameCert')?.reset()
+    this.formValidateUserId.get('taxCodeCTS')?.reset()
+    this.formValidateUserId.get('credentialId')?.reset()
+  }
+
   editUserId() {
     const body = {
       userId: this.formValidateUserId.getRawValue().userId,
@@ -890,6 +900,12 @@ export class AccountRegisterComponent {
 
     // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
+
+    // Kiểm tra xem đối tượng Date có hợp lệ không
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid Date format:', dateStr)
+      return 0 // Trả về 0 nếu ngày không hợp lệ
+    }
 
     // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
@@ -1068,16 +1084,17 @@ export class AccountRegisterComponent {
       if (result) {
         const body = {
           taxCode: this.taxCode,
-          representativeName: this.form.value.representativeName,
-          representativeIdType: this.form.value.representativeIdType,
-          representativeIdNo: this.form.value.representativeIdNo,
-          address: this.form.value.address,
-          fieldOfActivity: this.form.value.fieldOfActivity?.join(';'),
-          proposal: this.form.value.proposal,
-          freeSoftware: this.form.value.freeSoftware,
-          ediSoftware: this.form.value.ediSoftware,
-          edifactSoftware: this.form.value.ediSoftware,
-          userCodeExpiryDate: new Date(this.form.value.userCodeExpiryDate).getTime(),
+          representativeName: this.form.getRawValue().representativeName,
+          representativeIdType: this.form.getRawValue().representativeIdType,
+          representativeIdNo: this.form.getRawValue().representativeIdNo,
+          address: this.form.getRawValue().address,
+          fieldOfActivity: this.form.getRawValue().fieldOfActivity?.join(';'),
+          proposal: this.form.getRawValue().proposal,
+          userCode: this.form.getRawValue().userCode,
+          freeSoftware: this.form.getRawValue().freeSoftware,
+          ediSoftware: this.form.getRawValue().ediSoftware,
+          edifactSoftware: this.form.getRawValue().ediSoftware,
+          userCodeExpiryDate: new Date(this.form.getRawValue().userCodeExpiryDate).getTime(),
           userIdRequestList: this.dataTable
         }
 

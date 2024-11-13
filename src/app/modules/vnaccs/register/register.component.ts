@@ -122,7 +122,7 @@ export class RegisterComponent implements OnInit {
   loadForm() {
     this.loginForm = this.fb.group(
       {
-        taxCode: ['', [Validators.required]],
+        taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
         adminPassword: [
           '',
           [
@@ -304,7 +304,7 @@ export class RegisterComponent implements OnInit {
             expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
             publicKey: this.loginForm.getRawValue().publicKey,
             email: this.loginForm.getRawValue().email,
-            taxCodeCTS: this.loginForm.getRawValue().taxCode
+            taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS
             // credentialId: '001301020532_5181042_20241017083237'
           }
           if (this.dataToEditOrView.requestId) {
@@ -338,12 +338,12 @@ export class RegisterComponent implements OnInit {
             expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
             publicKey: this.loginForm.getRawValue().publicKey,
             email: this.loginForm.value.email,
-            taxCodeCTS: this.loginForm.getRawValue().taxCode,
+            taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
             credentialId: this.loginForm.getRawValue().credentialId
           }
           this.registerSrv.register(body).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              this.router.navigate(['vnaccs/home/search-custom'])
+              this.router.navigate(['vnaccs/login'])
               this.notification.success('Đăng ký tài khoản quản trị thành công')
             }
           })
@@ -378,6 +378,9 @@ export class RegisterComponent implements OnInit {
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
+      }
+      if (control.errors?.['pattern']) {
+        return 'Mã số thuế tối đa 13 ký tự số'
       }
     }
     return undefined
@@ -515,13 +518,22 @@ export class RegisterComponent implements OnInit {
   }
 
   convertComplexDateString(dateStr: string): number {
+    // Chuyển chuỗi 'YYYYMMDDHHmmss±zzzz' thành định dạng ISO 8601
     const isoFormattedDate = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T${dateStr.slice(
       8,
       10
     )}:${dateStr.slice(10, 12)}:${dateStr.slice(12, 14)}${dateStr.slice(14)}`
 
+    // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
 
+    // Kiểm tra xem đối tượng Date có hợp lệ không
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid Date format:', dateStr)
+      return 0 // Trả về 0 nếu ngày không hợp lệ
+    }
+
+    // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
   }
 
@@ -530,10 +542,8 @@ export class RegisterComponent implements OnInit {
     const validDate = this.convertComplexDateString(data.validFrom)
     const expireDate = this.convertComplexDateString(data.validTo)
     if (validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực')
     } else if (expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false

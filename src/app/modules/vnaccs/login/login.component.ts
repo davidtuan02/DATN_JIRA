@@ -105,7 +105,7 @@ export class LoginComponent implements OnInit {
 
   loadForm() {
     this.loginForm = this.fb.group({
-      taxCode: ['', [Validators.required]],
+      taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
       adminPassword: ['', [Validators.required]],
       digitalSignatureType: [null],
       digitalSignature: [''],
@@ -169,6 +169,12 @@ export class LoginComponent implements OnInit {
     // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
 
+    // Kiểm tra xem đối tượng Date có hợp lệ không
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid Date format:', dateStr)
+      return 0 // Trả về 0 nếu ngày không hợp lệ
+    }
+
     // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
   }
@@ -224,6 +230,9 @@ export class LoginComponent implements OnInit {
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
+      }
+      if (control.errors?.['pattern']) {
+        return 'Mã số thuế tối đa 13 ký tự số'
       }
     }
     return undefined
@@ -326,11 +335,13 @@ export class LoginComponent implements OnInit {
     const currentDate = new Date().getTime()
     const validDate = this.convertComplexDateString(data.validFrom)
     const expireDate = this.convertComplexDateString(data.validTo)
+    // console.log('Current Date (timestamp):', currentDate)
+    // console.log('Valid Date (timestamp):', validDate)
+    // console.log('Expire Date (timestamp):', expireDate)
+
     if (validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực')
     } else if (expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false

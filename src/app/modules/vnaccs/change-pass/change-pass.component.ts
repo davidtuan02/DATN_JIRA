@@ -105,7 +105,7 @@ export class ChangePassComponent implements OnInit {
     this.authService.taxCode$.subscribe((taxCode) => {
       this.loginForm = this.fb.group(
         {
-          taxCode: [taxCode, [Validators.required]],
+          taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
           password: ['', [Validators.required]],
           newPassword: [
             '',
@@ -232,6 +232,9 @@ export class ChangePassComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
       }
+      if (control.errors?.['pattern']) {
+        return 'Mã số thuế tối đa 13 ký tự số'
+      }
     }
     return undefined
   }
@@ -273,7 +276,10 @@ export class ChangePassComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu mới không được để trống'
       }
-      if (this.loginForm.errors?.['notmatching']) {
+      // if (this.loginForm.errors?.['notmatching']) {
+      //   return 'Xác nhận lại mật khẩu mới phải giống mật khẩu đã nhập'
+      // }
+      if (control.errors?.['notmatching']) {
         return 'Xác nhận lại mật khẩu mới phải giống mật khẩu đã nhập'
       }
     }
@@ -282,9 +288,12 @@ export class ChangePassComponent implements OnInit {
 
   passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     const pass = group.get('newPassword')?.value
-    const confirmPass = group.get('confirmPassword')?.value
-    if (pass && confirmPass && pass !== confirmPass) {
-      return { notmatching: true }
+    const confirmPass = group.get('confirmPassword') as FormControl
+
+    if (pass !== confirmPass?.value) {
+      confirmPass.setErrors({ notmatching: true })
+    } else {
+      confirmPass.setErrors(null)
     }
     return null
   }
@@ -359,6 +368,12 @@ export class ChangePassComponent implements OnInit {
     // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
 
+    // Kiểm tra xem đối tượng Date có hợp lệ không
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid Date format:', dateStr)
+      return 0 // Trả về 0 nếu ngày không hợp lệ
+    }
+
     // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
   }
@@ -368,10 +383,8 @@ export class ChangePassComponent implements OnInit {
     const validDate = this.convertComplexDateString(data.validFrom)
     const expireDate = this.convertComplexDateString(data.validTo)
     if (validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực')
     } else if (expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false

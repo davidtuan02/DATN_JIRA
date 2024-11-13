@@ -329,6 +329,7 @@
           <nz-input-group nz-col nzSpan="8">
             <input
               type="text"
+              autoTrim
               formControlName="msAcc"
               placeholder="Nhập tài khoản MySign"
               nz-input
@@ -419,13 +420,13 @@
       <nz-table #basicTable [nzData]="listOfData" [nzShowPagination]="false" nzTableLayout="fixed">
         <thead>
           <tr>
-            <th nzWidth="70px" nzAlign="center" class="font-inter">STT</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Tên chứng thư</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Số seri</th>
-            <th nzWidth="200px" nzAlign="center" class="font-inter">Mã số thuế/CCCD</th>
-            <th nzWidth="150px" nzAlign="center" class="font-inter">Ngày hiệu lực</th>
-            <th nzWidth="170px" nzAlign="center" class="font-inter">Ngày hết hiệu lực</th>
-            <th nzWidth="100px" nzAlign="center" class="font-inter">Thao tác</th>
+            <th nzWidth="70px" nzAlign="center" class="font-inter" style="color: #000000">STT</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter" style="color: #000000">Tên chứng thư</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter" style="color: #000000">Số seri</th>
+            <th nzWidth="200px" nzAlign="center" class="font-inter" style="color: #000000">Mã số thuế/CCCD</th>
+            <th nzWidth="150px" nzAlign="center" class="font-inter" style="color: #000000">Ngày hiệu lực</th>
+            <th nzWidth="170px" nzAlign="center" class="font-inter" style="color: #000000">Ngày hết hiệu lực</th>
+            <th nzWidth="100px" nzAlign="center" class="font-inter" style="color: #000000">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -454,14 +455,14 @@
               </div>
             </td>
             <td>
-              <div class="flex items-center" style="overflow: hidden">
+              <div class="flex items-center justify-center" style="overflow: hidden">
                 <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validFrom)">{{
                   formatDateFromString(data.validFrom)
                 }}</span>
               </div>
             </td>
             <td>
-              <div class="flex items-center" style="overflow: hidden">
+              <div class="flex items-center justify-center" style="overflow: hidden">
                 <span class="cell-table" nz-tooltip [nzTooltipTitle]="formatDateFromString(data.validTo)">{{
                   formatDateFromString(data.validTo)
                 }}</span>

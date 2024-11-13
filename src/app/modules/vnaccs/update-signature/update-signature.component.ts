@@ -34,6 +34,7 @@ import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import * as forge from 'node-forge'
+import { EMAIL_REGEX } from '../../../shared/constants/regex.const'
 
 declare function initPlugin(comp: any): void
 @Component({
@@ -104,8 +105,8 @@ export class UpdateSignatureComponent implements OnInit {
   loadForm() {
     this.authService.taxCode$.subscribe((taxCode) => {
       this.loginForm = this.fb.group({
-        taxCode: ['', [Validators.required]],
-        email: ['', Validators.email],
+        taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
+        email: ['', [Validators.pattern(EMAIL_REGEX), Validators.required]],
         password: ['', [Validators.required]],
         digitalSignatureType: [null],
         digitalSignature: [''],
@@ -223,6 +224,9 @@ export class UpdateSignatureComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
       }
+      if (control.errors?.['pattern']) {
+        return 'Mã số thuế tối đa 13 ký tự số'
+      }
     }
     return undefined
   }
@@ -233,7 +237,7 @@ export class UpdateSignatureComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
-      if (control.errors?.['email']) {
+      if (control.errors?.['pattern']) {
         return 'Email không đúng định dạng'
       }
     }
@@ -338,6 +342,12 @@ export class UpdateSignatureComponent implements OnInit {
     // Tạo đối tượng Date từ chuỗi đã định dạng
     const dateObj = new Date(isoFormattedDate)
 
+    // Kiểm tra xem đối tượng Date có hợp lệ không
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid Date format:', dateStr)
+      return 0 // Trả về 0 nếu ngày không hợp lệ
+    }
+
     // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
   }
@@ -347,10 +357,8 @@ export class UpdateSignatureComponent implements OnInit {
     const validDate = this.convertComplexDateString(data.validFrom)
     const expireDate = this.convertComplexDateString(data.validTo)
     if (validDate > currentDate) {
-      console.log('Chữ ký số chưa có hiệu lực')
       this.notification.error('Chữ ký số chưa có hiệu lực')
     } else if (expireDate < currentDate) {
-      console.log('Chữ ký số đã hết hiệu lực')
       this.notification.error('Chữ ký số đã hết hiệu lực')
     } else {
       this.isVisible = false

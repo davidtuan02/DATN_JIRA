@@ -28,6 +28,12 @@
   font-size: 14px;
 }
 
+.text-forgot {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 ::ng-deep .ant-input-group,
 .ant-input-affix-wrapper,
 .ant-select {

@@ -101,3 +101,12 @@ nz-date-picker.ng-dirty.ng-invalid {
   font-weight: 500;
   font-style: normal;
 }
+
+.clear-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ccc;
+}

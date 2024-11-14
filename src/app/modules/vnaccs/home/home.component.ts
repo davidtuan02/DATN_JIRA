@@ -4,10 +4,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
 import { HomeService } from './home.service'
-import { filter, Subject } from 'rxjs'
+import { filter, Subject, Subscription } from 'rxjs'
 import { NzCarouselModule } from 'ng-zorro-antd/carousel'
 import { AuthService } from '../../../shared/services/auth.service'
-import { NavigationEnd, Router, RouterModule } from '@angular/router'
+import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router, RouterModule } from '@angular/router'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 import { NzModalService } from 'ng-zorro-antd/modal'
@@ -32,11 +32,14 @@ import { NotificationService } from '../../../shared/services/notification.servi
 export class HomeComponent implements OnInit {
   isLogin: boolean = false
   selectedItem: string | null = null
+  tempSelectedItem: string | null = null
+  routerSubscription!: Subscription
 
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private routerr: ActivatedRoute,
     private homeSrv: HomeService,
     private modalService: NzModalService,
     private notification: NotificationService
@@ -47,12 +50,48 @@ export class HomeComponent implements OnInit {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        // Chỉ cập nhật selectedItem khi URL thay đổi
+        this.updateSelectedItem(event.urlAfterRedirects)
+      })
+  }
 
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      if (event.urlAfterRedirects === '/vnaccs/home') {
+  private updateSelectedItem(url: string) {
+    console.log('Navigating to:', url)
+
+    if (!url) {
+      return
+    }
+    // Kiểm tra URL và cập nhật selectedItem
+    switch (url) {
+      case '/vnaccs/home':
         this.selectedItem = null
-      }
-    })
+        break
+      case '/vnaccs/home/account-information':
+        this.selectedItem = 'accountInfo'
+        break
+      case '/vnaccs/home/account-register':
+        this.selectedItem = 'register'
+        break
+      case '/vnaccs/home/account-admin-update':
+      case '/vnaccs/home/account-update':
+        this.selectedItem = 'update'
+        break
+      case '/vnaccs/home/search-custom':
+        this.selectedItem = 'search'
+        break
+      default:
+        this.selectedItem = null
+    }
+  }
+
+  ngOnDestroy() {
+    // Hủy subscription khi component bị destroy
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe()
+    }
   }
 
   decodeToken(token: string): any {
@@ -75,9 +114,6 @@ export class HomeComponent implements OnInit {
         const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
         decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
       }
-
-      // In payload ra console để kiểm tra
-      console.log(decodedPayload)
 
       return decodedPayload
     } catch (error) {
@@ -154,8 +190,9 @@ export class HomeComponent implements OnInit {
     modal.afterClose.subscribe((rf) => {
       if (rf) {
         const body = {
-          userid: rf.userid,
-          password: rf.password
+          userId: rf.userid,
+          newPassword: rf.password,
+          confirmNewPassword: rf.rePassword
         }
         this.homeSrv.updatePasswordForUserId(body).subscribe((res) => {
           this.notification.success('Đổi mật khẩu cho người dùng thành công')

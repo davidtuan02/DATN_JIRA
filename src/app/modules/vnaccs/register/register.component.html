@@ -15,6 +15,19 @@
           <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
             <input autoTrim type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế" />
+            <!-- <input
+              autoTrim
+              [clearInput]="loginForm.get('taxCode')?.value"
+              type="text"
+              nz-input
+              formControlName="taxCode"
+              placeholder="Nhập mã số thuế"
+            />
+            <span>Close</span> -->
+
+            <!-- <span *ngIf="loginForm.get('taxCode')?.value !== ''" (click)="loginForm.get('taxCode')?.setValue('')"
+              >hi</span
+            > -->
           </nz-input-group>
           <p style="max-height: 10px" class="text-danger fs-14">
             {{ getTaxCodeError() }}
@@ -141,7 +154,7 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
-            <label for="" class="custom-label">Chứng thư số <span style="color: #ed5564">*</span></label>
+            <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
             <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
             <!--              </nz-option>-->
@@ -550,7 +563,7 @@
             <td nzAlign="center">{{ i + 1 }}</td>
             <td>
               <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
+                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
               </div>
             </td>
             <td>

@@ -34,6 +34,7 @@ import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { RouteStateService } from '../../../shared/services/clear-state.service'
+import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -46,7 +47,6 @@ declare function initPlugin(comp: any): void
     TranslateModule,
     FormsModule,
     ReactiveFormsModule,
-    FormsModule,
     NzGridModule,
     CommonModule,
     NzFormModule,
@@ -60,7 +60,8 @@ declare function initPlugin(comp: any): void
     NzTableModule,
     RouterLink,
     NzToolTipModule,
-    AutoTrimDirective
+    AutoTrimDirective,
+    ClearInputDirective
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: RouteStateService }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

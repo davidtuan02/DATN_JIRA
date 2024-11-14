@@ -68,6 +68,6 @@ export class HomeService {
   }
 
   updatePasswordForUserId(body: any) {
-    return this.api.patch(this.PREFIX_API_USER + '/user-id/change-passWord', body)
+    return this.api.patch(this.PREFIX_API_USER + '/user-id/change-password', body)
   }
 }

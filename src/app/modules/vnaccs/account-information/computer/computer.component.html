@@ -1,0 +1,59 @@
+<nz-row nzGutter="16">
+  <nz-col nzSpan="8">
+    <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch">
+      <input
+        type="text"
+        style="padding: 4px 12px"
+        [(ngModel)]="searchKey"
+        (ngModelChange)="onSearch($event)"
+        nz-input
+        placeholder="Nhập để tìm kiếm"
+      />
+    </nz-input-group>
+  </nz-col>
+</nz-row>
+<span class="font-inter" style="font-size: 14px">Danh sách Terminal ID ({{ total }})</span>
+<nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]="basicTable.data.length >= 5">
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Terminal ID</th>
+      <th>Terminal Access key</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ data.age }}</td>
+      <td>{{ data.key }}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #prefixSearch>
+  <svg
+    style="margin-left: 17px"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="8.49047"
+      cy="8.48143"
+      r="7.49047"
+      stroke="#96A0B5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.6992 14.0803L16.6359 17.0094"
+      stroke="#96A0B5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</ng-template>

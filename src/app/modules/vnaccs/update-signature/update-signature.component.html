@@ -65,7 +65,12 @@
           <div class="flex justify-between">
             <div class="flex flex-col gap-[10px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
-              <nz-radio-group [(ngModel)]="radioValue" formControlName="digitalSignatureType" style="font-size: 14px">
+              <nz-radio-group
+                [(ngModel)]="radioValue"
+                (ngModelChange)="onRadioChange($event)"
+                formControlName="digitalSignatureType"
+                style="font-size: 14px"
+              >
                 <label nz-radio nzValue="1">Usb token</label>
                 <label nz-radio nzValue="2">Viettel - Mysign</label>
               </nz-radio-group>
@@ -110,7 +115,7 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
-            <label for="" class="custom-label">Chứng thư số <span style="color: #ed5564">*</span></label>
+            <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <!--            <nz-select nzPlaceHolder="-Chọn-" formControlName="digitalSignature">-->
             <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
             <!--              </nz-option>-->
@@ -435,7 +440,7 @@
             <td nzAlign="center">{{ i + 1 }}</td>
             <td>
               <div class="flex items-center" style="overflow: hidden">
-                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
+                <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
               </div>
             </td>
             <td>

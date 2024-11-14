@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core'
+import { ChangeDetectorRef, Component, Input } from '@angular/core'
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { NzGridModule } from 'ng-zorro-antd/grid'
 import { NzInputModule } from 'ng-zorro-antd/input'
@@ -60,7 +60,9 @@ declare function initPlugin(comp: any): void
     NzIconModule
   ]
 })
-export class AccountRegisterComponent {
+export class AccountInfoComponent {
+  @Input() data!: any
+
   modeScreen: 'register' | 'update' | 'admin-update' | 'detail' = 'register'
   optionRepresent = [
     {

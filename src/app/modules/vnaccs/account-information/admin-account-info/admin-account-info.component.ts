@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DatePipe, NgIf } from '@angular/common'
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid'
@@ -32,9 +32,8 @@ import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
   styleUrl: './admin-account-info.component.scss'
 })
 export class AdminAccountInfoComponent implements OnInit {
-  taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!
-  token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
   form: FormGroup
+  @Input() data!: any
 
   constructor(
     private router: Router,
@@ -59,54 +58,26 @@ export class AdminAccountInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.decodeToken(this.token).sub
-    this.accountInfoService.getAdminInfo(id).subscribe((res: any) => {
-      this.form.patchValue({
-        taxCode: res.data.taxCode,
-        email: res.data.email,
-        digitalSignatureType: res.data.digitalSignatureType.toString(),
-        digitalSignature: res.data.digitalSignature,
-        serial: res.data.serial,
-        provider: res.data.provider,
-        effectiveDate: this.datePipe.transform(res.data.effectiveDate, 'dd/MM/yyyy'),
-        expiryDate: this.datePipe.transform(res.data.expiryDate, 'dd/MM/yyyy'),
-        publicKey: res.data.publicKey,
-        nameCert: res.data.digitalSignature,
-        taxCodeCTS: res.data.taxCodeCTS,
-        credentialId: res.data.credentialId
-      })
-    })
-    this.form.disable()
+    console.log(this.data)
+
+    // this.form.patchValue({
+    //   taxCode: this.data.taxCode,
+    //   email: this.data.email,
+    //   digitalSignatureType: this.data.digitalSignatureType.toString(),
+    //   digitalSignature: this.data.digitalSignature,
+    //   serial: this.data.serial,
+    //   provider: this.data.provider,
+    //   effectiveDate: this.datePipe.transform(this.data.effectiveDate, 'dd/MM/yyyy'),
+    //   expiryDate: this.datePipe.transform(this.data.expiryDate, 'dd/MM/yyyy'),
+    //   publicKey: this.data.publicKey,
+    //   nameCert: this.data.digitalSignature,
+    //   taxCodeCTS: this.data.taxCodeCTS,
+    //   credentialId: this.data.credentialId
+    // })
+    // this.form.disable()
   }
 
-  decodeToken(token: string): any {
-    if (!token) {
-      return null
-    }
-
-    try {
-      // Tách phần payload (phần thứ 2 của JWT)
-      const base64Url = token.split('.')[1]
-
-      // Xử lý chuỗi Base64Url
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-
-      // Giải mã Base64 và phân tích JSON
-      const decodedPayload = JSON.parse(window.atob(base64))
-
-      // Kiểm tra và lấy phần "sub" trước dấu ";"
-      if (decodedPayload.sub) {
-        const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
-        decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
-      }
-
-      // In payload ra console để kiểm tra
-      console.log(decodedPayload)
-
-      return decodedPayload
-    } catch (error) {
-      console.error('Lỗi khi giải mã token:', error)
-      return null
-    }
+  ngOnChange() {
+    console.log(this.data)
   }
 }

@@ -686,6 +686,7 @@ export class AccountRegisterComponent {
   }
 
   setValueForm(data: any) {
+    console.log(data)
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)

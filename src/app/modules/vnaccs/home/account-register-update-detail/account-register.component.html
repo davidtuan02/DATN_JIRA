@@ -920,6 +920,7 @@
             </div>
             <div class="pt-[23px]">
               <button
+                *ngIf="mode !== 'view'"
                 type="button"
                 class="text-white button flex justify-center"
                 style="width: 258px; border-radius: 8px; background-color: #1944a7 !important"
@@ -957,7 +958,7 @@
         <!-- Chữ ký số -->
         <nz-col nzSpan="12" *ngIf="radioValue === '1'; else vtsign">
           <div class="flex flex-col">
-            <label for="" class="custom-label">Chứng thư số <span style="color: #ed5564">*</span></label>
+            <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
             <!--            <nz-select nzPlaceHolder="-Chọn-" nzSize="large" formControlName="digitalSignature">-->
             <!--              <nz-option *ngFor="let option of optionFileStatuss" [nzValue]="option.value" [nzLabel]="option.label">-->
             <!--              </nz-option>-->
@@ -1239,7 +1240,7 @@
               <td nzAlign="center">{{ i + 1 }}</td>
               <td>
                 <div class="flex items-center" style="overflow: hidden">
-                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.serialNumber">{{ data.subjectDN }}</span>
+                  <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.subjectDN">{{ data.subjectDN }}</span>
                 </div>
               </td>
               <td>

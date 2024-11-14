@@ -176,7 +176,10 @@ export class UpdateSignatureComponent implements OnInit {
           email: this.loginForm.value.email,
           adminPassword: this.loginForm.value.password,
           digitalSignatureType: this.loginForm.value.digitalSignatureType,
-          digitalSignature: this.loginForm.getRawValue().taxCode,
+          digitalSignature:
+            this.loginForm.value.digitalSignatureType === '1'
+              ? this.loginForm.getRawValue().digitalSignature
+              : this.loginForm.getRawValue().nameCert,
           serial: this.loginForm.getRawValue().serial,
           provider: this.loginForm.getRawValue().provider,
           effectiveDate: this.convertDateTimestamp(this.loginForm.getRawValue().effectiveDate),
@@ -196,6 +199,19 @@ export class UpdateSignatureComponent implements OnInit {
       }
     })
   }
+
+  onRadioChange(value: any) {
+    this.loginForm.get('digitalSignature')?.reset()
+    this.loginForm.get('nameCert')?.reset()
+    this.loginForm.get('serial')?.reset()
+    this.loginForm.get('provider')?.reset()
+    this.loginForm.get('effectiveDate')?.reset()
+    this.loginForm.get('expiryDate')?.reset()
+    this.loginForm.get('publicKey')?.reset()
+    this.loginForm.get('credentialId')?.reset()
+    this.loginForm.get('taxCodeCTS')?.reset()
+  }
+
   convertDateTimestamp(date: any) {
     const [d, m, y] = date.split(/-|\//) // splits "26-02-2012" or "26/02/2012"
     const dateNew = new Date(y, m - 1, d)

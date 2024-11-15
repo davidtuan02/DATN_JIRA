@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core'
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core'
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { NzGridModule } from 'ng-zorro-antd/grid'
 import { NzInputModule } from 'ng-zorro-antd/input'
@@ -172,127 +172,36 @@ export class AccountInfoComponent {
       .subscribe((searchText) => {
         this.filterList(searchText) // Gọi hàm lọc khi hết thời gian chờ
       })
-
-    this.determineScreenMode()
   }
 
-  determineScreenMode() {
-    if (this.router.url) {
-      const str = this.router.url.split('/').pop() as
-        | 'account-register'
-        | 'account-update'
-        | 'account-admin-update'
-        | 'account-detail'
-      switch (str) {
-        case 'account-register': {
-          this.modeScreen = 'register'
-          break
-        }
-        case 'account-update': {
-          this.modeScreen = 'update'
-          this.getDataToEditAcc()
-          this.form.enable()
-          break
-        }
-        case 'account-admin-update': {
-          this.modeScreen = 'admin-update'
-          break
-        }
-        case 'account-detail': {
-          this.modeScreen = 'detail'
-          this.getDataToEditAcc()
-          this.form.disable()
-          break
-        }
-        default: {
-          this.modeScreen = 'register'
-          break
-        }
-      }
-    }
-    // console.log(this.modeScreen)
-  }
-
-  responseFromCustom: any
-  dataResponse: any
-  dataFromSearch: any
-
-  getDataToEditAcc() {
-    const state = history.state
-    if (state && state.data) {
-      this.dataResponse = {
-        customsDepartmentNote: state.data.customsDepartmentNote,
-        approvalTime: state.data.approvalTime
-      }
-      // console.log(this.dataResponse)
-    }
-    if (state && state.data && state.data.id) {
-      if (state.data.body) {
-        this.responseFromCustom = state.data.requestStatus
-        // this.dataFromSearch = state.data
-        this.dataFromSearch = state.data.body
-        this.form.get('userCode')?.setValue(state.data.body.userCode)
-        this.form.get('representativeName')?.setValue(state.data.body.representativeName)
-        this.form.get('representativeIdType')?.setValue(state.data.body.representativeIdType)
-        this.form.get('representativeIdNo')?.setValue(state.data.body.representativeIdNo)
-        this.form.get('address')?.setValue(state.data.body.address)
-        this.form.get('fieldOfActivity')?.setValue(state.data.body.fieldOfActivity?.split(';').map(Number))
-        this.form.get('proposal')?.setValue(state.data.body.proposal)
-        this.form.get('freeSoftware')?.setValue(state.data.body.freeSoftware)
-        this.form.get('ediSoftware')?.setValue(state.data.body.ediSoftware)
-        this.form.get('numberComputer')?.setValue(state.data.body.numberComputer)
-        this.form.get('userCodeExpiryDate')?.setValue(state.data.body.userCodeExpiryDate)
-        this.calculateTotal()
-        this.dataTable = state.data.body.userIdResponses
-      } else {
-        this.accReSrv.viewDetailRequestRegister(state.data.id).subscribe((res: any) => {
-          if (res && res.message === 'success') {
-            this.responseFromCustom = state.data.requestStatus
-            // this.dataFromSearch = state.data
-            this.dataFromSearch = res.data
-            this.form.get('userCode')?.setValue(res?.data?.userCode)
-            this.form.get('representativeName')?.setValue(res?.data?.representativeName)
-            this.form.get('representativeIdType')?.setValue(res?.data?.representativeIdType)
-            this.form.get('representativeIdNo')?.setValue(res?.data?.representativeIdNo)
-            this.form.get('address')?.setValue(res?.data?.address)
-            this.form.get('fieldOfActivity')?.setValue(res.data.fieldOfActivity?.split(';').map(Number))
-            this.form.get('proposal')?.setValue(res?.data?.proposal)
-            this.form.get('freeSoftware')?.setValue(res?.data?.freeSoftware)
-            this.form.get('ediSoftware')?.setValue(res?.data?.ediSoftware)
-            this.form.get('numberComputer')?.setValue(res?.data?.numberComputer)
-            this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
-            this.calculateTotal()
-            this.dataTable = res?.data?.requestUserIds
-          }
-        })
-      }
-    } else {
-      console.log('Không có dữ liệu trong state')
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data'] && changes['data'].currentValue) {
+      // console.log('Data received in child component:', this.data)
+      this.fillData(this.data)
     }
   }
 
-  fromDetailToUpdate() {
-    this.router.navigate(['/vnaccs/home/account-update'], {
-      state: {
-        data: {
-          id: this.dataFromSearch.requestId
-        }
+  fillData(data: any) {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
+    // this.form.get('userCode')?.setValue(data.body.userCode)
+    console.log(data)
+    this.form.get('representativeName')?.setValue(data.representativeName)
+    this.form.get('representativeIdType')?.setValue(data.representativeIdType)
+    this.form.get('representativeIdNo')?.setValue(data.representativeIdNo)
+    this.form.get('address')?.setValue(data.address)
+    this.form.get('fieldOfActivity')?.setValue(data.fieldOfActivity?.split(';').map(Number))
+    this.form.get('proposal')?.setValue(data.proposal)
+    this.form.get('freeSoftware')?.setValue(data.freeSoftware)
+    this.form.get('ediSoftware')?.setValue(data.ediSoftware)
+    this.form.get('numberComputer')?.setValue(data.numberComputer)
+    this.calculateTotal()
+    this.form.get('userCodeExpiryDate')?.setValue(data.userCodeExpiryDate)
+    this.accReSrv.getListUserId(this.decodeToken(token).sub).subscribe((res: any) => {
+      if (res && res.errorCode == 0) {
+        this.dataTable = res.data
       }
     })
-    this.modeScreen = 'update'
-  }
-
-  getResultResponseFromCustom() {
-    if (this.responseFromCustom === 2) {
-      return 'Chờ phê duyệt'
-    }
-    if (this.responseFromCustom === 3) {
-      return 'Hải quan chấp nhận'
-    }
-    if (this.responseFromCustom === 0) {
-      return 'Hải quan từ chối'
-    }
-    return ''
+    this.form.disable()
   }
 
   loadForm() {
@@ -514,15 +423,6 @@ export class AccountInfoComponent {
     return undefined
   }
 
-  submit() {
-    this.form.markAllAsTouched()
-    if (!this.form.invalid) {
-      this.registerOrUpdate()
-    } else {
-      console.log('Form invalid')
-    }
-  }
-
   onSearch(searchText: string) {
     this.searchSubject.next(searchText)
   }
@@ -707,31 +607,6 @@ export class AccountInfoComponent {
     this.formValidateUserId.get('publicKey')?.setValue(data?.publicKey)
   }
 
-  submitValidateUserId() {
-    this.formValidateUserId.markAllAsTouched()
-    const rawFormData = this.formValidateUserId.getRawValue()
-    if (
-      (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
-      !rawFormData.serial ||
-      !rawFormData.provider ||
-      !rawFormData.effectiveDate ||
-      !rawFormData.expiryDate ||
-      !rawFormData.publicKey
-    ) {
-      return
-    }
-    if (!this.formValidateUserId.invalid) {
-      if (this.mode === 'add') {
-        this.validateUserId()
-      } else if (this.mode === 'edit') {
-        //edit
-        this.editUserId()
-      }
-    } else {
-      console.log('Form invalid')
-    }
-  }
-
   handleCancel() {
     this.isVisible = false
   }
@@ -789,48 +664,6 @@ export class AccountInfoComponent {
     this.cdr.detectChanges()
   }
 
-  validateUserId() {
-    const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
-
-    const body = {
-      userId: this.formValidateUserId.getRawValue().userId,
-      fullName: this.formValidateUserId.getRawValue().fullName,
-      email: this.formValidateUserId.getRawValue().email,
-      idType: this.formValidateUserId.getRawValue().idType,
-      idNo: this.formValidateUserId.getRawValue().idNo,
-      fieldOfActivity: this.formValidateUserId.getRawValue().fieldOfActivity?.join(';'),
-      customsEffectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().customsEffectiveDate),
-      customsExpiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().customsExpiryDate),
-      digitalSignatureType: this.formValidateUserId.getRawValue().digitalSignatureType,
-      digitalSignature:
-        this.radioValue === '1'
-          ? this.formValidateUserId.getRawValue().digitalSignature
-          : this.formValidateUserId.getRawValue().nameCert,
-      serial: this.formValidateUserId.getRawValue().serial,
-      provider: this.formValidateUserId.getRawValue().provider,
-      effectiveDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().effectiveDate),
-      expiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().expiryDate),
-      publicKey: this.formValidateUserId.getRawValue().publicKey,
-      taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS,
-      credentialId: this.formValidateUserId.getRawValue().credentialId,
-      taxCode: taxCode
-    }
-    // console.log(this.formValidateUserId.value.fullName)
-
-    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
-      if (res) {
-        if (res.success) {
-          this.isVisible = false
-          //add data to table
-          this.dataTable = [...this.dataTable, body]
-          // console.log(this.dataTable)
-          this.backupDataTable = this.dataTable
-          this.cdr.detectChanges()
-        }
-      }
-    })
-  }
-
   getMsAccError(): string | undefined {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
@@ -839,19 +672,6 @@ export class AccountInfoComponent {
       }
     }
     return undefined
-  }
-
-  getCTS() {
-    this.getCTSForm.markAllAsTouched()
-    if (!this.getCTSForm.invalid) {
-      this.accReSrv.getCertInfo(this.getCTSForm.value.msAcc).subscribe((res: any) => {
-        if (res && res.message === 'success') {
-          this.listOfData = res.data
-        }
-      })
-    } else {
-      console.log('Form is invalid!')
-    }
   }
 
   formatDateFromString = (dateString: string): string | null => {
@@ -1045,81 +865,6 @@ export class AccountInfoComponent {
     })
   }
 
-  registerOrUpdate() {
-    const dataDialog = {
-      title:
-        this.modeScreen === 'register'
-          ? 'Bạn có muốn đăng ký mới thông tin doanh nghiệp không?'
-          : 'Bạn có muốn đăng ký thay đổi thông tin doanh nghiệp không?'
-    }
-
-    const dialogRef = this.dialogService.openDialog(ConfirmPopupComponent, '', dataDialog, {
-      nzClosable: false,
-      nzWidth: '400px',
-      nzCentered: true,
-      nzClassName: 'popup-radius-2'
-    })
-
-    dialogRef.afterClose.subscribe((result: boolean) => {
-      if (result) {
-        const body = {
-          taxCode: this.taxCode,
-          representativeName: this.form.value.representativeName,
-          representativeIdType: this.form.value.representativeIdType,
-          representativeIdNo: this.form.value.representativeIdNo,
-          address: this.form.value.address,
-          fieldOfActivity: this.form.value.fieldOfActivity?.join(';'),
-          proposal: this.form.value.proposal,
-          freeSoftware: this.form.value.freeSoftware,
-          ediSoftware: this.form.value.ediSoftware,
-          edifactSoftware: this.form.value.ediSoftware,
-          userCodeExpiryDate: new Date(this.form.value.userCodeExpiryDate).getTime(),
-          userIdRequestList: this.dataTable
-        }
-
-        //get ID from token
-        const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
-        if (token) {
-          const decoded = this.decodeToken(token)
-          if (decoded && decoded.sub) {
-            if (this.modeScreen === 'register') {
-              this.accReSrv.register(decoded.sub, body).subscribe((res: any) => {
-                if (res) {
-                  if (res.success) {
-                    this.notification.success(res.message)
-                    this.router.navigate(['/vnaccs/home/search-custom'])
-                  }
-                }
-              })
-            } else if (this.modeScreen === 'update') {
-              // console.log(this.dataFromSearch.requestId)
-              if (this.dataFromSearch.requestId) {
-                this.accReSrv.update(this.dataFromSearch.requestId, body).subscribe((res: any) => {
-                  if (res) {
-                    if (res.success) {
-                      this.notification.success(res.message)
-                      this.router.navigate(['/vnaccs/home/search-custom'])
-                    }
-                  }
-                })
-              } else {
-                //update first
-                this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
-                  if (res) {
-                    console.log(res)
-                    console.log(res.message)
-                    this.notification.success(res.message)
-                    this.router.navigate(['/vnaccs/home/search-custom'])
-                  }
-                })
-              }
-            }
-          }
-        }
-      }
-    })
-  }
-
   decodeToken(token: string): any {
     if (!token) {
       return null
@@ -1140,10 +885,6 @@ export class AccountInfoComponent {
         const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
         decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
       }
-
-      // In payload ra console để kiểm tra
-      console.log(decodedPayload)
-
       return decodedPayload
     } catch (error) {
       console.error('Lỗi khi giải mã token:', error)

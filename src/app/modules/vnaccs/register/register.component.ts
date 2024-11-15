@@ -35,6 +35,7 @@ import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { RouteStateService } from '../../../shared/services/clear-state.service'
 import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
+import { BehaviorSubject } from 'rxjs'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -95,6 +96,7 @@ export class RegisterComponent implements OnInit {
   modeScreen!: 'register' | 'update' | 'detail'
   getCTSForm!: FormGroup
   requestStatus!: number
+  initialRadioValue$ = new BehaviorSubject<string | number | null>(null)
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -216,18 +218,23 @@ export class RegisterComponent implements OnInit {
     this.loginForm.get('expiryDate')?.setValue(this.formatDateToDDMMYYYY(data.expiryDate))
     this.loginForm.get('publicKey')?.setValue(data.publicKey)
     this.loginForm.get('nameCert')?.setValue(data.digitalSignature)
+
+    this.initialRadioValue$.next(this.radioValue)
   }
 
   onRadioChange(value: string | number): void {
-    this.loginForm.get('digitalSignature')?.reset()
-    this.loginForm.get('serial')?.reset()
-    this.loginForm.get('provider')?.reset()
-    this.loginForm.get('effectiveDate')?.reset()
-    this.loginForm.get('expiryDate')?.reset()
-    this.loginForm.get('publicKey')?.reset()
-    this.loginForm.get('nameCert')?.reset()
-    this.loginForm.get('taxCodeCTS')?.reset()
-    this.loginForm.get('credentialId')?.reset()
+    const initialValue = this.initialRadioValue$.getValue()
+    if (initialValue != value) {
+      this.loginForm.get('digitalSignature')?.reset()
+      this.loginForm.get('serial')?.reset()
+      this.loginForm.get('provider')?.reset()
+      this.loginForm.get('effectiveDate')?.reset()
+      this.loginForm.get('expiryDate')?.reset()
+      this.loginForm.get('publicKey')?.reset()
+      this.loginForm.get('nameCert')?.reset()
+      this.loginForm.get('taxCodeCTS')?.reset()
+      this.loginForm.get('credentialId')?.reset()
+    }
   }
 
   disableForm() {
@@ -305,8 +312,8 @@ export class RegisterComponent implements OnInit {
             expiryDate: this.convertDateTimestamp(this.loginForm.getRawValue().expiryDate),
             publicKey: this.loginForm.getRawValue().publicKey,
             email: this.loginForm.getRawValue().email,
-            taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS
-            // credentialId: '001301020532_5181042_20241017083237'
+            taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
+            credentialId: this.loginForm.getRawValue().credentialId
           }
           if (this.dataToEditOrView.requestId) {
             this.registerSrv.update(this.dataToEditOrView.requestId, body).subscribe((res: any) => {

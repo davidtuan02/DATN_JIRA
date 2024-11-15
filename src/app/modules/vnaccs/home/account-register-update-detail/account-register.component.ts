@@ -26,7 +26,7 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { debounceTime, Subject } from 'rxjs'
+import { BehaviorSubject, debounceTime, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
@@ -146,6 +146,7 @@ export class AccountRegisterComponent {
 
   dataFromRouter: any
   getCTSForm!: FormGroup
+  initialRadioValue$ = new BehaviorSubject<string | number | null>(null)
 
   constructor(
     private accReSrv: AccountRegisterService,
@@ -686,7 +687,6 @@ export class AccountRegisterComponent {
   }
 
   setValueForm(data: any) {
-    console.log(data)
     this.formValidateUserId.get('fullName')?.setValue(data?.fullName)
     this.formValidateUserId.get('userId')?.setValue(data?.userId)
     this.formValidateUserId.get('email')?.setValue(data?.email)
@@ -708,6 +708,8 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('publicKey')?.setValue(data?.publicKey)
     this.formValidateUserId.get('credentialId')?.setValue(data?.credentialId)
     this.formValidateUserId.get('taxCodeCTS')?.setValue(data?.taxCodeCTS)
+
+    this.initialRadioValue$.next(this.form.value.representativeIdType)
   }
 
   submitValidateUserId() {
@@ -759,15 +761,18 @@ export class AccountRegisterComponent {
   }
 
   onRadioChange(value: any) {
-    this.formValidateUserId.get('digitalSignature')?.reset()
-    this.formValidateUserId.get('serial')?.reset()
-    this.formValidateUserId.get('provider')?.reset()
-    this.formValidateUserId.get('effectiveDate')?.reset()
-    this.formValidateUserId.get('expiryDate')?.reset()
-    this.formValidateUserId.get('publicKey')?.reset()
-    this.formValidateUserId.get('nameCert')?.reset()
-    this.formValidateUserId.get('taxCodeCTS')?.reset()
-    this.formValidateUserId.get('credentialId')?.reset()
+    const initialValue = this.initialRadioValue$.getValue()
+    if (initialValue != value) {
+      this.formValidateUserId.get('digitalSignature')?.reset()
+      this.formValidateUserId.get('serial')?.reset()
+      this.formValidateUserId.get('provider')?.reset()
+      this.formValidateUserId.get('effectiveDate')?.reset()
+      this.formValidateUserId.get('expiryDate')?.reset()
+      this.formValidateUserId.get('publicKey')?.reset()
+      this.formValidateUserId.get('nameCert')?.reset()
+      this.formValidateUserId.get('taxCodeCTS')?.reset()
+      this.formValidateUserId.get('credentialId')?.reset()
+    }
   }
 
   editUserId() {
@@ -812,8 +817,6 @@ export class AccountRegisterComponent {
   }
 
   validateUserId() {
-    const taxCode: any = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
-
     const body = {
       userId: this.formValidateUserId.getRawValue().userId,
       fullName: this.formValidateUserId.getRawValue().fullName,
@@ -834,8 +837,7 @@ export class AccountRegisterComponent {
       expiryDate: this.convertDateTimestamp(this.formValidateUserId.getRawValue().expiryDate),
       publicKey: this.formValidateUserId.getRawValue().publicKey,
       taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS,
-      credentialId: this.formValidateUserId.getRawValue().credentialId,
-      taxCode: taxCode
+      credentialId: this.formValidateUserId.getRawValue().credentialId
     }
 
     this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {

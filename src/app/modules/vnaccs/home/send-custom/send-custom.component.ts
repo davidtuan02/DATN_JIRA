@@ -224,6 +224,7 @@ export class SendCustomComponent {
     if (state && state.data) {
       id = state.data.id
     }
+    console.log(id)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {

@@ -1,4 +1,4 @@
-<div class="accre-container flex flex-column pb-[60px] pt-[15px]">
+<div class="accre-container flex flex-column pt-[15px]">
   <form nz-form [formGroup]="form">
     <div class="flex flex-start">
       <span class="font-inter" style="font-size: 18px; color: #000000">Thông tin chung</span>
@@ -185,127 +185,6 @@
             />
           </nz-input-group>
         </nz-col>
-        <nz-col nzSpan="16">
-          <div class="flex justify-content-end gap-[16px] items-center mb-[5px]">
-            <button
-              *ngIf="modeScreen === 'update' || modeScreen === 'register'"
-              type="submit"
-              class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-              (click)="showModalUserId('add', null, null)"
-              style="
-                height: 40px;
-                width: 120px;
-                background-color: #1944a7 !important;
-                font-size: 14px;
-                border-radius: 8px;
-              "
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M10.0023 6.93945V13.0448"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M13.0564 9.99215H6.94531"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M13.9061 1.66675H6.09654C3.37432 1.66675 1.66797 3.59348 1.66797 6.32105V13.6791C1.66797 16.4067 3.36638 18.3334 6.09654 18.3334H13.9061C16.6362 18.3334 18.3346 16.4067 18.3346 13.6791V6.32105C18.3346 3.59348 16.6362 1.66675 13.9061 1.66675Z"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              Thêm mới
-            </button>
-
-            <!-- enable -->
-            <button
-              *ngIf="setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
-              (click)="deleteMany()"
-              nz-button
-              class="rounded font-bold text-white bg-red"
-              style="height: 40px; width: 44px; display: flex; justify-content: center; align-items: center"
-            >
-              <div style="width: 20px">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M17.2567 5.19963H3.125"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-            </button>
-
-            <!-- disable -->
-            <button
-              *ngIf="!setOfCheckedIndex.size && (modeScreen === 'update' || modeScreen === 'register')"
-              [disabled]="true"
-              nz-button
-              class="rounded font-bold"
-              style="
-                height: 40px;
-                width: 44px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: pink;
-              "
-            >
-              <div style="width: 20px">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M16.1071 7.89014C16.1071 7.89014 15.6546 13.5026 15.3921 15.8668C15.2671 16.996 14.5696 17.6576 13.4271 17.6785C11.2529 17.7176 9.07625 17.7201 6.90292 17.6743C5.80375 17.6518 5.11792 16.9818 4.99542 15.8726C4.73125 13.4876 4.28125 7.89014 4.28125 7.89014"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M17.2567 5.19963H3.125"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M14.5374 5.19974C13.8832 5.19974 13.3199 4.73724 13.1916 4.0964L12.9891 3.08307C12.8641 2.61557 12.4407 2.29224 11.9582 2.29224H8.43073C7.94823 2.29224 7.5249 2.61557 7.3999 3.08307L7.1974 4.0964C7.06906 4.73724 6.50573 5.19974 5.85156 5.19974"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-            </button>
-          </div>
-        </nz-col>
       </nz-row>
     </div>
 
@@ -454,44 +333,10 @@
       </nz-table>
     </div>
 
-    <!-- response info from custom  -->
-    <div
-      class="flex flex-column pt-[63px]"
-      *ngIf="responseFromCustom === 2 || responseFromCustom === 3 || responseFromCustom === 0"
-    >
-      <span class="font-inter" style="font-size: 18px">Thông tin phản hồi của Hải quan</span>
-      <nz-row nzGutter="20">
-        <nz-col nzSpan="8">
-          <span class="me-[14px] font-inter-400" style="font-size: 14px">Kết quả:</span
-          ><span
-            [ngClass]="responseFromCustom === 2 ? 'status-2' : responseFromCustom === 3 ? 'status-3' : 'status-0'"
-            style="padding: 4px; font-size: 14px; text-align: center; border-radius: 4px; line-height: 24px"
-            >{{ getResultResponseFromCustom() }}</span
-          >
-        </nz-col>
-        <nz-col nzSpan="8">
-          <span class="me-[14px] font-inter-400" style="font-size: 14px">Ngày phản hồi:</span
-          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.approvalTime | date : 'dd/MM/yyyy' }}</span>
-        </nz-col>
-      </nz-row>
-
-      <nz-row nzGutter="20">
-        <!-- <nz-col nzSpan="8">
-          <span class="me-[14px] font-inter-400" style="font-size: 14px">Đơn vị Hải quan phản hồi:</span
-          ><span class="font-inter" style="font-size: 14px">00P001 - Văn phòng tổng cục (Tổng cục Hải quan)</span>
-        </nz-col> -->
-        <nz-col nzSpan="8">
-          <span class="me-[14px] font-inter-400" style="font-size: 14px">Ghi nhận Hải quan:</span
-          ><span class="font-inter" style="font-size: 14px">{{ dataResponse.customsDepartmentNote }}</span>
-        </nz-col>
-      </nz-row>
-    </div>
-
     <!-- button -->
     <nz-row nzSpan="24">
       <div class="flex justify-center items-center gap-[10px] w-100 mt-[50px]">
         <button
-          *ngIf="modeScreen === 'register'"
           [routerLink]="['/vnaccs/home']"
           type="button"
           class="font-inter-600 flex items-center justify-center gap-[8px]"
@@ -504,109 +349,7 @@
             border-radius: 8px;
           "
         >
-          <svg width="15" height="11" viewBox="0 0 15 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M3.999 0.998047L1 4.00005L4 7.00005"
-              stroke="#699BF7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M6 10H11C13 10 14 9 14 7C14 4 13 4 11 4H1"
-              stroke="#1944A7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          Bỏ qua
-        </button>
-        <!-- <button
-          *ngIf="modeScreen === 'update'"
-          type="button"
-          class="font-inter-600 flex items-center justify-center gap-[8px]"
-          style="
-            height: 40px;
-            width: 145px;
-            background-color: #f5f5f5;
-            color: #1944a7 !important;
-            font-size: 14px;
-            border-radius: 8px;
-          "
-        >
           Đóng
-        </button> -->
-        <button
-          *ngIf="modeScreen === 'detail' || modeScreen === 'update'"
-          [routerLink]="['/vnaccs/home/search-custom']"
-          type="button"
-          class="font-inter-600 flex items-center justify-center gap-[8px]"
-          style="
-            height: 40px;
-            width: 145px;
-            background-color: #f5f5f5;
-            color: #1944a7 !important;
-            font-size: 14px;
-            border-radius: 8px;
-          "
-        >
-          Đóng
-        </button>
-        <button
-          *ngIf="modeScreen === 'register'"
-          type="submit"
-          (click)="submit()"
-          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
-        >
-          <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
-              fill="white"
-            />
-          </svg>
-          Đăng ký
-        </button>
-        <button
-          *ngIf="modeScreen === 'detail' && responseFromCustom === 1"
-          type="submit"
-          (click)="fromDetailToUpdate()"
-          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
-        >
-          Chỉnh sửa
-        </button>
-        <button
-          *ngIf="modeScreen === 'detail' && responseFromCustom === 1"
-          [routerLink]="['/vnaccs/home/send-custom']"
-          type="submit"
-          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-          style="
-            height: 40px;
-            width: 145px;
-            background-color: white !important;
-            color: #3bb54a !important;
-            border: 0.5px solid #3bb54a;
-            font-size: 14px;
-            border-radius: 8px;
-          "
-        >
-          Gửi hải quan
-        </button>
-        <button
-          *ngIf="modeScreen === 'update'"
-          [routerLink]="['/vnaccs/home/account-update']"
-          type="submit"
-          (click)="submit()"
-          class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
-          style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
-        >
-          <!-- <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M0.5 2C0.5 1.46957 0.710714 0.960859 1.08579 0.585786C1.46086 0.210714 1.96957 0 2.5 0H3.5V3.5C3.5 3.89782 3.65804 4.27936 3.93934 4.56066C4.22064 4.84196 4.60218 5 5 5H9C9.39782 5 9.77936 4.84196 10.0607 4.56066C10.342 4.27936 10.5 3.89782 10.5 3.5V0H10.879C11.4094 0.000113275 11.918 0.210901 12.293 0.586L13.914 2.207C14.2891 2.58199 14.4999 3.09061 14.5 3.621V12C14.5 12.5304 14.2893 13.0391 13.9142 13.4142C13.5391 13.7893 13.0304 14 12.5 14V8.5C12.5 8.10218 12.342 7.72064 12.0607 7.43934C11.7794 7.15804 11.3978 7 11 7H4C3.60218 7 3.22064 7.15804 2.93934 7.43934C2.65804 7.72064 2.5 8.10218 2.5 8.5V14C1.96957 14 1.46086 13.7893 1.08579 13.4142C0.710714 13.0391 0.5 12.5304 0.5 12V2ZM9.5 0H4.5V3.5C4.5 3.63261 4.55268 3.75979 4.64645 3.85355C4.74021 3.94732 4.86739 4 5 4H9C9.13261 4 9.25979 3.94732 9.35355 3.85355C9.44732 3.75979 9.5 3.63261 9.5 3.5V0ZM11.5 8.5V14H3.5V8.5C3.5 8.36739 3.55268 8.24021 3.64645 8.14645C3.74021 8.05268 3.86739 8 4 8H11C11.1326 8 11.2598 8.05268 11.3536 8.14645C11.4473 8.24021 11.5 8.36739 11.5 8.5Z"
-              fill="white"
-            />
-          </svg> -->
-          Lưu
         </button>
       </div>
     </nz-row>
@@ -863,40 +606,6 @@
               </nz-radio-group>
               <p style="max-height: 10px" class="text-danger fs-14"></p>
             </div>
-            <div class="pt-[23px]">
-              <button
-                type="button"
-                class="text-white button flex justify-center"
-                style="width: 258px; border-radius: 8px; background-color: #1944a7 !important"
-                (click)="radioValue === '2' ? showModalCTS() : getVTCAInfo()"
-              >
-                <div class="button-content flex justify-center items-center gap-2 p-[8px]" style="width: 170px">
-                  <div class="svg">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle
-                        cx="9.80687"
-                        cy="9.80547"
-                        r="7.49047"
-                        stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M15.0156 15.4042L17.9523 18.3333"
-                        stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div class="text">
-                    <span>Lấy chứng thư số</span>
-                  </div>
-                </div>
-              </button>
-            </div>
           </div>
         </nz-col>
         <!-- Chữ ký số -->
@@ -1090,11 +799,7 @@
           </p>
         </div>
         <div class="flex gap-[14px]">
-          <button
-            class="text-white"
-            style="border-radius: 8px; background-color: #1944a7 !important; height: 40px"
-            (click)="getCTS()"
-          >
+          <button class="text-white" style="border-radius: 8px; background-color: #1944a7 !important; height: 40px">
             <div class="flex justify-center items-center gap-2" style="width: 218px">
               <div>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1611,7 +1316,6 @@
       class="font-inter-600 text-white"
       *ngIf="mode === 'add' || mode === 'edit'"
       style="height: 40px; width: 145px; background-color: #1944a7 !important; font-size: 14px; border-radius: 8px"
-      (click)="submitValidateUserId()"
     >
       Lưu
     </button>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit, SimpleChange } from '@angular/core'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -54,10 +54,11 @@ export class AccountInformationComponent implements OnInit {
   ngOnInit() {
     const id = this.decodeToken(this.token).sub
 
-    // this.accountInfoService.getAdminInfo(id).subscribe((res: any) => {
-    //   this.data = res.data
-    //   this.cdr.detectChanges()
-    // })
+    this.accountInfoService.getAdminInfo(id).subscribe((res: any) => {
+      if (res && res.errorCode == 0) {
+        this.data = res.data
+      }
+    })
   }
 
   decodeToken(token: string): any {

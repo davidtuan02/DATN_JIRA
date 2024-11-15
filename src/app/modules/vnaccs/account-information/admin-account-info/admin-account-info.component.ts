@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DatePipe, NgIf } from '@angular/common'
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid'
@@ -57,27 +57,26 @@ export class AdminAccountInfoComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
-    console.log(this.data)
+  ngOnInit() {}
 
-    // this.form.patchValue({
-    //   taxCode: this.data.taxCode,
-    //   email: this.data.email,
-    //   digitalSignatureType: this.data.digitalSignatureType.toString(),
-    //   digitalSignature: this.data.digitalSignature,
-    //   serial: this.data.serial,
-    //   provider: this.data.provider,
-    //   effectiveDate: this.datePipe.transform(this.data.effectiveDate, 'dd/MM/yyyy'),
-    //   expiryDate: this.datePipe.transform(this.data.expiryDate, 'dd/MM/yyyy'),
-    //   publicKey: this.data.publicKey,
-    //   nameCert: this.data.digitalSignature,
-    //   taxCodeCTS: this.data.taxCodeCTS,
-    //   credentialId: this.data.credentialId
-    // })
-    // this.form.disable()
-  }
-
-  ngOnChange() {
-    console.log(this.data)
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data'] && changes['data'].currentValue) {
+      // console.log('Data received in child component:', this.data)
+      this.form.patchValue({
+        taxCode: this.data.taxCode,
+        email: this.data.email,
+        digitalSignatureType: this.data.digitalSignatureType.toString(),
+        digitalSignature: this.data.digitalSignature,
+        serial: this.data.serial,
+        provider: this.data.provider,
+        effectiveDate: this.datePipe.transform(this.data.effectiveDate, 'dd/MM/yyyy'),
+        expiryDate: this.datePipe.transform(this.data.expiryDate, 'dd/MM/yyyy'),
+        publicKey: this.data.publicKey,
+        nameCert: this.data.digitalSignature,
+        taxCodeCTS: this.data.taxCodeCTS,
+        credentialId: this.data.credentialId
+      })
+      this.form.disable()
+    }
   }
 }

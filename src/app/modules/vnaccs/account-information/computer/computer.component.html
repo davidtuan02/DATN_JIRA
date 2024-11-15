@@ -12,23 +12,57 @@
     </nz-input-group>
   </nz-col>
 </nz-row>
-<span class="font-inter" style="font-size: 14px">Danh sách Terminal ID ({{ total }})</span>
+<div class="flex items-center mt-[10px] mb-[13px]">
+  <span class="font-inter" style="font-size: 14px">Danh sách Terminal ID ({{ total }})</span>
+</div>
 <nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]="basicTable.data.length >= 5">
   <thead>
     <tr>
-      <th>STT</th>
-      <th>Terminal ID</th>
-      <th>Terminal Access key</th>
+      <th nzWidth="50px" nzAlign="center" class="font-inter" style="font-size: 14px">STT</th>
+      <th nzWidth="150PX" nzAlign="center" class="font-inter" style="font-size: 14px">Terminal ID</th>
+      <th nzAlign="center" class="font-inter" style="font-size: 14px">Terminal Access key</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ data.age }}</td>
-      <td>{{ data.key }}</td>
+      <td nzAlign="center">{{ i + 1 }}</td>
+      <td nzAlign="left">{{ data.terminalId }}</td>
+      <td nzAlign="left">{{ data.accessKey }}</td>
     </tr>
   </tbody>
 </nz-table>
+
+<div class="mt-[15px]">
+  <span class="font-inter-500" style="font-size: 14px">Terminal ID có ký tự cuối cùng là:</span>
+  <ul>
+    <li style="list-style-type: disc">"C": Sử dụng cho phần mềm đầu cuối, Hải quan cấp miễn phí</li>
+    <li style="list-style-type: disc">"K": Sử dụng cho phần mềm của hãng thứ ba hoặc đã xây</li>
+    <li style="list-style-type: disc">"E": Sử dụng cho phần mềm khai E - manifest (EDIFACT)</li>
+    <li class="font-inter-500" style="font-size: 14px; color: #d72717; list-style-type: disc">
+      Chú ý: Với Terminal ID có dâu (*) là Terminal nhận được tất cả các thông điệp phản hồi từ hệ thống
+    </li>
+  </ul>
+</div>
+
+<nz-row nzSpan="24">
+  <div class="flex justify-center items-center gap-[10px] w-100 mt-[50px]">
+    <button
+      [routerLink]="['/vnaccs/home']"
+      type="button"
+      class="font-inter-600"
+      style="
+        height: 40px;
+        width: 145px;
+        background-color: #f5f5f5;
+        color: #1944a7 !important;
+        font-size: 14px;
+        border-radius: 8px;
+      "
+    >
+      Đóng
+    </button>
+  </div>
+</nz-row>
 
 <ng-template #prefixSearch>
   <svg

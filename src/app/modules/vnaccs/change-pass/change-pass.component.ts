@@ -103,9 +103,10 @@ export class ChangePassComponent implements OnInit {
   ngOnInit(): void {}
   loadForm() {
     this.authService.taxCode$.subscribe((taxCode) => {
+      const taxCodeStorage = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!
       this.loginForm = this.fb.group(
         {
-          taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
+          taxCode: [taxCodeStorage, [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
           password: ['', [Validators.required]],
           newPassword: [
             '',

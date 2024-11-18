@@ -129,7 +129,7 @@ export class SendCustomComponent {
 
   submit() {
     this.form.markAllAsTouched()
-    const rawFormData = this.getCTSForm.getRawValue()
+    const rawFormData = this.form.getRawValue()
     if (
       (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
       !rawFormData.serial ||
@@ -138,6 +138,7 @@ export class SendCustomComponent {
       !rawFormData.expiryDate ||
       !rawFormData.publicKey
     ) {
+      console.log('thieu gt')
       return
     }
     if (!this.form.invalid) {

@@ -53,7 +53,6 @@ export class HomeComponent implements OnInit {
     this.routerSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        // Chỉ cập nhật selectedItem khi URL thay đổi
         this.updateSelectedItem(event.urlAfterRedirects)
       })
   }
@@ -64,7 +63,6 @@ export class HomeComponent implements OnInit {
     if (!url) {
       return
     }
-    // Kiểm tra URL và cập nhật selectedItem
     switch (url) {
       case '/vnaccs/home':
         this.selectedItem = null
@@ -88,7 +86,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    // Hủy subscription khi component bị destroy
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe()
     }

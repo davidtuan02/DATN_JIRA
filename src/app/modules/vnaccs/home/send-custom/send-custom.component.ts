@@ -212,7 +212,7 @@ export class SendCustomComponent {
             // console.log(res)
             this.current += 1
             this.isSent = true
-            this.requestNo = state.data.requestNo
+            this.requestNo = res.message
           }
         })
       }
@@ -255,6 +255,40 @@ export class SendCustomComponent {
         this.isSigned = true
       }
     })
+  }
+
+  onRadioChange(value: any) {
+    this.form.get('digitalSignature')?.reset()
+    this.form.get('nameCert')?.reset()
+    this.form.get('serial')?.reset()
+    this.form.get('provider')?.reset()
+    this.form.get('effectiveDate')?.reset()
+    this.form.get('expiryDate')?.reset()
+    this.form.get('publicKey')?.reset()
+    this.form.get('credentialId')?.reset()
+    this.form.get('taxCodeCTS')?.reset()
+  }
+
+  getDigitalSignatureError(): string | undefined {
+    const control = this.form.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.form.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   decodeToken(token: string): any {

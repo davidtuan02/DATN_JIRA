@@ -103,8 +103,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private notification: NotificationService,
     private registerSrv: RegisterService,
-    private dialogService: DialogService,
-    private routeStateService: RouteStateService
+    private dialogService: DialogService
   ) {
     this.loadForm()
   }
@@ -129,6 +128,7 @@ export class RegisterComponent implements OnInit {
         adminPassword: [
           '',
           [
+            Validators.required,
             Validators.pattern(
               /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_~`])([^\s])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]{};':"\\|,.<>\/?~`]{7,}$/
             )
@@ -476,7 +476,7 @@ export class RegisterComponent implements OnInit {
     const control = this.getCTSForm.get('msAcc')
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
-        return 'Họ tên người gửi Hải quan không được để trống'
+        return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }
     }
     return undefined
@@ -543,6 +543,28 @@ export class RegisterComponent implements OnInit {
 
     // Trả về timestamp (số milliseconds từ epoch)
     return dateObj.getTime()
+  }
+
+  getDigitalSignatureError(): string | undefined {
+    const control = this.loginForm.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.loginForm.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   applyData(data: any) {

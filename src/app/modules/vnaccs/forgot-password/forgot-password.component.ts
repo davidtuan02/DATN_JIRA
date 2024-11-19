@@ -322,6 +322,28 @@ export class ForgotPasswordComponent implements OnInit {
     return undefined
   }
 
+  getDigitalSignatureError(): string | undefined {
+    const control = this.loginForm.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.loginForm.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
   showModal() {
     this.isVisible = true
     this.getCTSForm.reset()

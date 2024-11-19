@@ -1,5 +1,9 @@
 @import '../../shared/styles/variable';
 
+.active {
+  text-decoration: underline;
+}
+
 .container-fluid {
   background-color: $primary-color !important;
 }

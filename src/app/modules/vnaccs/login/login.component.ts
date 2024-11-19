@@ -135,6 +135,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loginForm.markAllAsTouched()
     const rawFormData = this.loginForm.getRawValue()
     if (
       (!rawFormData.digitalSignature && !rawFormData.nameCert) ||
@@ -147,10 +148,31 @@ export class LoginComponent implements OnInit {
       return
     }
     if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched()
       return
     }
     this.login()
+  }
+
+  getDigitalSignatureError(): string | undefined {
+    const control = this.loginForm.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.loginForm.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   convertDateTimestamp(date: any) {
@@ -206,6 +228,18 @@ export class LoginComponent implements OnInit {
         this.authService.setTaxCode(this.loginForm.value.taxCode)
       }
     })
+  }
+
+  onRadioChange(value: any) {
+    this.loginForm.get('digitalSignature')?.reset()
+    this.loginForm.get('nameCert')?.reset()
+    this.loginForm.get('serial')?.reset()
+    this.loginForm.get('provider')?.reset()
+    this.loginForm.get('effectiveDate')?.reset()
+    this.loginForm.get('expiryDate')?.reset()
+    this.loginForm.get('publicKey')?.reset()
+    this.loginForm.get('credentialId')?.reset()
+    this.loginForm.get('taxCodeCTS')?.reset()
   }
 
   formatDateFromString = (dateString: string): string | null => {

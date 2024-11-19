@@ -38,6 +38,10 @@ nz-date-picker.ng-dirty.ng-invalid {
   border: 1px solid #dc3545;
 }
 
+nz-date-picker {
+  height: 40px !important;
+}
+
 .ant-input-affix-wrapper {
   padding: 0 !important;
   position: relative;
@@ -70,6 +74,10 @@ nz-date-picker.ng-dirty.ng-invalid {
 }
 
 .ant-select-selection-item {
+  font-size: 14px !important;
+}
+
+.ant-select-lg {
   font-size: 14px !important;
 }
 
@@ -109,4 +117,21 @@ nz-date-picker.ng-dirty.ng-invalid {
   transform: translateY(-50%);
   cursor: pointer;
   color: #ccc;
+}
+
+::ng-deep .ant-select-selection-item {
+  content: attr(data-value) '/ ' !important;
+}
+
+.ant-input {
+  font-size: 14px !important;
+  height: 40px !important;
+}
+
+.ant-form-item-label > label {
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }

@@ -7,23 +7,39 @@
       <div class="flex flex-col items-center">
         <div
           style="width: 70px; height: 70px; border-radius: 50%; position: relative; background-color: #bfbfbf40"
-          [ngClass]="isSigned ? 'step-signed' : 'step-not-signed'"
+          [ngClass]="{ 'step-signed': isSigned }"
         >
-          <span class="font-inter-500" style="font-size: 14px; position: absolute; top: 30px; left: 30px">1</span>
+          <span
+            class="font-inter-500"
+            style="font-size: 14px; position: absolute; top: 25px; left: 31px; color: #a5a5a5"
+            [ngClass]="{ 'number-signed': isSigned }"
+            >1</span
+          >
         </div>
-        <span
-          class="font-inter-500"
-          style="font-size: 14px; color: #a5a5a5"
-          [ngClass]="isSigned ? 'text-signed' : 'text-not-signed'"
+        <span class="font-inter-500" style="font-size: 14px; color: #a5a5a5" [ngClass]="{ 'text-signed': isSigned }"
           >Ký chữ ký số</span
         >
       </div>
-      <div class="flex-grow h-[1px]" style="background-color: #bfbfbf40"></div>
+      <div
+        class="flex-grow h-[1px] mb-[15px]"
+        style="background-color: #bfbfbf40"
+        [ngClass]="{ 'line-sent': isSent }"
+      ></div>
       <div class="flex flex-col items-center">
-        <div style="width: 70px; height: 70px; border-radius: 50%; position: relative; background-color: #bfbfbf40">
-          <span class="font-inter-500" style="font-size: 14px; position: absolute; top: 30px; left: 30px">2</span>
+        <div
+          style="width: 70px; height: 70px; border-radius: 50%; position: relative; background-color: #bfbfbf40"
+          [ngClass]="{ 'step-sent': isSent }"
+        >
+          <span
+            class="font-inter-500"
+            style="font-size: 14px; position: absolute; top: 25px; left: 31px; color: #a5a5a5"
+            [ngClass]="{ 'number-sent': isSigned }"
+            >2</span
+          >
         </div>
-        <span class="font-inter-500" style="font-size: 14px; color: #a5a5a5">Gửi hải quan</span>
+        <span class="font-inter-500" style="font-size: 14px; color: #a5a5a5" [ngClass]="{ 'text-sent': isSent }"
+          >Gửi hải quan</span
+        >
       </div>
     </div>
 
@@ -127,10 +143,11 @@
           <!-- Loại chữ ký số -->
           <nz-col nzSpan="12">
             <div class="flex justify-between">
-              <div class="flex flex-col gap-[10px]">
+              <div class="flex flex-col gap-[15px]">
                 <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
                 <nz-radio-group
                   [(ngModel)]="radioValue"
+                  (ngModelChange)="onRadioChange($event)"
                   nzSize="large"
                   formControlName="digitalSignatureType"
                   style="font-size: 14px"
@@ -187,7 +204,9 @@
               <nz-input-group style="border-radius: 8px">
                 <input autoTrim text nz-input maxlength="13" formControlName="digitalSignature" />
               </nz-input-group>
-              <p style="max-height: 10px" class="text-danger fs-14"></p>
+              <p *ngIf="getDigitalSignatureError()" style="max-height: 10px" class="text-danger fs-14">
+                {{ getDigitalSignatureError() }}
+              </p>
             </div>
           </nz-col>
 
@@ -198,7 +217,9 @@
               <nz-input-group style="border-radius: 8px">
                 <input autoTrim text nz-input maxlength="13" formControlName="nameCert" />
               </nz-input-group>
-              <p style="max-height: 10px" class="text-danger fs-14"></p>
+              <p *ngIf="getNameCertError()" style="max-height: 10px" class="text-danger fs-14">
+                {{ getNameCertError() }}
+              </p>
             </nz-col>
           </ng-template>
         </nz-row>

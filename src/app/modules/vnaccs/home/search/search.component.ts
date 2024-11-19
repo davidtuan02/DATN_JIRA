@@ -31,6 +31,7 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { da } from 'date-fns/locale'
 import { NotificationService } from '../../../../shared/services/notification.service'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import { NzI18nService, zh_CN } from 'ng-zorro-antd/i18n'
 
 @Component({
   selector: 'app-search',
@@ -83,12 +84,12 @@ export class SearchComponent {
       value: 2
     },
     {
-      label: 'Hải quan từ chối',
+      label: 'Hải quan chấp nhận',
       value: 3
     },
     {
-      label: 'Hải quan chấp nhận',
-      value: 4
+      label: 'Hải quan từ chối',
+      value: 0
     }
   ]
 
@@ -124,12 +125,23 @@ export class SearchComponent {
     private router: Router,
     private dialogSrv: DialogService,
     private cdr: ChangeDetectorRef,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private i18n: NzI18nService
   ) {}
 
   ngOnInit() {
     this.loadForm()
     this.search()
+
+    const customPaginationLang = {
+      ...zh_CN.Pagination,
+      items_per_page: '/ Trang'
+    }
+
+    this.i18n.setLocale({
+      ...zh_CN,
+      Pagination: customPaginationLang
+    })
   }
 
   loadForm() {
@@ -263,16 +275,28 @@ export class SearchComponent {
           nzCentered: true,
           nzClassName: 'popup-radius-2'
         })
-        dialogRef.afterClose.subscribe((res: any) => {
-          if (res) {
-            this.searchSrv.deleteRequest(data.id).subscribe((res: any) => {
-              if (res && res.success) {
-                this.notification.success('Xóa đề xuất thành công')
-                this.search()
-              }
-            })
+        dialogRef.afterClose.subscribe({
+          next: (res: any) => {
+            if (res) {
+              this.searchSrv.deleteRequest(data.id).subscribe({
+                next: (res: any) => {
+                  if (res && res.success) {
+                    this.notification.success('Xóa đề xuất thành công')
+                    this.search()
+                  }
+                },
+                error: (er: any) => {
+                  this.notification.error(res.message)
+                  console.error(er)
+                }
+              })
+            }
+          },
+          error: (er: any) => {
+            this.search()
           }
         })
+
         break
       }
     }

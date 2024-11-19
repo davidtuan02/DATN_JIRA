@@ -157,6 +157,29 @@ export class UpdateSignatureComponent implements OnInit {
       console.log('Form is invalid!')
     }
   }
+
+  getDigitalSignatureError(): string | undefined {
+    const control = this.loginForm.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.loginForm.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
   updateSignature() {
     const dataDialog = {
       title: 'Bạn có muốn cập nhật chữ ký số cho tài khoản quản trị không?'

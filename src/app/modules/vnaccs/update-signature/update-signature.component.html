@@ -63,7 +63,7 @@
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
-            <div class="flex flex-col gap-[10px]">
+            <div class="flex flex-col gap-[15px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
               <nz-radio-group
                 [(ngModel)]="radioValue"
@@ -123,7 +123,9 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim text nz-input maxlength="13" formControlName="digitalSignature" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14"></p>
+            <p *ngIf="getDigitalSignatureError()" style="max-height: 10px" class="text-danger fs-14">
+              {{ getDigitalSignatureError() }}
+            </p>
           </div>
         </nz-col>
 
@@ -134,7 +136,9 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14"></p>
+            <p *ngIf="getNameCertError()" style="max-height: 10px" class="text-danger fs-14">
+              {{ getNameCertError() }}
+            </p>
           </nz-col>
         </ng-template>
       </nz-row>

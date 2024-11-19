@@ -380,6 +380,7 @@ export class AccountRegisterComponent {
 
       if (new Date(fromDate) > new Date(toDate)) {
         formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
+        formGroup.get(toDateField)?.setErrors({ dateRangeInvalid: true })
       } else {
         formGroup.get(fromDateField)?.setErrors(null)
       }
@@ -405,6 +406,9 @@ export class AccountRegisterComponent {
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Thời gian hết hiệu lực khai báo hải quan không được để trống'
+      }
+      if (control.errors?.['dateRangeInvalid']) {
+        return 'Ngày hiệu lực phải nhỏ hơn hoặc bằng ngày hết hiệu lực'
       }
     }
     return undefined
@@ -441,6 +445,28 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('expiryDate')?.disable()
     this.formValidateUserId.get('nameCert')?.disable()
     this.formValidateUserId.get('publicKey')?.disable()
+  }
+
+  getDigitalSignatureError(): string | undefined {
+    const control = this.formValidateUserId.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.formValidateUserId.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
   }
 
   getRepresentativeNameError(): string | undefined {

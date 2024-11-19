@@ -8,7 +8,7 @@
         <!-- Loại đăng ký  -->
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Loại đăng ký</label>
-          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="requestType">
+          <nz-select nzSize="large" nzAllowClear nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="requestType">
             @for (option of listOfOptionRegisterType; track option.value) {
             <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
             }
@@ -21,7 +21,13 @@
         <!-- Trạng thái  -->
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Trạng thái</label>
-          <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="requestStatus">
+          <nz-select
+            nzSize="large"
+            nzAllowClear
+            nzMode="multiple"
+            nzPlaceHolder="-Chọn-"
+            formControlName="requestStatus"
+          >
             @for (option of listOfOptionStatus; track option.value) {
             <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
             }
@@ -41,7 +47,6 @@
               nz-input
               placeholder="Nhập số tiếp nhận"
               maxlength="250"
-              (input)="onInput($event)"
               formControlName="requestNo"
             />
           </nz-input-group>
@@ -189,20 +194,20 @@
           [nzFrontPagination]="false"
           nzTableLayout="fixed"
           nzNoResult="Không tìm thấy bản ghi nào"
-          [nzScroll]="{ x: '1500px' }"
+          [nzScroll]="{ x: '1700px' }"
         >
           <thead>
             <tr>
               <th nzAlign="center" nzWidth="60px" style="font-size: 14px">STT</th>
               <th nzAlign="center" nzWidth="250px" style="font-size: 14px">Loại đăng ký</th>
-              <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Số tiếp nhận</th>
-              <th nzAlign="left" nzWidth="100px" style="font-size: 14px">Năm tiếp nhận</th>
+              <th nzAlign="center" nzWidth="90px" style="font-size: 14px">Số tiếp nhận</th>
+              <th nzAlign="center" nzWidth="100px" style="font-size: 14px">Năm tiếp nhận</th>
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Trạng thái</th>
               <th nzAlign="center" nzWidth="90px" style="font-size: 14px">Người gửi</th>
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày gửi</th>
-              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày phê duyệt</th>
+              <th nzAlign="center" nzWidth="110px" style="font-size: 14px">Ngày phê duyệt</th>
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ghi nhận của Hải quan</th>
-              <th nzAlign="center" nzWidth="140px" style="font-size: 14px">Thao tác</th>
+              <th nzAlign="center" nzWidth="70px" style="font-size: 14px">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -215,8 +220,7 @@
               </td>
               <td nzAlign="left">
                 <span
-                  class="flex items-center justify-center py-[1px]"
-                  style="line-height: 24px"
+                  style="line-height: 24px; text-align: left"
                   [ngClass]="data.requestType === 1 ? 'active' : 'not-active'"
                   nz-tooltip
                   [nzTooltipTitle]="
@@ -236,15 +240,15 @@
                   }}</span
                 >
               </td>
-              <td nzAlign="left">
-                <div class="flex items-center">
+              <td nzAlign="center">
+                <div class="flex items-center justify-center">
                   <span class="cell-table" nz-tooltip [nzTooltipTitle]="data.requestNo">
                     {{ data.requestNo }}
                   </span>
                 </div>
               </td>
-              <td nzgn="left">
-                <div class="flex items-center">
+              <td nzgn="center">
+                <div class="flex items-center justify-center">
                   <span
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
@@ -317,9 +321,9 @@
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
                     nz-tooltip
-                    [nzTooltipTitle]="data.receiptTime | date : 'dd/MM/yyyy hh:mm:ss'"
+                    [nzTooltipTitle]="data.receiptTime | date : 'dd/MM/yyyy HH:mm:ss'"
                   >
-                    {{ data.receiptTime | date : 'dd/MM/yyyy hh:mm:ss' }}</span
+                    {{ data.receiptTime | date : 'dd/MM/yyyy HH:mm:ss' }}</span
                   >
                 </div>
               </td>
@@ -329,8 +333,8 @@
                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
                     class="cell-table"
                     nz-tooltip
-                    [nzTooltipTitle]="data.approvalTime | date : 'dd/MM/yyyy hh:mm:ss'"
-                    >{{ data.approvalTime | date : 'dd/MM/yyyy hh:mm:ss' }}</span
+                    [nzTooltipTitle]="data.approvalTime | date : 'dd/MM/yyyy HH:mm:ss'"
+                    >{{ data.approvalTime | date : 'dd/MM/yyyy HH:mm:ss' }}</span
                   >
                 </div>
               </td>
@@ -424,7 +428,7 @@
         *ngIf="basicTable.data.length > 0"
       >
         <div class="flex items-center gap-2">
-          <span>{{ getDisplayRange() }} / {{ total }}</span>
+          <span>{{ getDisplayRange() }}/{{ total }}</span>
           <nz-pagination
             [(nzPageIndex)]="paginate.page"
             [nzTotal]="total"

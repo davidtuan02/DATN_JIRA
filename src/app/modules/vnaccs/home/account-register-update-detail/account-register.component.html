@@ -685,7 +685,7 @@
         <span class="font-inter" style="font-size: 14px">Thông tin người khai</span>
       </div>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="[20, 20]">
         <ng-container *ngIf="mode === 'add'; else editOrViewMode">
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
@@ -746,7 +746,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="[20, 20]">
         <ng-container *ngIf="mode === 'add'; else editOrViewModeRow2">
           <!-- lĩnh vực hoạt động -->
           <nz-col nzSpan="12">
@@ -807,7 +807,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="[20, 20]">
         <!-- loai giay to  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Loại giấy tờ <span style="color: #ed5564">*</span></label>
@@ -849,7 +849,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="[20, 20]">
         <!-- thời gian hiệu lực khai hải quan  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label"
@@ -901,11 +901,11 @@
         <span class="font-inter" style="font-size: 14px">Thông tin chữ ký số</span>
       </div>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="[20, 20]">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
-            <div class="flex flex-col gap-[10px]">
+            <div class="flex flex-col gap-[15px]">
               <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
               <nz-radio-group
                 style="font-size: 14px"
@@ -966,7 +966,9 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim text nz-input maxlength="13" formControlName="digitalSignature" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14"></p>
+            <p *ngIf="getDigitalSignatureError()" style="max-height: 10px" class="text-danger fs-14">
+              {{ getDigitalSignatureError() }}
+            </p>
           </div>
         </nz-col>
 
@@ -977,12 +979,14 @@
             <nz-input-group style="border-radius: 8px">
               <input text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>
-            <p style="max-height: 10px" class="text-danger fs-14"></p>
+            <p *ngIf="getNameCertError()" style="max-height: 10px" class="text-danger fs-14">
+              {{ getNameCertError() }}
+            </p>
           </nz-col>
         </ng-template>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="20">
         <!-- Số seri -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
@@ -1002,7 +1006,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="20">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>

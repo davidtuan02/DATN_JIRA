@@ -1,5 +1,33 @@
 @import '../../../../shared/styles/variable';
 
+.step-signed {
+  background-color: #2362f6 !important;
+}
+
+.number-signed {
+  color: #ffffff !important;
+}
+
+.text-signed {
+  color: #2362f6 !important;
+}
+
+.line-sent {
+  background-color: #2362f6 !important;
+}
+
+.step-sent {
+  background-color: #2362f6 !important;
+}
+
+.number-sent {
+  color: #ffffff !important;
+}
+
+.text-sent {
+  color: #2362f6 !important;
+}
+
 ::ng-deep .ant-modal-content {
   border-radius: 8px;
 }

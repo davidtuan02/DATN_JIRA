@@ -227,6 +227,28 @@ export class ChangePassComponent implements OnInit {
     return `${day}/${month}/${year}`
   }
 
+  getDigitalSignatureError(): string | undefined {
+    const control = this.loginForm.get('digitalSignature')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getNameCertError(): string | undefined {
+    const control = this.loginForm.get('nameCert')
+    if (control?.touched) {
+      if (!control.getRawValue()) {
+        return 'Tên chứng thư số không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode')
     if (control?.touched && control.invalid) {

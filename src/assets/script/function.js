@@ -453,7 +453,7 @@ function getCertCommonName(comp) {
     let cks = "";
     if (ReqCommonName.responseText) {
     console.log(ReqCommonName.responseText)
-      cks = ReqCommonName.responseText.split("MST")[1].substring(1,15).replace("-", "")
+      cks = ReqCommonName.responseText.split("MST")[1].substring(1,15)
       comp.patchValueToForm("digitalSignature", cks)
     }
   }

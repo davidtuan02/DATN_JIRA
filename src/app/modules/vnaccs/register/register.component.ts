@@ -125,7 +125,7 @@ export class RegisterComponent implements OnInit {
   loadForm() {
     this.loginForm = this.fb.group(
       {
-        taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
+        taxCode: ['', [Validators.required, Validators.pattern(/^\d{10}(-\d{3})?$/)]],
         adminPassword: [
           '',
           [
@@ -388,7 +388,7 @@ export class RegisterComponent implements OnInit {
         return 'Mã số thuế không được để trống'
       }
       if (control.errors?.['pattern']) {
-        return 'Mã số thuế tối đa 13 ký tự số'
+        return 'Mã số thuế không đúng định dạng'
       }
     }
     return undefined

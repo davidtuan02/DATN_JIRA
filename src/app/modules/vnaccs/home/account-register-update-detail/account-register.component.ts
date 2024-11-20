@@ -564,7 +564,7 @@ export class AccountRegisterComponent {
 
     const total = freeSoftwareValue + ediSoftwareValue
 
-    this.form.get('numberComputer')?.setValue(total)
+    this.form.get('numberComputer')?.setValue(total.toLocaleString('de-DE'));
   }
 
   getFieldOfActivityError(): string | undefined {

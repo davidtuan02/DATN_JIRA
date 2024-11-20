@@ -43,8 +43,8 @@
             >
             </nz-option>
           </nz-select>
-          <p *ngIf="getRepresentativeNameError()" style="max-height: 0" class="text-danger fs-14">
-            {{ getRepresentativeNameError() }}
+          <p *ngIf="getRepresentativeTypeError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getRepresentativeTypeError() }}
           </p>
         </nz-col>
         <nz-col nzSpan="8">
@@ -84,6 +84,7 @@
             >Lĩnh vực hoạt động của doanh nghiệp <span style="color: #ed5564">*</span></label
           >
           <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
+            <i></i>
             @for (option of listOfOption; track option.value) {
             <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
             }

@@ -300,14 +300,14 @@ export class AccountRegisterComponent {
     this.form = this.fb.group({
       userCode: [''],
       representativeName: ['', [Validators.required]],
-      representativeIdType: [2],
+      representativeIdType: [2, [Validators.required]],
       representativeIdNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
       address: ['', [Validators.required]],
       fieldOfActivity: [null, [Validators.required]],
       proposal: [''],
       freeSoftware: ['0', [Validators.required]],
       ediSoftware: ['0'],
-      numberComputer: [''],
+      numberComputer: [0],
       userCodeExpiryDate: ['']
     })
 
@@ -469,17 +469,6 @@ export class AccountRegisterComponent {
     return undefined
   }
 
-  getRepresentativeNameError(): string | undefined {
-    const control = this.formValidateUserId.get('representativeName')
-    if (control?.touched) {
-      if (control.errors?.['required']) {
-        return 'Loại giấy tờ người đại diện không được để trống'
-      }
-    }
-
-    return undefined
-  }
-
   getIdNoValidateError(): string | undefined {
     const control = this.formValidateUserId.get('idNo')
     if (control?.touched) {
@@ -594,6 +583,17 @@ export class AccountRegisterComponent {
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Tên người đại diện không được để trống'
+      }
+    }
+
+    return undefined
+  }
+
+  getRepresentativeTypeError(): string | undefined {
+    const control = this.form.get('representativeIdType')
+    if (control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Loại giấy tờ người đại diện không được để trống'
       }
     }
 

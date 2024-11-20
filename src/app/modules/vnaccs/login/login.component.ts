@@ -105,7 +105,7 @@ export class LoginComponent implements OnInit {
 
   loadForm() {
     this.loginForm = this.fb.group({
-      taxCode: ['', [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
+      taxCode: ['', [Validators.required]],
       adminPassword: ['', [Validators.required]],
       digitalSignatureType: [null],
       digitalSignature: [''],
@@ -118,6 +118,21 @@ export class LoginComponent implements OnInit {
       credentialId: [''],
       taxCodeCTS: ['']
     })
+
+    this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
+      const taxCodeControl = this.loginForm.get('taxCode')
+
+      if (type === '1') {
+        taxCodeControl?.setValidators([Validators.pattern(/^\d{10}(-\d{3})?$/)])
+      } else if (type === '2') {
+        taxCodeControl?.setValidators([Validators.pattern(/^\d{1,13}$/)])
+      } else {
+        taxCodeControl?.setValidators([Validators.required])
+      }
+
+      taxCodeControl?.updateValueAndValidity()
+    })
+
     this.disableForm()
     this.getCTSForm = this.fb.group({
       msAcc: ['', [Validators.required]]
@@ -266,7 +281,7 @@ export class LoginComponent implements OnInit {
         return 'Mã số thuế không được để trống'
       }
       if (control.errors?.['pattern']) {
-        return 'Mã số thuế tối đa 13 ký tự số'
+        return 'Mã số thuế không đúng định dạng'
       }
     }
     return undefined

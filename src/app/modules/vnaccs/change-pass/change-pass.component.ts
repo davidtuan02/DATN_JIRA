@@ -106,7 +106,7 @@ export class ChangePassComponent implements OnInit {
       const taxCodeStorage = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!
       this.loginForm = this.fb.group(
         {
-          taxCode: [taxCodeStorage, [Validators.required, Validators.pattern(/^\d{1,13}$/)]],
+          taxCode: ['', [Validators.required]],
           password: ['', [Validators.required]],
           newPassword: [
             '',
@@ -126,6 +126,20 @@ export class ChangePassComponent implements OnInit {
         },
         { validators: this.passwordMatchValidator.bind(this) }
       )
+
+      this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
+        const taxCodeControl = this.loginForm.get('taxCode')
+
+        if (type === '1') {
+          taxCodeControl?.setValidators([Validators.pattern(/^\d{10}(-\d{3})?$/)])
+        } else if (type === '2') {
+          taxCodeControl?.setValidators([Validators.pattern(/^\d{1,13}$/)])
+        } else {
+          taxCodeControl?.setValidators([Validators.required])
+        }
+
+        taxCodeControl?.updateValueAndValidity()
+      })
 
       this.getCTSForm = this.fb.group({
         msAcc: ['', [Validators.required]]
@@ -256,7 +270,7 @@ export class ChangePassComponent implements OnInit {
         return 'Mã số thuế không được để trống'
       }
       if (control.errors?.['pattern']) {
-        return 'Mã số thuế tối đa 13 ký tự số'
+        return 'Mã số thuế không đúng định dạng'
       }
     }
     return undefined

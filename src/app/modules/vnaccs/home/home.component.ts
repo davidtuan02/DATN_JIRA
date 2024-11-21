@@ -91,6 +91,11 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  onDropdownVisibleChange(visible: any): void {
+    // if (!visible) {
+    // }
+  }
+
   decodeToken(token: string): any {
     if (!token) {
       return null

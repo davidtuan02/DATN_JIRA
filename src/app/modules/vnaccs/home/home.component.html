@@ -87,7 +87,7 @@
 
 <router-outlet></router-outlet>
 
-<nz-dropdown-menu #menu="nzDropdownMenu">
+<nz-dropdown-menu #menu="nzDropdownMenu" (nzVisibleChange)="onDropdownVisibleChange($event)">
   <ul nz-menu nzSelectable>
     <li nz-menu-item (click)="handleNavigate('editAdminAcc')">
       <div class="flex items-center justify-between">

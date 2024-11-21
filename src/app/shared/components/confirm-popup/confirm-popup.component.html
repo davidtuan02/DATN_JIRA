@@ -1,21 +1,11 @@
 <div class="flex flex-column items-center gap-4">
   <div class="flex justify-center items-center">
     <span class="text-center font-semibold text-lg">
-      {{ dialogData?.title ?? ""  }}
+      {{ dialogData?.title ?? '' }}
     </span>
   </div>
   <div class="flex justify-center items-center h-[40px] gap-[20px]">
-    <button
-      class="h-100 btn-cancel font-inter-600"
-      (click)="closePopup()"
-    >
-      Hủy
-    </button>
-    <button
-      class="h-100 btn-agree font-inter-600"
-      (click)="accept()"
-    >
-      Xác nhận
-    </button>
+    <button class="h-100 btn-cancel font-inter-600 common-button" (click)="closePopup()">Hủy</button>
+    <button class="h-100 btn-agree font-inter-600 common-button" (click)="accept()">Xác nhận</button>
   </div>
 </div>

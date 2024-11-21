@@ -414,7 +414,7 @@ export class ForgotPasswordComponent implements OnInit {
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.loginForm.get('nameCert')?.setValue(data.subjectDN)
-      this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
+      this.loginForm.get('publicKey')?.setValue(data.publicKey)
       this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
       this.loginForm.get('credentialId')?.setValue(data.credentialId)
     }

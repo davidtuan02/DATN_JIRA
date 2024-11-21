@@ -220,16 +220,21 @@ export class SearchComponent {
           })
         }
         if (data?.requestType === 3) {
-          this.searchSrv.getInfoAccAdmin(data.id).subscribe((res: any) => {
-            if (res && res.errorCode == 0) {
-              this.router.navigate(['/vnaccs/home/account-admin-detail'], {
-                state: {
-                  data: res.data,
-                  requestStatus: data.requestStatus
-                }
-              })
+          this.searchSrv.getInfoAccAdmin(data.id).subscribe(
+            (res: any) => {
+              if (res && res.errorCode == 0) {
+                this.router.navigate(['/vnaccs/home/account-admin-detail'], {
+                  state: {
+                    data: res.data,
+                    requestStatus: data.requestStatus
+                  }
+                })
+              }
+            },
+            (error: any) => {
+              this.search()
             }
-          })
+          )
         }
         break
       }
@@ -253,15 +258,20 @@ export class SearchComponent {
           })
         }
         if (data?.requestType === 3) {
-          this.searchSrv.getInfoAccAdmin(data.id).subscribe((res: any) => {
-            if (res && res.errorCode == 0) {
-              this.router.navigate(['/vnaccs/home/account-admin-update'], {
-                state: {
-                  data: res.data
-                }
-              })
+          this.searchSrv.getInfoAccAdmin(data.id).subscribe(
+            (res: any) => {
+              if (res && res.errorCode == 0) {
+                this.router.navigate(['/vnaccs/home/account-admin-update'], {
+                  state: {
+                    data: res.data
+                  }
+                })
+              }
+            },
+            (error: any) => {
+              this.search()
             }
-          })
+          )
         }
         break
       }

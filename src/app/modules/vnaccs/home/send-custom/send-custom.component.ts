@@ -16,8 +16,8 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-send-custom',
@@ -150,10 +150,6 @@ export class SendCustomComponent {
 
   getFullNameError() {
     const control = this.form.get('fullName')
-    const trimmedValue = control?.value?.trim()
-    if (control && control.value !== trimmedValue) {
-      control.setValue(trimmedValue, { emitEvent: false })
-    }
 
     if (control?.touched && control.invalid) {
       if (control.errors?.['required']) {
@@ -450,7 +446,7 @@ export class SendCustomComponent {
       this.form.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.form.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.form.get('nameCert')?.setValue(data.subjectDN)
-      this.form.get('publicKey')?.setValue(data.subjectDN) //check
+      this.form.get('publicKey')?.setValue(data.publicKey)
       this.form.get('credentialId')?.setValue(data.credentialId)
       this.form.get('taxCodeCTS')?.setValue(data.subjectDN)
     }

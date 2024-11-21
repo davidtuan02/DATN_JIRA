@@ -28,11 +28,12 @@
   font-style: normal;
 }
 
-button {
+.common-button {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
   }
 }
 
@@ -146,4 +147,23 @@ nz-date-picker {
 
 .ant-dropdown-menu-item-selected {
   color: #1944a7 !important;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }

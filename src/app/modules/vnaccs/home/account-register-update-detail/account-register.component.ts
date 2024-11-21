@@ -431,7 +431,7 @@ export class AccountRegisterComponent {
       this.formValidateUserId.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.formValidateUserId.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.formValidateUserId.get('nameCert')?.setValue(data.subjectDN)
-      this.formValidateUserId.get('publicKey')?.setValue(data.subjectDN), //check
+      this.formValidateUserId.get('publicKey')?.setValue(data.publicKey),
         this.formValidateUserId.get('credentialId')?.setValue(data.credentialId)
       this.formValidateUserId.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
@@ -564,7 +564,7 @@ export class AccountRegisterComponent {
 
     const total = freeSoftwareValue + ediSoftwareValue
 
-    this.form.get('numberComputer')?.setValue(total.toLocaleString('de-DE'));
+    this.form.get('numberComputer')?.setValue(total.toLocaleString('de-DE'))
   }
 
   getFieldOfActivityError(): string | undefined {

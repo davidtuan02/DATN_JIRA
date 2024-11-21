@@ -309,13 +309,11 @@ export class ChangePassComponent implements OnInit {
   }
   getConfirmPassError(): string | undefined {
     const control = this.loginForm.get('confirmPassword')
+    console.log(control?.errors)
     if (control?.touched) {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu mới không được để trống'
       }
-      // if (this.loginForm.errors?.['notmatching']) {
-      //   return 'Xác nhận lại mật khẩu mới phải giống mật khẩu đã nhập'
-      // }
       if (control.errors?.['notmatching']) {
         return 'Xác nhận lại mật khẩu mới phải giống mật khẩu đã nhập'
       }
@@ -329,8 +327,6 @@ export class ChangePassComponent implements OnInit {
 
     if (pass !== confirmPass?.value) {
       confirmPass.setErrors({ notmatching: true })
-    } else {
-      confirmPass.setErrors(null)
     }
     return null
   }
@@ -431,7 +427,7 @@ export class ChangePassComponent implements OnInit {
       this.loginForm.get('effectiveDate')?.setValue(this.formatDateFromString(data.validFrom))
       this.loginForm.get('expiryDate')?.setValue(this.formatDateFromString(data.validTo))
       this.loginForm.get('nameCert')?.setValue(data.subjectDN)
-      this.loginForm.get('publicKey')?.setValue(data.subjectDN) //check
+      this.loginForm.get('publicKey')?.setValue(data.publicKey)
       this.loginForm.get('credentialId')?.setValue(data.credentialId)
       this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
     }

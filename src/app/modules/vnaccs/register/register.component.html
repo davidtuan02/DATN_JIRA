@@ -118,7 +118,7 @@
             <div class="pt-[23px]">
               <button
                 type="button"
-                class="text-white button flex justify-center"
+                class="text-white button flex justify-center common-button"
                 style="width: 258px; border-radius: 8px; background-color: #1944a7 !important"
                 (click)="radioValue === '2' ? showModal() : getVTCAInfo()"
               >
@@ -313,7 +313,7 @@
             *ngIf="modeScreen === 'register'"
             [routerLink]="['/vnaccs']"
             type="button"
-            class="font-inter-600"
+            class="font-inter-600 common-button"
             style="
               height: 40px;
               width: 145px;
@@ -328,7 +328,7 @@
           <button
             *ngIf="modeScreen === 'register'"
             type="submit"
-            class="font-inter-600 text-white"
+            class="font-inter-600 text-white common-button"
             style="
               height: 40px;
               width: 145px;
@@ -346,7 +346,7 @@
             *ngIf="modeScreen === 'update'"
             [routerLink]="['/vnaccs/home/search-custom']"
             type="button"
-            class="font-inter-600 flex items-center justify-center gap-[8px]"
+            class="font-inter-600 flex items-center justify-center gap-[8px] common-button"
             style="
               height: 40px;
               width: 145px;
@@ -367,7 +367,7 @@
           <button
             *ngIf="modeScreen === 'update'"
             type="submit"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            class="font-inter-600 text-white flex justify-center gap-[8px] items-center common-button"
             style="
               height: 40px;
               width: 170px;
@@ -390,7 +390,7 @@
             *ngIf="modeScreen === 'detail'"
             [routerLink]="['/vnaccs/home/search-custom']"
             type="button"
-            class="font-inter-600 flex items-center justify-center gap-[8px]"
+            class="font-inter-600 flex items-center justify-center gap-[8px] common-button"
             style="
               height: 40px;
               width: 145px;
@@ -405,7 +405,7 @@
           <button
             *ngIf="modeScreen === 'detail'"
             (click)="fromDetailToUpdate($event)"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            class="font-inter-600 text-white flex justify-center gap-[8px] items-center common-button"
             style="
               height: 40px;
               width: 145px;
@@ -419,7 +419,7 @@
           <button
             *ngIf="modeScreen === 'detail' && requestStatus === 1"
             (click)="sendCustom()"
-            class="font-inter-600 text-white flex justify-center gap-[8px] items-center"
+            class="font-inter-600 text-white flex justify-center gap-[8px] items-center common-button"
             style="
               height: 40px;
               width: 145px;
@@ -475,7 +475,7 @@
         </div>
         <div class="flex gap-[14px]">
           <button
-            class="text-white"
+            class="text-white common-button"
             style="border-radius: 8px; background-color: #1944a7 !important; height: 40px"
             (click)="getCTS()"
           >
@@ -507,6 +507,7 @@
           </button>
           <button
             (click)="showModalDownload()"
+            class="common-button"
             style="border-radius: 8px; color: #1944a7 !important; border: 1px solid #1944a7; height: 40px"
           >
             <div class="flex justify-center items-center gap-2" style="width: 218px">
@@ -604,7 +605,7 @@
             <td nzAlign="center">
               <button
                 (click)="applyData(data)"
-                class="font-inter-600 text-white"
+                class="font-inter-600 text-white common-button"
                 style="
                   border-radius: 8px;
                   background-color: #1944a7 !important;
@@ -665,7 +666,7 @@
           />
         </nz-input-group>
         <button
-          class="font-inter-600"
+          class="font-inter-600 common-button"
           style="
             color: #ffffff;
             margin-left: -10px;
@@ -982,7 +983,7 @@
       margin-bottom: 5px;
       margin-top: 5px;
     "
-    class="font-inter-600"
+    class="font-inter-600 common-button"
     (click)="handleCancel()"
   >
     Đóng
@@ -992,7 +993,7 @@
 <ng-template #footerDownloadTemplate>
   <button
     style="height: 40px; width: 145px; background-color: #f5f5f5; border-radius: 8px; color: #1944a7; font-size: 14px"
-    class="font-inter-600"
+    class="font-inter-600 common-button"
     (click)="handleCancelDownload()"
   >
     Đóng

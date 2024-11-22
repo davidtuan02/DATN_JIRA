@@ -32,6 +32,7 @@ import { da } from 'date-fns/locale'
 import { NotificationService } from '../../../../shared/services/notification.service'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import { NzI18nService, zh_CN } from 'ng-zorro-antd/i18n'
+import { customPaginationI18n } from '../../../../shared/constants/pagination.const'
 
 @Component({
   selector: 'app-search',
@@ -133,15 +134,15 @@ export class SearchComponent {
     this.loadForm()
     this.search()
 
-    const customPaginationLang = {
-      ...zh_CN.Pagination,
-      items_per_page: '/ Trang'
-    }
+    // const customPaginationLang = {
+    //   ...zh_CN.Pagination,
+    //   items_per_page: '/ Trang'
+    // }
 
-    this.i18n.setLocale({
-      ...zh_CN,
-      Pagination: customPaginationLang
-    })
+    // this.i18n.setLocale({
+    //   ...zh_CN,
+    //   Pagination: customPaginationLang
+    // })
   }
 
   loadForm() {

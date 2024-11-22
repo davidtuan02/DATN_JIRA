@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Input,
+  OnInit,
+  signal
+} from '@angular/core'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NzAvatarModule } from 'ng-zorro-antd/avatar'
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb'

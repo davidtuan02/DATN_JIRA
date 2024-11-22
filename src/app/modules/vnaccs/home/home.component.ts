@@ -91,11 +91,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onDropdownVisibleChange(visible: any): void {
-    // if (!visible) {
-    // }
-  }
-
   decodeToken(token: string): any {
     if (!token) {
       return null
@@ -187,7 +182,9 @@ export class HomeComponent implements OnInit {
       nzTitle: 'Đổi mật khẩu cho người sử dụng',
       nzContent: ProvideNewPasswordComponent,
       nzFooter: null,
-      nzCentered: true
+      nzWidth: '600px',
+      nzCentered: true,
+      nzMaskClosable: false
     })
     modal.afterClose.subscribe((rf) => {
       if (rf) {

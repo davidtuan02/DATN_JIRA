@@ -87,9 +87,9 @@
 
 <router-outlet></router-outlet>
 
-<nz-dropdown-menu #menu="nzDropdownMenu" (nzVisibleChange)="onDropdownVisibleChange($event)">
+<nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu nzSelectable>
-    <li nz-menu-item (click)="handleNavigate('editAdminAcc')">
+    <li nz-menu-item (click)="handleNavigate('editAdminAcc')" [class.ant-dropdown-menu-item-selected]="false">
       <div class="flex items-center justify-between">
         <svg
           style="margin-right: 15px"
@@ -118,7 +118,7 @@
         <span style="font-size: 14px"> Đăng ký thay đổi tài khoản quản trị </span>
       </div>
     </li>
-    <li nz-menu-item (click)="handleNavigate('editAcc')">
+    <li nz-menu-item (click)="handleNavigate('editAcc')" [class.ant-dropdown-menu-item-selected]="false">
       <div class="flex items-center justify-between">
         <svg
           style="margin-right: 15px"
@@ -143,7 +143,7 @@
         <span style="font-size: 14px"> Đăng ký thay đổi thông tin doanh nghiệp </span>
       </div>
     </li>
-    <li nz-menu-item (click)="onClickNewPassword()">
+    <li nz-menu-item (click)="onClickNewPassword()" [class.ant-dropdown-menu-item-selected]="false">
       <div class="flex items-center justify-between">
         <svg
           style="margin-right: 15px"

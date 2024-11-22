@@ -767,7 +767,7 @@
   [nzCentered]="true"
   [(nzVisible)]="isVisibleModalCTS"
   [nzBodyStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
-  [nzStyle]="{ width: '1200px' }"
+  [nzStyle]="{ width: '1060px' }"
   (nzOnCancel)="handleCancelCTS()"
   [nzMaskClosable]="false"
   [nzOkLoading]="isOkLoading"
@@ -782,8 +782,8 @@
       <div class="font-inter-500" style="font-size: 14px">
         <span>Tài khoản MySign <span style="color: #ed5564">*</span></span>
       </div>
-      <form nz-form [formGroup]="getCTSForm" class="flex gap-[25px] justify-between" style="height: auto">
-        <div class="flex flex-col">
+      <form nz-form [formGroup]="getCTSForm" class="flex gap-[14px] justify-between" style="height: auto">
+        <div class="flex flex-col flex-grow">
           <nz-input-group nz-col nzSpan="8">
             <input
               type="text"

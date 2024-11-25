@@ -11,9 +11,20 @@
         <!-- Mã số thuế -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="taxCodeClearTpl">
             <input autoTrim type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế" />
           </nz-input-group>
+          <ng-template #taxCodeClearTpl>
+            @if (loginForm.get('taxCode')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="loginForm.get('taxCode')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p style="max-height: 10px" class="text-danger fs-14">
             {{ getTaxCodeError() }}
           </p>
@@ -300,7 +311,7 @@
                 </svg>
               </div>
               <div class="flex items-center">
-                <span>Đăng nhập</span>
+                <span class="font-inter-600">Đăng nhập</span>
               </div>
             </div>
           </button>
@@ -336,7 +347,7 @@
       </div>
       <form nz-form [formGroup]="getCTSForm" class="flex gap-[14px] justify-between" style="height: auto">
         <div class="flex flex-col flex-grow">
-          <nz-input-group>
+          <nz-input-group [nzSuffix]="msClearTpl">
             <input
               type="text"
               autoTrim
@@ -346,6 +357,17 @@
               style="width: 100%; border-radius: 8px"
             />
           </nz-input-group>
+          <ng-template #msClearTpl>
+            @if (getCTSForm.get('msAcc')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="getCTSForm.get('msAcc')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getMsAccError()" style="max-height: 0" class="text-danger fs-14">
             {{ getMsAccError() }}
           </p>

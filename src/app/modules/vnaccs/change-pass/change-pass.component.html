@@ -11,9 +11,6 @@
           <nz-input-group style="border-radius: 8px">
             <input autoTrim type="text" nz-input formControlName="taxCode" placeholder="Nhập mã số thuế" />
           </nz-input-group>
-          <!-- <p style="max-height: 10px;" class="text-danger fs-14">
-            {{getTaxCodeError()}}
-          </p> -->
         </nz-col>
 
         <!-- Mật khẩu hiện tại -->
@@ -335,7 +332,7 @@
       </div>
       <form nz-form [formGroup]="getCTSForm" class="flex gap-[14px] justify-between" style="height: auto">
         <div class="flex flex-col flex-grow">
-          <nz-input-group>
+          <nz-input-group [nzSuffix]="msClearTpl">
             <input
               type="text"
               autoTrim
@@ -345,6 +342,17 @@
               style="width: 100%; border-radius: 8px"
             />
           </nz-input-group>
+          <ng-template #msClearTpl>
+            @if (getCTSForm.get('msAcc')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="getCTSForm.get('msAcc')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getMsAccError()" style="max-height: 0" class="text-danger fs-14">
             {{ getMsAccError() }}
           </p>

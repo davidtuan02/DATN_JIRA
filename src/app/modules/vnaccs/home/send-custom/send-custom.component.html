@@ -106,7 +106,7 @@
         <nz-row [nzGutter]="[20, 20]">
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên người gửi Hải quan <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="inputClearTpl">
               <input
                 autoTrim
                 type="text"
@@ -116,6 +116,17 @@
                 maxlength="50"
               />
             </nz-input-group>
+            <ng-template #inputClearTpl>
+              @if (form.get('fullName')?.value) {
+              <span
+                nz-icon
+                class="ant-input-clear-icon"
+                nzTheme="fill"
+                nzType="close-circle"
+                (click)="form.get('fullName')?.setValue(null)"
+              ></span>
+              }
+            </ng-template>
             <p style="max-height: 10px" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
@@ -363,7 +374,7 @@
         </div>
         <form nz-form [formGroup]="getCTSForm" class="flex gap-[14px] justify-between" style="height: auto">
           <div class="flex flex-col flex-grow">
-            <nz-input-group>
+            <nz-input-group [nzSuffix]="inputClearTpl">
               <input
                 type="text"
                 autoTrim
@@ -372,6 +383,17 @@
                 nz-input
                 style="width: 100%; border-radius: 8px"
               />
+              <ng-template #inputClearTpl>
+                @if (getCTSForm.get('msAcc')?.value) {
+                <span
+                  nz-icon
+                  class="ant-input-clear-icon"
+                  nzTheme="fill"
+                  nzType="close-circle"
+                  (click)="getCTSForm.get('msAcc')?.setValue(null)"
+                ></span>
+                }
+              </ng-template>
             </nz-input-group>
             <p *ngIf="getMsAccError()" style="max-height: 0" class="text-danger fs-14">
               {{ getMsAccError() }}

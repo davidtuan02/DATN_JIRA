@@ -40,7 +40,7 @@
         <!-- Số tiếp nhận  -->
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Số tiếp nhận</label>
-          <nz-input-group style="border-radius: 8px" nzSize="large">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="inputClearTpl">
             <input
               autoTrim
               type="text"
@@ -50,6 +50,17 @@
               formControlName="requestNo"
             />
           </nz-input-group>
+          <ng-template #inputClearTpl>
+            @if (form.get('requestNo')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('requestNo')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <!-- <p style="max-height: 10px" class="text-danger fs-14">
             {{ getBusinessAddressError() }}
           </p> -->

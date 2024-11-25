@@ -18,7 +18,7 @@
       <nz-row [nzGutter]="[20, 20]">
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Tên người đại diện <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="nameClearTpl">
             <input
               type="text"
               nzAllowClear
@@ -28,6 +28,17 @@
               formControlName="representativeName"
             />
           </nz-input-group>
+          <ng-template #nameClearTpl>
+            @if (form.get('representativeName')?.value && form.get('representativeName')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('representativeName')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getRepresentativeError()" style="max-height: 0" class="text-danger fs-14">
             {{ getRepresentativeError() }}
           </p>
@@ -51,7 +62,7 @@
           <label for="" class="custom-label"
             >Số CMND/CCCD/Hộ chiếu người đại diện <span style="color: #ed5564">*</span></label
           >
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="idNoClearTpl">
             <input
               type="text"
               nz-input
@@ -60,13 +71,24 @@
               formControlName="representativeIdNo"
             />
           </nz-input-group>
+          <ng-template #idNoClearTpl>
+            @if (form.get('representativeIdNo')?.value && form.get('representativeIdNo')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('representativeIdNo')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getIdNoError()" style="max-height: 0" class="text-danger fs-14">
             {{ getIdNoError() }}
           </p>
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Địa chỉ doanh nghiệp <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="addressClearTpl">
             <input
               type="text"
               nz-input
@@ -75,6 +97,17 @@
               formControlName="address"
             />
           </nz-input-group>
+          <ng-template #addressClearTpl>
+            @if (form.get('address')?.value && form.get('address')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('address')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getBusinessAddressError()" style="max-height: 0" class="text-danger fs-14">
             {{ getBusinessAddressError() }}
           </p>
@@ -84,6 +117,7 @@
             >Lĩnh vực hoạt động của doanh nghiệp <span style="color: #ed5564">*</span></label
           >
           <nz-select
+            nzAllowClear
             nzSize="large"
             nzMode="multiple"
             nzShowArrow="true"
@@ -103,14 +137,27 @@
         </nz-col>
         <nz-col nzSpan="24">
           <label for="" class="custom-label">Đề xuất của doanh nghiệp</label>
-          <textarea
-            style="min-height: 100px; border-radius: 8px"
-            nz-input
-            maxlength="500"
-            placeholder="Nhập đề xuất của doanh nghiệp"
-            formControlName="proposal"
-          >
-          </textarea>
+          <nz-input-group [nzSuffix]="proposalClearTpl" style="min-height: 100px">
+            <textarea
+              style="background: transparent; border-radius: 8px"
+              nz-input
+              maxlength="500"
+              placeholder="Nhập đề xuất của doanh nghiệp"
+              formControlName="proposal"
+            >
+            </textarea>
+          </nz-input-group>
+          <ng-template #proposalClearTpl>
+            @if (form.get('proposal')?.value && form.get('proposal')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('proposal')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p style="max-height: 10px" class="text-danger fs-14"></p>
         </nz-col>
       </nz-row>
@@ -128,7 +175,7 @@
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Phần mềm khai báo miễn phí <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="freeSoftwareClearTpl">
             <input
               type="text"
               nz-input
@@ -140,12 +187,24 @@
               (keypress)="allowOnlyNumbers($event)"
             />
           </nz-input-group>
+          <ng-template #freeSoftwareClearTpl>
+            @if (form.get('freeSoftware')?.value && form.get('freeSoftware')?.value != 0 &&
+            form.get('freeSoftware')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('freeSoftware')?.setValue(0)"
+            ></span>
+            }
+          </ng-template>
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label"
             >Phần mềm do bên thứ 3 hoặc tự xây dựng <span style="color: #ed5564">*</span></label
           >
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="ediSoftwareClearTpl">
             <input
               type="text"
               nz-input
@@ -157,6 +216,18 @@
               (keypress)="allowOnlyNumbers($event)"
             />
           </nz-input-group>
+          <ng-template #ediSoftwareClearTpl>
+            @if (form.get('ediSoftware')?.value && form.get('ediSoftware')?.value != 0 &&
+            form.get('ediSoftware')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('ediSoftware')?.setValue(0)"
+            ></span>
+            }
+          </ng-template>
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Số lượng máy tính <span style="color: #ed5564">*</span></label>
@@ -195,7 +266,7 @@
     <div>
       <nz-row nzGutter="16">
         <nz-col nzSpan="8">
-          <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch">
+          <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch" [nzSuffix]="listSenderClearTpl">
             <input
               type="text"
               style="padding: 4px 12px; background: transparent"
@@ -205,6 +276,17 @@
               placeholder="Nhập Họ tên, CCCD/CMND/Hộ chiếu, hoặc Email"
             />
           </nz-input-group>
+          <ng-template #listSenderClearTpl>
+            @if (searchKey) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="searchKey = ''"
+            ></span>
+            }
+          </ng-template>
         </nz-col>
         <nz-col nzSpan="16">
           <div class="flex justify-content-end gap-[16px] items-center mb-[5px]">
@@ -707,7 +789,7 @@
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="nameClearTpl">
               <input
                 autoTrim
                 type="text"
@@ -717,6 +799,17 @@
                 maxlength="50"
               />
             </nz-input-group>
+            <ng-template #nameClearTpl>
+              @if (formValidateUserId.get('fullName')?.value) {
+              <span
+                nz-icon
+                class="ant-input-clear-icon"
+                nzTheme="fill"
+                nzType="close-circle"
+                (click)="formValidateUserId.get('fullName')?.setValue(null)"
+              ></span>
+              }
+            </ng-template>
             <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
@@ -725,9 +818,20 @@
           <!-- Email  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="emailClearTpl">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
+            <ng-template #emailClearTpl>
+              @if (formValidateUserId.get('email')?.value) {
+              <span
+                nz-icon
+                class="ant-input-clear-icon"
+                nzTheme="fill"
+                nzType="close-circle"
+                (click)="formValidateUserId.get('email')?.setValue(null)"
+              ></span>
+              }
+            </ng-template>
             <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
@@ -746,7 +850,7 @@
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="nameClearTpl">
               <input
                 autoTrim
                 type="text"
@@ -756,6 +860,17 @@
                 maxlength="50"
               />
             </nz-input-group>
+            <ng-template #nameClearTpl>
+              @if (formValidateUserId.get('fullName')?.value) {
+              <span
+                nz-icon
+                class="ant-input-clear-icon"
+                nzTheme="fill"
+                nzType="close-circle"
+                (click)="formValidateUserId.get('fullName')?.setValue(null)"
+              ></span>
+              }
+            </ng-template>
             <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
@@ -768,7 +883,14 @@
           <!-- lĩnh vực hoạt động -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ed5564">*</span></label>
-            <nz-select nzSize="large" nzMode="multiple" nzPlaceHolder="-Chọn-" formControlName="fieldOfActivity">
+            <nz-select
+              nzAllowClear
+              nzSize="large"
+              nzMode="multiple"
+              nzShowArrow="true"
+              nzPlaceHolder="-Chọn-"
+              formControlName="fieldOfActivity"
+            >
               @for (option of listOfOption; track option.value) {
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
               }
@@ -783,9 +905,20 @@
           <!-- Email  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Email <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="emailClearTpl">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
+            <ng-template #emailClearTpl>
+              @if (formValidateUserId.get('email')?.value) {
+              <span
+                nz-icon
+                class="ant-input-clear-icon"
+                nzTheme="fill"
+                nzType="close-circle"
+                (click)="formValidateUserId.get('email')?.setValue(null)"
+              ></span>
+              }
+            </ng-template>
             <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
@@ -795,11 +928,12 @@
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Lĩnh vực hoạt động <span style="color: #ed5564">*</span></label>
             <nz-select
+              nzAllowClear
               nzSize="large"
               nzMode="multiple"
+              nzShowArrow="true"
               nzPlaceHolder="-Chọn-"
               formControlName="fieldOfActivity"
-              [nzShowArrow]="true"
             >
               @for (option of listOfOption; track option.value) {
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
@@ -808,18 +942,6 @@
             <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
               {{ getFieldOfActivityValidateError() }}
             </p>
-
-            <ng-template #iconSelect>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M19 8.5L12 15.5L5 8.5"
-                  stroke="#A5A5A5"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </ng-template>
           </nz-col>
         </ng-template>
       </nz-row>
@@ -850,7 +972,7 @@
         <!-- so cmnd/cccd  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số CMND/CCCD/Hộ chiếu <span style="color: #ed5564">*</span></label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzSuffix]="idnoClearTpl">
             <input
               autoTrim
               type="text"
@@ -860,6 +982,17 @@
               formControlName="idNo"
             />
           </nz-input-group>
+          <ng-template #idnoClearTpl>
+            @if (formValidateUserId.get('idNo')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="formValidateUserId.get('idNo')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getIdNoValidateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getIdNoValidateError() }}
           </p>
@@ -1152,7 +1285,7 @@
       </div>
       <form nz-form [formGroup]="getCTSForm" class="flex gap-[14px] justify-between" style="height: auto">
         <div class="flex flex-col flex-grow">
-          <nz-input-group>
+          <nz-input-group [nzSuffix]="msClearTpl">
             <input
               type="text"
               autoTrim
@@ -1162,6 +1295,17 @@
               style="width: 100%; border-radius: 8px"
             />
           </nz-input-group>
+          <ng-template #msClearTpl>
+            @if (getCTSForm.get('msAcc')?.value) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="getCTSForm.get('msAcc')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
           <p *ngIf="getMsAccError()" style="max-height: 0" class="text-danger fs-14">
             {{ getMsAccError() }}
           </p>

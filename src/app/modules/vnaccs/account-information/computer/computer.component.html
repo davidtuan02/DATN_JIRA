@@ -2,6 +2,7 @@
   <nz-col nzSpan="8">
     <nz-input-group style="border-radius: 8px" [nzPrefix]="prefixSearch">
       <input
+        autoTrim
         type="text"
         style="padding: 4px 12px"
         [(ngModel)]="searchKey"
@@ -39,7 +40,7 @@
     <li style="list-style-type: disc">"K": Sử dụng cho phần mềm của hãng thứ ba hoặc đã xây</li>
     <li style="list-style-type: disc">"E": Sử dụng cho phần mềm khai E - manifest (EDIFACT)</li>
     <li class="font-inter-500" style="font-size: 14px; color: #d72717; list-style-type: disc">
-      Chú ý: Với Terminal ID có dâu (*) là Terminal nhận được tất cả các thông điệp phản hồi từ hệ thống
+      Chú ý: Với Terminal ID có dấu (*) là Terminal nhận được tất cả các thông điệp phản hồi từ hệ thống
     </li>
   </ul>
 </div>

@@ -14,3 +14,21 @@
 body {
   font-family: 'Inter', sans-serif !important;
 }
+
+.ant-notification-notice {
+  max-width: 400px !important;
+}
+
+@media only screen and (max-width: 1700px) {
+  .ant-notification-notice {
+    max-width: 300px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .ant-notification-notice {
+    max-width: 250px !important;
+    font-size: 12px !important;
+  }
+}

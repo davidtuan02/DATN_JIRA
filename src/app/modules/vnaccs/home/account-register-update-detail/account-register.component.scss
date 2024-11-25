@@ -63,3 +63,11 @@ nz-date-picker {
   color: white;
   background-color: #f22a2a;
 }
+
+textarea {
+  height: 100% !important;
+}
+
+// ::ng-deep .ant-input-affix-wrapper:not(textarea) {
+//   padding: 0 16px !important;
+// }

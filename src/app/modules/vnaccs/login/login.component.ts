@@ -33,6 +33,7 @@ import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 
 declare function initPlugin(comp: any): void
 
@@ -51,17 +52,15 @@ declare function initPlugin(comp: any): void
     CommonModule,
     NzFormModule,
     NzInputModule,
-    HeaderVnaccsComponent,
-    FooterVnaccsComponent,
     NzRadioModule,
     NzSelectModule,
     NzModalComponent,
     NzModalModule,
     NzTableModule,
-    PasswordMaskDirective,
     NzToolTipModule,
     RouterLink,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

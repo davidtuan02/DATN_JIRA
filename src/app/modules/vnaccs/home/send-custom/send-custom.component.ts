@@ -18,6 +18,8 @@ import { SendCustomService } from './send-custom.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import * as forge from 'node-forge'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+
 declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-send-custom',
@@ -37,7 +39,8 @@ declare function initPlugin(comp: any): void
     NzToolTipModule,
     NzRadioModule,
     RouterLink,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ]
 })
 export class SendCustomComponent {

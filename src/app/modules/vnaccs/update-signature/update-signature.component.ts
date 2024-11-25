@@ -11,13 +11,10 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms'
-import { BrowserModule } from '@angular/platform-browser'
 import { NzGridModule } from 'ng-zorro-antd/grid'
 import { CommonModule } from '@angular/common'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzInputModule } from 'ng-zorro-antd/input'
-import { HeaderVnaccsComponent } from '../../../layouts/header/header.component'
-import { FooterVnaccsComponent } from '../../../layouts/footer/footer.component'
 import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
@@ -31,10 +28,9 @@ import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/
 import { UpdateSignatureService } from './update-signature.service'
 import { clearStore } from '../../../shared/utilities/system.utils'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
-import * as asn1js from 'asn1js'
-import { Certificate } from 'pkijs'
 import * as forge from 'node-forge'
 import { EMAIL_REGEX } from '../../../shared/constants/regex.const'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 
 declare function initPlugin(comp: any): void
 @Component({
@@ -52,8 +48,6 @@ declare function initPlugin(comp: any): void
     CommonModule,
     NzFormModule,
     NzInputModule,
-    HeaderVnaccsComponent,
-    FooterVnaccsComponent,
     NzRadioModule,
     NzSelectModule,
     NzModalComponent,
@@ -61,7 +55,8 @@ declare function initPlugin(comp: any): void
     NzTableModule,
     NzToolTipModule,
     RouterLink,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

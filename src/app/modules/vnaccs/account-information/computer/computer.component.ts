@@ -10,13 +10,23 @@ import { AccountInfoService } from '../account-info/account-register.service'
 import { AccountInformationService } from '../account-information.service'
 import { RouterLink } from '@angular/router'
 import { debounceTime, Subject } from 'rxjs'
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 
 @Component({
   selector: 'app-computer',
   templateUrl: './computer.component.html',
   styleUrls: ['./computer.component.scss'],
   standalone: true,
-  imports: [NzGridModule, NzInputModule, FormsModule, CommonModule, NzTableModule, NzDividerModule, RouterLink]
+  imports: [
+    NzGridModule,
+    NzInputModule,
+    FormsModule,
+    CommonModule,
+    NzTableModule,
+    NzDividerModule,
+    RouterLink,
+    AutoTrimDirective
+  ]
 })
 export class ComputerComponent {
   searchKey!: any

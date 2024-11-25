@@ -36,6 +36,7 @@ import * as forge from 'node-forge'
 import { RouteStateService } from '../../../shared/services/clear-state.service'
 import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
 import { BehaviorSubject } from 'rxjs'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -52,8 +53,6 @@ declare function initPlugin(comp: any): void
     CommonModule,
     NzFormModule,
     NzInputModule,
-    HeaderVnaccsComponent,
-    FooterVnaccsComponent,
     NzRadioModule,
     NzSelectModule,
     NzModalComponent,
@@ -62,7 +61,7 @@ declare function initPlugin(comp: any): void
     RouterLink,
     NzToolTipModule,
     AutoTrimDirective,
-    ClearInputDirective
+    NzIconModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: RouteStateService }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -224,7 +223,6 @@ export class RegisterComponent implements OnInit {
   applyDataToEditOrView(data: any) {
     this.loginForm.get('taxCode')?.setValue(data.taxCode)
     this.loginForm.get('email')?.setValue(data.email)
-    // this.loginForm.get('digitalSignatureType')?.setValue(data.digitalSignatureType)
     this.radioValue = data.digitalSignatureType.toString()
     this.loginForm.get('digitalSignature')?.setValue(data.digitalSignature)
     this.loginForm.get('serial')?.setValue(data.serial)

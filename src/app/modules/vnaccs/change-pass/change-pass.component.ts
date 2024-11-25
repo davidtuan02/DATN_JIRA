@@ -36,6 +36,7 @@ import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/
 import { clearStore } from '../../../shared/utilities/system.utils'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import forge from 'node-forge'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-change-password',
@@ -61,7 +62,8 @@ declare function initPlugin(comp: any): void
     NzTableModule,
     NzToolTipModule,
     RouterLink,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

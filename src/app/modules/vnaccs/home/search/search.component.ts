@@ -28,11 +28,10 @@ import { SearchService } from './search.service'
 import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { da } from 'date-fns/locale'
 import { NotificationService } from '../../../../shared/services/notification.service'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import { NzI18nService, zh_CN } from 'ng-zorro-antd/i18n'
-import { customPaginationI18n } from '../../../../shared/constants/pagination.const'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 
 @Component({
   selector: 'app-search',
@@ -53,10 +52,10 @@ import { customPaginationI18n } from '../../../../shared/constants/pagination.co
     DatePipe,
     CommonModule,
     NzModalModule,
-    RouterLink,
     NzRadioModule,
     NzPaginationModule,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzIconModule
   ]
 })
 export class SearchComponent {

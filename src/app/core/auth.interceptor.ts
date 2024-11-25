@@ -8,7 +8,7 @@ import {
   HttpInterceptorFn,
   HttpHandlerFn
 } from '@angular/common/http'
-import { catchError, finalize, Observable, throwError } from 'rxjs'
+import {catchError, finalize, map, Observable, throwError} from 'rxjs'
 import { Router } from '@angular/router'
 import { TranslateService } from '@ngx-translate/core'
 import { STORAGE_KEYS } from '../shared/constants/system.const'
@@ -95,7 +95,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
   }
 }
-
+let count = 0;
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const router = inject(Router)
   const authSrv = inject(AuthService)
@@ -105,7 +105,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
   const language = 'vi-VN'
   let request = req
-  let count = 0
 
   if (token) {
     request = req.clone({
@@ -124,13 +123,15 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   if (count === 0) spinner.show()
   count++
   return next(request).pipe(
-    finalize(() => {
+    map((event) => {
       count--
-      if (count === 0) spinner.hide()
+      if (count === 0) spinner.hide();
+      return event;
     }),
     catchError((err) => {
       const translate = injector.get(TranslateService)
-
+      count--
+      if (count === 0) spinner.hide()
       if (err.status === 401) {
         clearStore()
         router.navigateByUrl('/')

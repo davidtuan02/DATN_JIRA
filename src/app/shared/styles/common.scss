@@ -37,8 +37,8 @@
   }
 }
 
-.ant-input.ng-invalid.ng-touched,
-.ant-input.ng-invalid.ng-dirty {
+.ant-input.ng-invalid.ng-touched:not(.ant-input-affix-wrapper .ant-input),
+.ant-input.ng-invalid.ng-dirty:not(.ant-input-affix-wrapper .ant-input) {
   border: 1px solid #dc3545;
 }
 
@@ -51,19 +51,8 @@ nz-date-picker {
   height: 40px !important;
 }
 
-.ant-input-affix-wrapper {
-  padding: 0 !important;
-  position: relative;
-  height: 40px;
-  .ant-input-suffix {
-    position: absolute;
-    right: 0%;
-    top: 25%;
-    transform: translate(-25%, -0%);
-  }
-  .ant-input {
-    padding: 8px 12px !important;
-  }
+.ant-input-affix-wrapper:has(.ng-invalid.ng-touched) {
+  border: 1px solid #dc3545;
 }
 
 .ant-select.ng-invalid.ng-touched,

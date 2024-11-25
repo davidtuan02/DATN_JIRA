@@ -54,6 +54,13 @@ export class HeaderVnaccsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEYS.TOKEN) {
+        this.authService.setLoginStatus(true);
+        this.router.navigate(['/vnaccs/home'])
+        this.cdr.detectChanges()
+      }
+    })
     this.authService.taxCode$.subscribe((taxCode) => {
       this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) ? localStorage.getItem(STORAGE_KEYS.TAX_CODE) : taxCode
     })
@@ -66,12 +73,6 @@ export class HeaderVnaccsComponent implements OnInit {
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
-    })
-    window.addEventListener('storage', (event) => {
-      if (event.key === STORAGE_KEYS.TOKEN) {
-        this.authService.setLoginStatus(true)
-        this.cdr.detectChanges()
-      }
     })
   }
 

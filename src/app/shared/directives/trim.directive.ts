@@ -15,3 +15,5 @@ export class AutoTrimDirective {
     this.ngControl.control?.setValue(this.el.nativeElement.value.trim());
   }
 }
+
+

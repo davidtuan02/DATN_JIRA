@@ -17,11 +17,11 @@ export class ConfirmPopupComponent {
     public commonService: CommonService
   ) {}
 
-  @HostListener('document:keydown.enter', ['$event'])
-  handleEnterKey(event: KeyboardEvent) {
-    event.preventDefault();
-    this.accept();
-  }
+  // @HostListener('document:keydown.enter', ['$event'])
+  // handleEnterKey(event: KeyboardEvent) {
+  //   event.preventDefault();
+  //   this.accept();
+  // }
 
   accept() {
     this.modalRef.close(true);

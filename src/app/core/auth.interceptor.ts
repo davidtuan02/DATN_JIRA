@@ -1,21 +1,22 @@
-import { inject, Injectable, Injector } from '@angular/core'
+import {inject, Injectable, Injector} from '@angular/core'
 import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
   HttpErrorResponse,
+  HttpEvent,
+  HttpEventType,
+  HttpHandler,
+  HttpHandlerFn,
+  HttpInterceptor,
   HttpInterceptorFn,
-  HttpHandlerFn
+  HttpRequest
 } from '@angular/common/http'
-import {catchError, finalize, map, Observable, throwError} from 'rxjs'
-import { Router } from '@angular/router'
-import { TranslateService } from '@ngx-translate/core'
-import { STORAGE_KEYS } from '../shared/constants/system.const'
-import { NgxSpinnerService } from 'ngx-spinner'
-import { clearStore } from '../shared/utilities/system.utils'
-import { NotificationService } from '../shared/services/notification.service'
-import { AuthService } from '../shared/services/auth.service'
+import {catchError, filter, finalize, map, Observable, throwError} from 'rxjs'
+import {Router} from '@angular/router'
+import {TranslateService} from '@ngx-translate/core'
+import {STORAGE_KEYS} from '../shared/constants/system.const'
+import {NgxSpinnerService} from 'ngx-spinner'
+import {clearStore} from '../shared/utilities/system.utils'
+import {NotificationService} from '../shared/services/notification.service'
+import {AuthService} from '../shared/services/auth.service'
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -120,9 +121,10 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   //     body: encodedBody
   //   })
   // }
-  if (count === 0) spinner.show()
   count++
+  spinner.show()
   return next(request).pipe(
+    filter((event) => event.type === HttpEventType.Response),
     map((event) => {
       count--
       if (count === 0) spinner.hide();

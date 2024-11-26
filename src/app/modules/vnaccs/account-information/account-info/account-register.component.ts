@@ -232,6 +232,14 @@ export class AccountInfoComponent {
     this.form.get('ediSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal()
     })
+
+    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+      const control = this.getCTSForm.get('msAcc')
+      if (!value && control) {
+        control.markAsTouched()
+        control.updateValueAndValidity()
+      }
+    })
   }
 
   getStatusItemTable(data: any): string {

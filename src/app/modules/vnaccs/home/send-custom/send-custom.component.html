@@ -33,7 +33,7 @@
           <span
             class="font-inter-500"
             style="font-size: 14px; position: absolute; top: 25px; left: 31px; color: #a5a5a5"
-            [ngClass]="{ 'number-sent': isSigned }"
+            [ngClass]="{ 'number-sent': isSent }"
             >2</span
           >
         </div>
@@ -103,7 +103,7 @@
           </button>
         </div>
 
-        <nz-row [nzGutter]="[20, 20]">
+        <nz-row [nzGutter]="[46, 20]">
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên người gửi Hải quan <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px" [nzSuffix]="inputClearTpl">
@@ -137,23 +137,22 @@
           <span>Thông tin chữ ký số</span>
         </div>
 
-        <nz-row nzGutter="16">
+        <nz-row nzGutter="46">
           <!-- Loại chữ ký số -->
           <nz-col nzSpan="12">
             <div class="flex justify-between">
-              <div class="flex flex-col gap-[15px]">
-                <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
+              <div class="flex flex-col">
+                <label for="" class="custom-label mb-[4px]">Loại chữ ký số <span style="color: #ed5564">*</span></label>
                 <nz-radio-group
                   [(ngModel)]="radioValue"
                   (ngModelChange)="onRadioChange($event)"
-                  nzSize="large"
                   formControlName="digitalSignatureType"
-                  style="font-size: 14px"
+                  style="font-size: 14px; margin-bottom: 14px"
                 >
                   <label nz-radio nzValue="1">Usb token</label>
                   <label nz-radio nzValue="2">Viettel - Mysign</label>
                 </nz-radio-group>
-                <p style="max-height: 10px" class="text-danger fs-14"></p>
+                <p style="max-height: 0" class="text-danger fs-14"></p>
               </div>
               <div class="pt-[23px]">
                 <button
@@ -184,7 +183,7 @@
                       </svg>
                     </div>
                     <div class="text">
-                      <span>Lấy chứng thư số</span>
+                      <span class="font-inter-600">Lấy chứng thư số</span>
                     </div>
                   </div>
                 </button>
@@ -222,7 +221,7 @@
           </ng-template>
         </nz-row>
 
-        <nz-row nzGutter="16">
+        <nz-row nzGutter="46">
           <!-- Số seri -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
@@ -242,7 +241,7 @@
           </nz-col>
         </nz-row>
 
-        <nz-row nzGutter="16">
+        <nz-row nzGutter="46">
           <!-- Ngày hiệu lực -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
@@ -330,8 +329,9 @@
         <span class="font-inter-500" style="font-size: 24px; text-align: center">Đăng ký tới Hải quan thành công</span>
         <span class="font-inter-400" style="font-size: 24px; text-align: center"
           >Số tiếp nhận Hải quan:
-          <span class="font-inter-700" style="font-size: 24px; text-align: center; color: #3bb54a"></span
-          >{{ requestNo }}</span
+          <span style="font-size: 24px; text-align: center; color: #3bb54a !important; font-weight: 700 !important">{{
+            requestNo
+          }}</span></span
         >
         <button
           type="button"
@@ -427,7 +427,7 @@
                   </svg>
                 </div>
                 <div>
-                  <span>Lấy chứng thư số</span>
+                  <span class="font-inter-600">Lấy chứng thư số</span>
                 </div>
               </div>
             </button>

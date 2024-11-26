@@ -37,6 +37,7 @@ import { clearStore } from '../../../shared/utilities/system.utils'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../shared/services/menu.service'
 declare function initPlugin(comp: any): void
 @Component({
   selector: 'app-change-password',
@@ -98,7 +99,8 @@ export class ChangePassComponent implements OnInit {
     private notification: NotificationService,
     private changepassSrv: ChangePassService,
     private dialogService: DialogService,
-    private authService: AuthService
+    private authService: AuthService,
+    public menuSrv: MenuService
   ) {
     this.loadForm()
   }
@@ -145,6 +147,14 @@ export class ChangePassComponent implements OnInit {
 
       this.getCTSForm = this.fb.group({
         msAcc: ['', [Validators.required]]
+      })
+
+      this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+        const control = this.getCTSForm.get('msAcc')
+        if (!value && control) {
+          control.markAsTouched()
+          control.updateValueAndValidity()
+        }
       })
 
       this.disableForm()

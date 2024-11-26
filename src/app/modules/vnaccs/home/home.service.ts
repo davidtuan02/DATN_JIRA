@@ -50,7 +50,10 @@ export class HomeService {
   }
 
   downloadGuideFile() {
-    return this.http.get('https://api-service.techasians.com/customs-gov/admin-service/api/file/getGuideFile', {
+    // return this.http.get('https://api-service.techasians.com/customs-gov/admin-service/api/file/getGuideFile', {
+    //   responseType: 'blob'
+    // })
+    return this.http.get('http://192.168.0.3:8203/customs-gov/admin-service/api/file/getGuideFile', {
       responseType: 'blob'
     })
   }

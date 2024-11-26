@@ -54,26 +54,24 @@ export class HeaderVnaccsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    window.addEventListener('storage', (event) => {
-      if (event.key === STORAGE_KEYS.TOKEN) {
-        this.authService.setLoginStatus(true);
-        this.router.navigate(['/vnaccs/home'])
-        this.cdr.detectChanges()
-      }
-    })
     this.authService.taxCode$.subscribe((taxCode) => {
-      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) ? localStorage.getItem(STORAGE_KEYS.TAX_CODE) : taxCode
-    })
-    this.authService.taxCode$.subscribe((taxCode) => {
-      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) ? localStorage.getItem(STORAGE_KEYS.TAX_CODE) : taxCode
-      this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) ? localStorage.getItem(STORAGE_KEYS.TAX_CODE) : taxCode
-
+      // this.taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) ? localStorage.getItem(STORAGE_KEYS.TAX_CODE) : taxCode
+      this.taxCode = this.authService.getTaxCode()
       this.cdr.detectChanges()
     })
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEYS.TAX_CODE) {
+        this.authService.setLoginStatus(true)
+        this.authService.setTaxCode(localStorage.getItem(STORAGE_KEYS.TAX_CODE)!)
+        this.router.navigate(['/vnaccs/home'])
+        this.cdr.detectChanges()
+      }
+    })
+    this.cdr.detectChanges()
   }
 
   getUserInfo(taxCode: string) {

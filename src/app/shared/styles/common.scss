@@ -126,7 +126,8 @@ nz-date-picker {
 }
 
 nz-select {
-  height: 40px !important;
+  min-height: 40px !important;
+  height: auto !important;
 }
 
 .ant-form-item-label > label {
@@ -164,10 +165,14 @@ input {
   background: transparent !important;
 }
 
-textarea.ant-input {
-  padding-left: 0;
-  padding-right: 0;
+nz-input-group textarea {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   background: transparent;
+}
+
+textarea {
+  padding: 4px 11px;
 }
 
 .ant-input-disabled,
@@ -178,7 +183,3 @@ textarea.ant-input {
 .ant-input-affix-wrapper-disabled .ant-input[disabled] {
   background: transparent !important;
 }
-
-// textarea {
-//   padding: 0 11px
-// }

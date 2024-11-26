@@ -142,6 +142,14 @@ export class ForgotPasswordComponent implements OnInit {
         msAcc: ['', [Validators.required]]
       })
 
+      this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+        const control = this.getCTSForm.get('msAcc')
+        if (!value && control) {
+          control.markAsTouched()
+          control.updateValueAndValidity()
+        }
+      })
+
       this.disableForm()
     })
   }

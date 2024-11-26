@@ -7,7 +7,7 @@
       <span>Thông tin đăng nhập</span>
     </div>
     <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <nz-row nzGutter="32">
+      <nz-row nzGutter="46">
         <!-- Mã số thuế -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Mã số thuế <span style="color: #ed5564">*</span></label>
@@ -52,22 +52,22 @@
         <span>Thông tin chữ ký số</span>
       </div>
 
-      <nz-row nzGutter="32">
+      <nz-row nzGutter="46">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
-            <div class="flex flex-col gap-[15px]">
-              <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
+            <div class="flex flex-col">
+              <label for="" class="custom-label mb-[4px]">Loại chữ ký số <span style="color: #ed5564">*</span></label>
               <nz-radio-group
                 [(ngModel)]="radioValue"
                 (ngModelChange)="onRadioChange($event)"
                 formControlName="digitalSignatureType"
-                style="font-size: 14px"
+                style="font-size: 14px; margin-bottom: 14px"
               >
                 <label nz-radio nzValue="1">Usb token</label>
                 <label nz-radio nzValue="2">Viettel - Mysign</label>
               </nz-radio-group>
-              <p style="max-height: 10px" class="text-danger fs-14"></p>
+              <p style="max-height: 0" class="text-danger fs-14"></p>
             </div>
             <div *ngIf="radioValue === '1'" class="pt-[23px]">
               <button
@@ -98,7 +98,7 @@
                     </svg>
                   </div>
                   <div class="text">
-                    <span>Lấy chứng thư số</span>
+                    <span class="font-inter-600">Lấy chứng thư số</span>
                   </div>
                 </div>
               </button>
@@ -132,7 +132,7 @@
                     </svg>
                   </div>
                   <div class="text">
-                    <span>Lấy chứng thư số</span>
+                    <span class="font-inter-600">Lấy chứng thư số</span>
                   </div>
                 </div>
               </button>
@@ -170,7 +170,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row nzGutter="32">
+      <nz-row nzGutter="46">
         <!-- Số seri -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
@@ -190,7 +190,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="32">
+      <nz-row nzGutter="46">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
@@ -400,7 +400,7 @@
                 </svg>
               </div>
               <div>
-                <span>Lấy chứng thư số</span>
+                <span class="font-inter-600">Lấy chứng thư số</span>
               </div>
             </div>
           </button>

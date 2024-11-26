@@ -99,7 +99,7 @@
       <span class="font-inter" style="font-size: 18px">Thông tin User code</span>
     </div>
     <div class="mt-[18px]">
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <nz-col nzSpan="8" *ngIf="modeScreen === 'update' || modeScreen === 'detail'">
           <label for="" class="custom-label">User code <span style="color: #ed5564">*</span></label>
           <nz-input-group style="border-radius: 8px">
@@ -378,7 +378,7 @@
         <span class="font-inter" style="font-size: 14px">Thông tin người khai</span>
       </div>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <ng-container *ngIf="mode === 'add'; else editOrViewMode">
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
@@ -393,7 +393,7 @@
                 maxlength="50"
               />
             </nz-input-group>
-            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
           </nz-col>
@@ -404,7 +404,7 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
-            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
           </nz-col>
@@ -432,14 +432,14 @@
                 maxlength="50"
               />
             </nz-input-group>
-            <p *ngIf="getFullNameError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getFullNameError() }}
             </p>
           </nz-col>
         </ng-template>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <ng-container *ngIf="mode === 'add'; else editOrViewModeRow2">
           <!-- lĩnh vực hoạt động -->
           <nz-col nzSpan="12">
@@ -449,7 +449,7 @@
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
               }
             </nz-select>
-            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getFieldOfActivityValidateError() }}
             </p>
           </nz-col>
@@ -462,7 +462,7 @@
             <nz-input-group style="border-radius: 8px">
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
-            <p *ngIf="getEmailError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getEmailError() }}
             </p>
           </nz-col>
@@ -481,7 +481,7 @@
               <nz-option [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
               }
             </nz-select>
-            <p *ngIf="getFieldOfActivityValidateError()" style="max-height: 0" class="text-danger fs-14">
+            <p style="max-height: 0" class="text-danger fs-14">
               {{ getFieldOfActivityValidateError() }}
             </p>
 
@@ -500,7 +500,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <!-- loai giay to  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Loại giấy tờ <span style="color: #ed5564">*</span></label>
@@ -513,15 +513,9 @@
             >
             </nz-option>
           </nz-select>
-          <p *ngIf="getIdTypeValidateError()" style="max-height: 0" class="text-danger fs-14">
+          <p style="max-height: 0" class="text-danger fs-14">
             {{ getIdTypeValidateError() }}
           </p>
-
-          <!-- <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
-            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
-              style="background-color: #1944A7;">
-            </nz-option>
-          </nz-select> -->
         </nz-col>
         <!-- so cmnd/cccd  -->
         <nz-col nzSpan="12">
@@ -536,13 +530,13 @@
               formControlName="idNo"
             />
           </nz-input-group>
-          <p *ngIf="getIdNoValidateError()" style="max-height: 0" class="text-danger fs-14">
+          <p style="max-height: 0" class="text-danger fs-14">
             {{ getIdNoValidateError() }}
           </p>
         </nz-col>
       </nz-row>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <!-- thời gian hiệu lực khai hải quan  -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label"
@@ -594,17 +588,21 @@
         <span class="font-inter" style="font-size: 14px">Thông tin chữ ký số</span>
       </div>
 
-      <nz-row [nzGutter]="[16, 20]">
+      <nz-row [nzGutter]="46">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
-            <div class="flex flex-col gap-[15px]">
-              <label for="" class="custom-label">Loại chữ ký số <span style="color: #ed5564">*</span></label>
-              <nz-radio-group style="font-size: 14px" [(ngModel)]="radioValue" formControlName="digitalSignatureType">
+            <div class="flex flex-col">
+              <label for="" class="custom-label mb-[4px]">Loại chữ ký số <span style="color: #ed5564">*</span></label>
+              <nz-radio-group
+                [(ngModel)]="radioValue"
+                formControlName="digitalSignatureType"
+                style="font-size: 14px; margin-bottom: 14px"
+              >
                 <label nz-radio nzValue="1">Usb token</label>
                 <label nz-radio nzValue="2">Viettel - Mysign</label>
               </nz-radio-group>
-              <p style="max-height: 10px" class="text-danger fs-14"></p>
+              <p style="max-height: 0" class="text-danger fs-14"></p>
             </div>
           </div>
         </nz-col>
@@ -635,7 +633,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Số seri -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Số seri <span style="color: #ed5564">*</span></label>
@@ -655,7 +653,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label for="" class="custom-label">Ngày hiệu lực <span style="color: #ed5564">*</span></label>
@@ -836,7 +834,7 @@
                 </svg>
               </div>
               <div>
-                <span>Lấy chứng thư số</span>
+                <span class="font-inter-600">Lấy chứng thư số</span>
               </div>
             </div>
           </button>

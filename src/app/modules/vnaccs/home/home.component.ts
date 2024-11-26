@@ -13,6 +13,8 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
 import { NzModalService } from 'ng-zorro-antd/modal'
 import { ProvideNewPasswordComponent } from './provide-new-password/provide-new-password.component'
 import { NotificationService } from '../../../shared/services/notification.service'
+import { CommonService } from '../../../shared/services/common.service'
+import { MenuService } from '../../../shared/services/menu.service'
 
 @Component({
   selector: 'app-home',
@@ -35,6 +37,8 @@ export class HomeComponent implements OnInit {
   tempSelectedItem: string | null = null
   routerSubscription!: Subscription
 
+  selectedMenu!: String
+
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
@@ -42,7 +46,8 @@ export class HomeComponent implements OnInit {
     private routerr: ActivatedRoute,
     private homeSrv: HomeService,
     private modalService: NzModalService,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private menuSrv: MenuService
   ) {}
 
   ngOnInit() {
@@ -50,39 +55,11 @@ export class HomeComponent implements OnInit {
       this.isLogin = this.authService.getLoginStatus()
       this.cdr.detectChanges()
     })
-    this.routerSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.updateSelectedItem(event.urlAfterRedirects)
-      })
-  }
 
-  private updateSelectedItem(url: string) {
-    console.log('Navigating to:', url)
-
-    if (!url) {
-      return
-    }
-    switch (url) {
-      case '/vnaccs/home':
-        this.selectedItem = null
-        break
-      case '/vnaccs/home/account-information':
-        this.selectedItem = 'accountInfo'
-        break
-      case '/vnaccs/home/account-register':
-        this.selectedItem = 'register'
-        break
-      case '/vnaccs/home/account-admin-update':
-      case '/vnaccs/home/account-update':
-        this.selectedItem = 'update'
-        break
-      case '/vnaccs/home/search-custom':
-        this.selectedItem = 'search'
-        break
-      default:
-        this.selectedItem = null
-    }
+    this.menuSrv.selectedMenu$.subscribe((menu: any) => {
+      this.selectedItem = menu
+      console.log(this.selectedItem)
+    })
   }
 
   ngOnDestroy() {
@@ -120,7 +97,6 @@ export class HomeComponent implements OnInit {
   }
 
   handleNavigate(mode: 'editAcc' | 'editAdminAcc' | 'registerAcc' | 'search' | 'accountInfo') {
-    this.selectedItem = mode
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {
@@ -131,7 +107,8 @@ export class HomeComponent implements OnInit {
         case 'editAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 2).subscribe((res: any) => {
             if (res && res.message === 'success') {
-              console.log(res.data.id)
+              // this.selectedItem = mode
+              this.menuSrv.setSelectedMenu(mode)
               this.router.navigate(['/vnaccs/home/account-update'], {
                 state: {
                   data: {
@@ -147,6 +124,8 @@ export class HomeComponent implements OnInit {
         case 'editAdminAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 3).subscribe((res: any) => {
             if (res && res.message === 'success') {
+              // this.selectedItem = mode
+              this.menuSrv.setSelectedMenu(mode)
               this.router.navigate(['/vnaccs/home/account-admin-update'], {
                 state: {
                   data: res.data,
@@ -160,16 +139,22 @@ export class HomeComponent implements OnInit {
         case 'registerAcc': {
           this.homeSrv.registerAccountInfo(decoded.sub, 1).subscribe((res: any) => {
             if (res && res.message === 'success') {
+              // this.selectedItem = mode
+              this.menuSrv.setSelectedMenu(mode)
               this.router.navigate(['/vnaccs/home/account-register'])
             }
           })
           break
         }
         case 'accountInfo': {
+          // this.selectedItem = mode
+          this.menuSrv.setSelectedMenu(mode)
           this.router.navigate(['/vnaccs/home/account-information'])
           break
         }
         case 'search': {
+          // this.selectedItem = mode
+          this.menuSrv.setSelectedMenu(mode)
           this.router.navigate(['/vnaccs/home/search-custom'])
           break
         }

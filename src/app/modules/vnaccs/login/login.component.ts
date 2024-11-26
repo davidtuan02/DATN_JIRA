@@ -136,6 +136,14 @@ export class LoginComponent implements OnInit {
     this.getCTSForm = this.fb.group({
       msAcc: ['', [Validators.required]]
     })
+
+    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+      const control = this.getCTSForm.get('msAcc')
+      if (!value && control) {
+        control.markAsTouched()
+        control.updateValueAndValidity()
+      }
+    })
   }
 
   disableForm() {

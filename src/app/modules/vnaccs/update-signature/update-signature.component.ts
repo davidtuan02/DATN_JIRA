@@ -133,15 +133,15 @@ export class UpdateSignatureComponent implements OnInit {
         msAcc: ['', [Validators.required]]
       })
 
-      this.disableForm();
+      this.disableForm()
 
       this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
-    const control = this.getCTSForm.get('msAcc');
-    if (!value && control) {
-      control.markAsTouched();
-      control.updateValueAndValidity();
-    }
-  });
+        const control = this.getCTSForm.get('msAcc')
+        if (!value && control) {
+          control.markAsTouched()
+          control.updateValueAndValidity()
+        }
+      })
     })
   }
 

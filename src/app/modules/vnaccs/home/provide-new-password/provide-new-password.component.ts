@@ -13,15 +13,15 @@ import { PASSWORD_REGEX } from '../../../../shared/constants/regex.const'
 import { NzFormDirective } from 'ng-zorro-antd/form'
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid'
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select'
-import {NgForOf, NgIf, registerLocaleData} from '@angular/common'
+import { NgForOf, NgIf, registerLocaleData } from '@angular/common'
 import { NzInputDirective, NzInputGroupComponent } from 'ng-zorro-antd/input'
 import { NzIconDirective } from 'ng-zorro-antd/icon'
 import { NzButtonComponent } from 'ng-zorro-antd/button'
 import { HomeService } from '../home.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { AutoTrimDirective } from '../../../../shared/directives/trim.directive';
-import vi from "@angular/common/locales/vi"
-registerLocaleData(vi);
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import vi from '@angular/common/locales/vi'
+registerLocaleData(vi)
 
 @Component({
   selector: 'app-provide-new-password',
@@ -86,7 +86,7 @@ export class ProvideNewPasswordComponent implements OnInit {
     const rePassword = control.get('rePassword')?.value
 
     // Return error if passwords do not match
-    return password && rePassword && password !== rePassword ? { passwordMismatch: true } : null
+    return rePassword && password !== rePassword ? { passwordMismatch: true } : null
   }
 
   onCloseModal() {

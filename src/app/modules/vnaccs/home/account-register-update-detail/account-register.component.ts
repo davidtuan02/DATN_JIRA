@@ -32,6 +32,7 @@ import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../../shared/services/menu.service'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -155,7 +156,8 @@ export class AccountRegisterComponent {
     private dialogService: DialogService,
     private router: Router,
     private authSrv: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private menuSrv: MenuService
   ) {}
 
   ngOnInit(): void {
@@ -189,6 +191,7 @@ export class AccountRegisterComponent {
         }
         case 'account-update': {
           this.modeScreen = 'update'
+          this.menuSrv.setSelectedMenu('search')
           this.getDataToEditAcc()
           this.form.enable()
           this.form.get('numberComputer')?.disable()
@@ -197,10 +200,12 @@ export class AccountRegisterComponent {
         }
         case 'account-admin-update': {
           this.modeScreen = 'admin-update'
+          this.menuSrv.setSelectedMenu('search')
           break
         }
         case 'account-detail': {
           this.modeScreen = 'detail'
+          this.menuSrv.setSelectedMenu('search')
           this.getDataToEditAcc()
           this.form.disable()
           break
@@ -315,6 +320,14 @@ export class AccountRegisterComponent {
       msAcc: ['', [Validators.required]]
     })
 
+    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+      const control = this.getCTSForm.get('msAcc')
+      if (!value && control) {
+        control.markAsTouched()
+        control.updateValueAndValidity()
+      }
+    })
+
     this.form.get('numberComputer')?.disable()
     this.form.get('userCode')?.disable()
 
@@ -346,7 +359,7 @@ export class AccountRegisterComponent {
       {
         fullName: ['', [Validators.required]],
         userId: [''],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z]{2,})+$/)]],
         fieldOfActivity: [null, [Validators.required]],
         idType: [null, [Validators.required]],
         idNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
@@ -511,7 +524,7 @@ export class AccountRegisterComponent {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
-      if (control.errors?.['email']) {
+      if (control.errors?.['pattern']) {
         return 'Email không đúng định dạng'
       }
     }
@@ -1138,6 +1151,7 @@ export class AccountRegisterComponent {
                   if (res.success) {
                     this.notification.success(res.message)
                     this.router.navigate(['/vnaccs/home/search-custom'])
+                    this.menuSrv.setSelectedMenu('search')
                   }
                 }
               })
@@ -1148,6 +1162,7 @@ export class AccountRegisterComponent {
                     if (res.success) {
                       this.notification.success(res.message)
                       this.router.navigate(['/vnaccs/home/search-custom'])
+                      this.menuSrv.setSelectedMenu('search')
                     }
                   }
                 })
@@ -1158,6 +1173,7 @@ export class AccountRegisterComponent {
                     if (res.success) {
                       this.notification.success(res.message)
                       this.router.navigate(['/vnaccs/home/search-custom'])
+                      this.menuSrv.setSelectedMenu('search')
                     }
                   }
                 })

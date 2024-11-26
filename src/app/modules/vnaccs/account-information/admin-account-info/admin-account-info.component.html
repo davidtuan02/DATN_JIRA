@@ -2,7 +2,7 @@
   <div class="flex flex-col mt-[10px]">
     <form nz-form [formGroup]="form">
       <label class="font-inter mb-2" style="font-size: 14px">Thông tin chung</label>
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Mã số thuế -->
         <nz-col nzSpan="12">
           <label class="custom-label">Mã số thuế </label>
@@ -29,17 +29,17 @@
         <span class="font-inter" style="font-size: 14px">Thông tin chữ ký số</span>
       </div>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Loại chữ ký số -->
         <nz-col nzSpan="12">
           <div class="flex justify-between">
-            <div class="flex flex-col gap-[15px]">
-              <label class="custom-label">Loại chữ ký số </label>
-              <nz-radio-group formControlName="digitalSignatureType" style="font-size: 14px">
+            <div class="flex flex-col">
+              <label for="" class="custom-label mb-[4px]">Loại chữ ký số <span style="color: #ed5564">*</span></label>
+              <nz-radio-group formControlName="digitalSignatureType" style="font-size: 14px; margin-bottom: 14px">
                 <label nz-radio nzValue="1">Usb token</label>
                 <label nz-radio nzValue="2">Viettel - Mysign</label>
               </nz-radio-group>
-              <p style="max-height: 10px" class="text-danger fs-14"></p>
+              <p style="max-height: 0" class="text-danger fs-14"></p>
             </div>
           </div>
         </nz-col>
@@ -70,7 +70,7 @@
         </ng-template>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Số seri -->
         <nz-col nzSpan="12">
           <label class="custom-label">Số seri </label>
@@ -90,7 +90,7 @@
         </nz-col>
       </nz-row>
 
-      <nz-row nzGutter="16">
+      <nz-row nzGutter="46">
         <!-- Ngày hiệu lực -->
         <nz-col nzSpan="12">
           <label class="custom-label">Ngày hiệu lực </label>

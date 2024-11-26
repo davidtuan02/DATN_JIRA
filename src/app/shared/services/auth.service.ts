@@ -19,6 +19,13 @@ export class AuthService {
     }
     return false
   }
+  getTaxCode() {
+    const taxCode = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || sessionStorage.getItem(STORAGE_KEYS.TAX_CODE)
+    if (taxCode) {
+      return taxCode
+    }
+    return ''
+  }
   setLoginStatus(status: boolean) {
     this.isLoggedIn.next(status)
   }

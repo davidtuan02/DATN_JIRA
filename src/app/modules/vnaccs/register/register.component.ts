@@ -37,6 +37,7 @@ import { RouteStateService } from '../../../shared/services/clear-state.service'
 import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
 import { BehaviorSubject } from 'rxjs'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../shared/services/menu.service'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -102,7 +103,8 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private notification: NotificationService,
     private registerSrv: RegisterService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private menuSrv: MenuService
   ) {
     this.loadForm()
   }
@@ -167,6 +169,14 @@ export class RegisterComponent implements OnInit {
       msAcc: ['', [Validators.required]]
     })
 
+    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+      const control = this.getCTSForm.get('msAcc')
+      if (!value && control) {
+        control.markAsTouched()
+        control.updateValueAndValidity()
+      }
+    })
+
     this.disableForm()
   }
 
@@ -190,6 +200,7 @@ export class RegisterComponent implements OnInit {
       }
       case 'account-admin-update': {
         this.modeScreen = 'update'
+        this.menuSrv.setSelectedMenu('search')
         this.loginForm.disable()
         this.loginForm.get('email')?.enable()
         this.loginForm.get('digitalSignatureType')?.enable()
@@ -197,6 +208,7 @@ export class RegisterComponent implements OnInit {
       }
       case 'account-admin-detail': {
         this.modeScreen = 'detail'
+        this.menuSrv.setSelectedMenu('search')
         this.loginForm.disable()
         break
       }

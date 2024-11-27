@@ -34,6 +34,7 @@ import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../shared/services/menu.service'
 
 declare function initPlugin(comp: any): void
 
@@ -95,7 +96,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private notification: NotificationService,
     private message: NzMessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private menuSrv: MenuService
   ) {
     this.loadForm()
   }
@@ -116,6 +118,15 @@ export class LoginComponent implements OnInit {
       nameCert: [''],
       credentialId: [''],
       taxCodeCTS: ['']
+    })
+
+    this.loginForm.valueChanges.subscribe(() => {
+      Object.keys(this.loginForm.controls).forEach((controlName) => {
+        const control = this.loginForm.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
     })
 
     this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
@@ -241,6 +252,7 @@ export class LoginComponent implements OnInit {
     }
     this.loginSrv.login(body).subscribe((res: any) => {
       if (res && res.code === 200) {
+        this.menuSrv.setSelectedMenu('')
         localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
         sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
         this.router.navigate(['vnaccs'])
@@ -283,7 +295,7 @@ export class LoginComponent implements OnInit {
 
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
       }
@@ -302,7 +314,7 @@ export class LoginComponent implements OnInit {
       control.setValue(trimmedValue, { emitEvent: false })
     }
 
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }

@@ -29,45 +29,55 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
                 (c) => c.AccountRegisterComponent
-              )
+              ),
+            canActivate: [authGuard]
           },
           {
             path: 'account-detail',
             loadComponent: () =>
               import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
                 (c) => c.AccountRegisterComponent
-              )
+              ),
+            canActivate: [authGuard]
           },
           {
             path: 'account-update',
             loadComponent: () =>
               import('./modules/vnaccs/home/account-register-update-detail/account-register.component').then(
                 (c) => c.AccountRegisterComponent
-              )
+              ),
+            canActivate: [authGuard]
           },
           {
             path: 'account-admin-update',
-            loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
+            loadComponent: () =>
+              import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent),
+            canActivate: [authGuard]
           },
           {
             path: 'account-admin-detail',
-            loadComponent: () => import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent)
+            loadComponent: () =>
+              import('./modules/vnaccs/register/register.component').then((c) => c.RegisterComponent),
+            canActivate: [authGuard]
           },
           {
             path: 'search-custom',
-            loadComponent: () => import('./modules/vnaccs/home/search/search.component').then((c) => c.SearchComponent)
+            loadComponent: () => import('./modules/vnaccs/home/search/search.component').then((c) => c.SearchComponent),
+            canActivate: [authGuard]
           },
           {
             path: 'send-custom',
             loadComponent: () =>
-              import('./modules/vnaccs/home/send-custom/send-custom.component').then((c) => c.SendCustomComponent)
+              import('./modules/vnaccs/home/send-custom/send-custom.component').then((c) => c.SendCustomComponent),
+            canActivate: [authGuard]
           },
           {
             path: 'account-information',
             loadComponent: () =>
               import('./modules/vnaccs/account-information/account-information.component').then(
                 (c) => c.AccountInformationComponent
-              )
+              ),
+            canActivate: [authGuard]
           }
         ]
         // canActivate: [authGuard]
@@ -88,7 +98,8 @@ export const routes: Routes = [
       {
         path: 'change-password',
         loadComponent: () =>
-          import('./modules/vnaccs/change-pass/change-pass.component').then((c) => c.ChangePassComponent)
+          import('./modules/vnaccs/change-pass/change-pass.component').then((c) => c.ChangePassComponent),
+        canActivate: [authGuard]
       },
       {
         path: 'forgot-password',

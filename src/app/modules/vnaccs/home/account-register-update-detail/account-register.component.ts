@@ -200,7 +200,7 @@ export class AccountRegisterComponent {
         }
         case 'account-admin-update': {
           this.modeScreen = 'admin-update'
-          this.menuSrv.setSelectedMenu('search')
+          // this.menuSrv.setSelectedMenu('search')
           break
         }
         case 'account-detail': {
@@ -316,16 +316,13 @@ export class AccountRegisterComponent {
       userCodeExpiryDate: ['']
     })
 
-    this.getCTSForm = this.fb.group({
-      msAcc: ['', [Validators.required]]
-    })
-
-    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
-      const control = this.getCTSForm.get('msAcc')
-      if (!value && control) {
-        control.markAsTouched()
-        control.updateValueAndValidity()
-      }
+    this.form.valueChanges.subscribe(() => {
+      Object.keys(this.form.controls).forEach((controlName) => {
+        const control = this.form.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
     })
 
     this.form.get('numberComputer')?.disable()
@@ -380,6 +377,15 @@ export class AccountRegisterComponent {
         validator: this.dateRangeValidator('customsEffectiveDate', 'customsExpiryDate')
       }
     )
+
+    this.formValidateUserId.valueChanges.subscribe(() => {
+      Object.keys(this.formValidateUserId.controls).forEach((controlName) => {
+        const control = this.formValidateUserId.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
+    })
   }
 
   dateRangeValidator(fromDateField: string, toDateField: string) {
@@ -403,7 +409,7 @@ export class AccountRegisterComponent {
 
   getFromDateError(): string | undefined {
     const control = this.formValidateUserId.get('customsEffectiveDate')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Thời gian hiệu lực khai báo hải quan không được để trống'
       }
@@ -416,7 +422,7 @@ export class AccountRegisterComponent {
 
   getExpiryDateValidateError(): string | undefined {
     const control = this.formValidateUserId.get('customsExpiryDate')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Thời gian hết hiệu lực khai báo hải quan không được để trống'
       }
@@ -484,7 +490,7 @@ export class AccountRegisterComponent {
 
   getIdNoValidateError(): string | undefined {
     const control = this.formValidateUserId.get('idNo')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Số CMND/CCCD/Hộ chiếu không được để trống'
       }
@@ -498,7 +504,7 @@ export class AccountRegisterComponent {
 
   getFieldOfActivityValidateError(): string | undefined {
     const control = this.formValidateUserId.get('fieldOfActivity')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Lĩnh vực hoạt động không được để trống'
       }
@@ -509,7 +515,7 @@ export class AccountRegisterComponent {
 
   getIdTypeValidateError(): string | undefined {
     const control = this.formValidateUserId.get('idType')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Loại giấy tờ không được để trống'
       }
@@ -520,7 +526,7 @@ export class AccountRegisterComponent {
 
   getEmailError(): string | undefined {
     const control = this.formValidateUserId.get('email')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
@@ -534,7 +540,7 @@ export class AccountRegisterComponent {
 
   getFullNameError(): string | undefined {
     const control = this.formValidateUserId.get('fullName')
-    if (control?.touched) {
+    if (control?.touched || control?.dirty) {
       if (control.errors?.['required']) {
         return 'Họ tên không được để trống'
       }
@@ -582,7 +588,7 @@ export class AccountRegisterComponent {
 
   getFieldOfActivityError(): string | undefined {
     const control = this.form.get('fieldOfActivity')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Lĩnh vực hoạt động không được để trống'
       }
@@ -593,7 +599,7 @@ export class AccountRegisterComponent {
 
   getRepresentativeError(): string | undefined {
     const control = this.form.get('representativeName')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Tên người đại diện không được để trống'
       }
@@ -604,7 +610,7 @@ export class AccountRegisterComponent {
 
   getRepresentativeTypeError(): string | undefined {
     const control = this.form.get('representativeIdType')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Loại giấy tờ người đại diện không được để trống'
       }
@@ -615,7 +621,7 @@ export class AccountRegisterComponent {
 
   getIdNoError(): string | undefined {
     const control = this.form.get('representativeIdNo')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Số CMND/CCCD/ Hộ chiếu không được để trống'
       }
@@ -684,7 +690,7 @@ export class AccountRegisterComponent {
 
   getBusinessAddressError(): string | undefined {
     const control = this.form.get('address')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Địa chỉ doanh  nghiệp không được để trống'
       }
@@ -695,6 +701,24 @@ export class AccountRegisterComponent {
 
   showModalUserId(mode: 'add' | 'view' | 'edit', data: any, index: any) {
     this.isVisible = true
+    this.getCTSForm = this.fb.group({
+      msAcc: ['', [Validators.required]]
+    })
+    this.getCTSForm.valueChanges.subscribe(() => {
+      Object.keys(this.getCTSForm.controls).forEach((controlName) => {
+        const control = this.getCTSForm.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
+    })
+    this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
+      const control = this.getCTSForm.get('msAcc')
+      if (!value && control && control.touched) {
+        control.markAsTouched()
+        control.updateValueAndValidity()
+      }
+    })
     this.formValidateUserId.reset()
     this.formValidateUserId.enable()
 
@@ -895,7 +919,7 @@ export class AccountRegisterComponent {
 
   getMsAccError(): string | undefined {
     const control = this.getCTSForm.get('msAcc')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }

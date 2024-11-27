@@ -74,18 +74,31 @@
             <nz-form-label class="custom-label" style="margin-bottom: -3px" [nzSpan]="24">Ngày gửi</nz-form-label>
             <nz-form-control class="mt-[-10px] flex flex-column gap-1">
               <div class="custom-range-picker">
+                <!-- <nz-input-group [nzPrefix]="submitFromDateClearTpl"> -->
                 <nz-date-picker
                   [nzFormat]="dateFormat"
                   [nzPlaceHolder]="'dd/mm/yyyy'"
                   [nzDisabledDate]="disabledDate"
-                  [nzAllowClear]="true"
                   [nzSuffixIcon]="suffixDate"
                   formControlName="startDateSubmit"
+                  (nzOnChange)="onDateChange($event)"
                   nzSize="large"
                   class="custom-date-picker"
                   style="width: 100%"
                 >
                 </nz-date-picker>
+                <ng-template #submitFromDateClearTpl>
+                  @if (form.get('startDateSubmit')?.value) {
+                  <span
+                    nz-icon
+                    class="ant-input-clear-icon"
+                    nzTheme="fill"
+                    nzType="close-circle"
+                    (click)="form.get('startDateSubmit')?.setValue(1)"
+                  ></span>
+                  }
+                </ng-template>
+                <!-- </nz-input-group> -->
 
                 <div class="mb-[10px]">
                   <svg width="28" height="8" viewBox="0 0 28 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -205,7 +218,7 @@
           [nzFrontPagination]="false"
           nzTableLayout="fixed"
           nzNoResult="Không tìm thấy bản ghi nào"
-          [nzScroll]="{ x: '1700px' }"
+          [nzScroll]="{ x: '1700px', y: '285px' }"
         >
           <thead>
             <tr>
@@ -216,7 +229,7 @@
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Trạng thái</th>
               <th nzAlign="center" nzWidth="90px" style="font-size: 14px">Người gửi</th>
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày gửi</th>
-              <th nzAlign="center" nzWidth="110px" style="font-size: 14px">Ngày phê duyệt</th>
+              <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ngày phê duyệt</th>
               <th nzAlign="center" nzWidth="130px" style="font-size: 14px">Ghi nhận của Hải quan</th>
               <th nzAlign="center" nzWidth="70px" style="font-size: 14px">Thao tác</th>
             </tr>

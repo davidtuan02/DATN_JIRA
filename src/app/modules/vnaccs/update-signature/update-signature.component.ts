@@ -115,6 +115,15 @@ export class UpdateSignatureComponent implements OnInit {
         credentialId: ['']
       })
 
+      this.loginForm.valueChanges.subscribe(() => {
+        Object.keys(this.loginForm.controls).forEach((controlName) => {
+          const control = this.loginForm.get(controlName)
+          if (control?.value && !control.touched) {
+            control.markAsTouched()
+          }
+        })
+      })
+
       this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
         const taxCodeControl = this.loginForm.get('taxCode')
 
@@ -276,7 +285,7 @@ export class UpdateSignatureComponent implements OnInit {
 
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
       }
@@ -289,7 +298,7 @@ export class UpdateSignatureComponent implements OnInit {
 
   getEmailError(): string | undefined {
     const control = this.loginForm.get('email')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
@@ -308,7 +317,7 @@ export class UpdateSignatureComponent implements OnInit {
       control.setValue(trimmedValue, { emitEvent: false })
     }
 
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }

@@ -315,6 +315,42 @@
         <p style="max-height: 10px" class="text-danger fs-14"></p>
       </nz-row>
 
+      <!-- response info from custom  -->
+      <ng-container *ngIf="responseFromCustom && responseFromCustom.requestStatus">
+        <div
+          class="flex flex-column pt-[17px]"
+          *ngIf="
+            responseFromCustom.requestStatus === 2 ||
+            responseFromCustom.requestStatus === 3 ||
+            responseFromCustom.requestStatus === 0
+          "
+        >
+          <span class="font-inter" style="font-size: 18px">Thông tin phản hồi của Hải quan</span>
+          <nz-row nzGutter="20">
+            <nz-col nzSpan="8">
+              <span class="me-[14px] font-inter-400" style="font-size: 14px">Kết quả:</span
+              ><span
+                [ngClass]="
+                  responseFromCustom.requestStatus === 2
+                    ? 'status-2'
+                    : responseFromCustom.requestStatus === 3
+                    ? 'status-3'
+                    : 'status-0'
+                "
+                style="padding: 4px; font-size: 14px; text-align: center; border-radius: 4px; line-height: 24px"
+                >{{ getResultResponseFromCustom() }}</span
+              >
+            </nz-col>
+            <nz-col nzSpan="8">
+              <span class="me-[14px] font-inter-400" style="font-size: 14px">Ngày phản hồi:</span
+              ><span class="font-inter" style="font-size: 14px">{{
+                responseFromCustom.approvalTime | date : 'dd/MM/yyyy'
+              }}</span>
+            </nz-col>
+          </nz-row>
+        </div>
+      </ng-container>
+
       <nz-row nzSpan="24">
         <!-- register  -->
         <div class="flex justify-center items-center gap-[10px] w-100 mt-[30px]">
@@ -559,7 +595,7 @@
                 </svg>
               </div>
               <div>
-                <span>Đăng ký tài khoản MySign</span>
+                <span class="font-inter-600">Đăng ký tài khoản MySign</span>
               </div>
             </div>
           </button>

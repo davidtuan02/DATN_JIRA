@@ -45,7 +45,7 @@
 
 nz-date-picker.ng-touched.ng-invalid,
 nz-date-picker.ng-dirty.ng-invalid {
-  border: 1px solid #dc3545;
+  border: 1px solid #dc3545 !important;
 }
 
 nz-date-picker {
@@ -182,4 +182,11 @@ textarea {
 
 .ant-input-affix-wrapper-disabled .ant-input[disabled] {
   background: transparent !important;
+}
+
+.ant-tabs-tab {
+  font-family: 'Inter', sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 500 !important;
+  font-style: normal;
 }

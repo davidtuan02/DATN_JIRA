@@ -109,6 +109,15 @@ export class SendCustomComponent {
       credentialId: [''],
       taxCodeCTS: ['']
     })
+
+    this.form.valueChanges.subscribe(() => {
+      Object.keys(this.form.controls).forEach((controlName) => {
+        const control = this.form.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
+    })
     this.form.get('digitalSignature')?.disable()
     this.form.get('serial')?.disable()
     this.form.get('provider')?.disable()
@@ -119,6 +128,15 @@ export class SendCustomComponent {
 
     this.getCTSForm = this.fb.group({
       msAcc: ['', [Validators.required]]
+    })
+
+    this.getCTSForm.valueChanges.subscribe(() => {
+      Object.keys(this.getCTSForm.controls).forEach((controlName) => {
+        const control = this.getCTSForm.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
     })
 
     this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
@@ -162,7 +180,7 @@ export class SendCustomComponent {
   getFullNameError() {
     const control = this.form.get('fullName')
 
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Họ tên người gửi Hải quan không được để trống'
       }
@@ -331,7 +349,7 @@ export class SendCustomComponent {
 
   getMsAccError(): string | undefined {
     const control = this.getCTSForm.get('msAcc')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Vui lòng nhập tài khoản MySign để lấy chứng thư số'
       }

@@ -167,7 +167,7 @@ export class HomeComponent implements OnInit {
       nzTitle: 'Đổi mật khẩu cho người sử dụng',
       nzContent: ProvideNewPasswordComponent,
       nzFooter: null,
-      nzWidth: '600px',
+      nzWidth: '31%',
       nzCentered: true,
       nzMaskClosable: false
     })

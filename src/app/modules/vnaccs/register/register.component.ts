@@ -35,7 +35,7 @@ import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { RouteStateService } from '../../../shared/services/clear-state.service'
 import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, skip } from 'rxjs'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { MenuService } from '../../../shared/services/menu.service'
 declare function initPlugin(comp: any): void
@@ -151,6 +151,15 @@ export class RegisterComponent implements OnInit {
       { validators: this.passwordMatchValidator.bind(this) }
     )
 
+    this.loginForm.valueChanges.subscribe(() => {
+      Object.keys(this.loginForm.controls).forEach((controlName) => {
+        const control = this.loginForm.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
+    })
+
     this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
       const taxCodeControl = this.loginForm.get('taxCode')
 
@@ -180,14 +189,32 @@ export class RegisterComponent implements OnInit {
     this.disableForm()
   }
 
+  responseFromCustom!: any
+  getResultResponseFromCustom() {
+    if (this.responseFromCustom.requestStatus === 2) {
+      return 'Chờ phê duyệt'
+    }
+    if (this.responseFromCustom.requestStatus === 3) {
+      return 'Hải quan chấp nhận'
+    }
+    if (this.responseFromCustom.requestStatus === 0) {
+      return 'Hải quan từ chối'
+    }
+    return ''
+  }
+
   determineMode(endpoint: string) {
     const state = history.state
     if (state) {
       if (state.data) {
+        this.responseFromCustom = state.responseFromCustom
+        console.log(this.responseFromCustom)
         this.dataToEditOrView = state.data
         if (this.dataToEditOrView) {
           this.applyDataToEditOrView(this.dataToEditOrView)
         }
+      } else {
+        this.menuSrv.setSelectedMenu('editAdminAcc')
       }
       if (state.requestStatus) {
         this.requestStatus = state.requestStatus
@@ -200,7 +227,6 @@ export class RegisterComponent implements OnInit {
       }
       case 'account-admin-update': {
         this.modeScreen = 'update'
-        this.menuSrv.setSelectedMenu('search')
         this.loginForm.disable()
         this.loginForm.get('email')?.enable()
         this.loginForm.get('digitalSignatureType')?.enable()
@@ -208,7 +234,6 @@ export class RegisterComponent implements OnInit {
       }
       case 'account-admin-detail': {
         this.modeScreen = 'detail'
-        this.menuSrv.setSelectedMenu('search')
         this.loginForm.disable()
         break
       }
@@ -408,7 +433,7 @@ export class RegisterComponent implements OnInit {
 
   getTaxCodeError(): string | undefined {
     const control = this.loginForm.get('taxCode')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mã số thuế không được để trống'
       }
@@ -421,7 +446,7 @@ export class RegisterComponent implements OnInit {
 
   getEmailError(): string | undefined {
     const control = this.loginForm.get('email')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control?.touched && control.invalid) {
       if (control.errors?.['required']) {
         return 'Email không được để trống'
       }
@@ -440,7 +465,7 @@ export class RegisterComponent implements OnInit {
       control.setValue(trimmedValue, { emitEvent: false })
     }
 
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu không được để trống'
       }
@@ -459,7 +484,7 @@ export class RegisterComponent implements OnInit {
       control.setValue(trimmedValue, { emitEvent: false })
     }
 
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control?.touched) {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu không được để trống'
       }
@@ -583,7 +608,7 @@ export class RegisterComponent implements OnInit {
 
   getNameCertError(): string | undefined {
     const control = this.loginForm.get('nameCert')
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control?.touched) {
       if (!control.getRawValue()) {
         return 'Tên chứng thư số không được để trống'
       }

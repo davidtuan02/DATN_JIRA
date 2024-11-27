@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common'
 import { STORAGE_KEYS } from '../../shared/constants/system.const'
 import { HeaderService } from './header.service'
 import { AuthService } from '../../shared/services/auth.service'
+import { MenuService } from '../../shared/services/menu.service'
 
 @Component({
   selector: 'app-header-vnaccs',
@@ -48,7 +49,8 @@ export class HeaderVnaccsComponent implements OnInit {
     private breadcrumcService: BreadcrumService,
     private headerSrv: HeaderService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    public menuSrv: MenuService
   ) {
     this.breadcrumcService.breadcrumb$.subscribe((breadcrumbs) => this.breadcrums.set(breadcrumbs))
   }

@@ -1,7 +1,7 @@
 <div class="header-container">
   <div class="header-left">
     <div class="left">
-      <div class="logo" [routerLink]="['/']" style="cursor: pointer">
+      <div class="logo" [routerLink]="['/']" style="cursor: pointer" (click)="menuSrv.setSelectedMenu('')">
         <img src=".././../../assets/images/logo_haiquan 1.png" alt="" />
       </div>
       <div class="logo-text">

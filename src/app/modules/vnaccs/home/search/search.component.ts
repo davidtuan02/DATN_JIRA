@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core'
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -102,9 +103,8 @@ export class SearchComponent {
     page: INIT_PAGE, //1
     size: INIT_SIZE //10
   }
-  paginateStart = 1 // Bắt đầu từ bản ghi nào
+  paginateStart = 1
   paginateEnd = 10
-  // Hàm cập nhật vị trí bản ghi hiển thị khi thay đổi trang
   updatePaginateRange() {
     this.paginateStart = (this.paginate.page - 1) * this.paginate.size + 1
     this.paginateEnd = Math.min(this.paginate.page * this.paginate.size, this.total)
@@ -155,8 +155,13 @@ export class SearchComponent {
         approvalFromDate: [''],
         approvalToDate: ['']
       },
-      { Validators: this.validateDate }
+      { validators: this.validateDate.bind(this) }
     )
+
+    this.form.get('startDateSubmit')?.valueChanges.subscribe((value) => {
+      console.log('Date changed:', value)
+      // Thêm logic xử lý
+    })
   }
 
   validateDate: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -167,42 +172,45 @@ export class SearchComponent {
 
     const errors: ValidationErrors = {}
 
-    if (startDateSubmit && endDateSubmit && new Date(startDateSubmit).getTime() > new Date(endDateSubmit).getTime()) {
-      errors['submitInvalidDateRange'] = true
+    if (startDateSubmit && endDateSubmit) {
+      if (new Date(startDateSubmit).getTime() > new Date(endDateSubmit).getTime()) {
+        // errors['submitInvalidDateRange'] = true;
+        this.form.get('startDateSubmit')?.setErrors({ submitInvalidDateRange: true })
+      } else {
+        this.form.get('startDateSubmit')?.setErrors(null)
+      }
     }
 
-    if (
-      approvalFromDate &&
-      approvalToDate &&
-      new Date(approvalFromDate).getTime() > new Date(approvalToDate).getTime()
-    ) {
-      errors['approvalInvalidDateRange'] = true
+    if (approvalFromDate && approvalToDate) {
+      if (new Date(approvalFromDate).getTime() > new Date(approvalToDate).getTime()) {
+        // errors['submitInvalidDateRange'] = true;
+        this.form.get('approvalFromDate')?.setErrors({ approvalInvalidDateRange: true })
+      } else {
+        this.form.get('approvalFromDate')?.setErrors(null)
+      }
     }
 
     return Object.keys(errors).length ? errors : null
   }
 
   getDateSubmitError(): string | undefined {
-    const fromDate = this.form.get('startDateSubmit')?.value
-    const toDate = this.form.get('endDateSubmit')?.value
-    if (fromDate && toDate && new Date(fromDate).getTime() > new Date(toDate).getTime()) {
+    const fromDate = this.form.get('startDateSubmit') as FormControl
+    if (fromDate.errors?.['submitInvalidDateRange']) {
       return 'Từ ngày phải nhỏ hơn hoặc bằng đến ngày'
     }
-    // if (fromDate?.touched && toDate?.touched) {
-    //   if (fromDate && toDate && new Date(fromDate).getTime() > new Date(toDate).getTime()) {
-    //     return 'loi r'
-    //   }
-    // }
     return undefined
   }
 
   getDateApprovalError(): string | undefined {
-    const fromDate = this.form.get('approvalFromDate')?.value
-    const toDate = this.form.get('approvalToDate')?.value
-    if (fromDate && toDate && new Date(fromDate).getTime() > new Date(toDate).getTime()) {
+    const fromDate = this.form.get('approvalFromDate') as FormControl
+    if (fromDate.errors?.['approvalInvalidDateRange']) {
       return 'Từ ngày phải nhỏ hơn hoặc bằng đến ngày'
     }
     return undefined
+  }
+
+  onDateChange(result: any): void {
+    console.log('Selected date:', result)
   }
 
   handleNavigate(mode: 'detail' | 'custom' | 'edit' | 'delete', data: any) {
@@ -226,7 +234,7 @@ export class SearchComponent {
                 this.router.navigate(['/vnaccs/home/account-admin-detail'], {
                   state: {
                     data: res.data,
-                    requestStatus: data.requestStatus
+                    responseFromCustom: data
                   }
                 })
               }
@@ -313,29 +321,41 @@ export class SearchComponent {
   }
 
   search() {
-    const body = {
-      requestType: this.form.get('requestType')?.value?.join(';'),
-      requestStatus: this.form.get('requestStatus')?.value?.join(';'),
-      requestNo: this.form.get('requestNo')?.value,
-      startDateSubmit: new Date(this.form.get('startDateSubmit')?.value).getTime(),
-      endDateSubmit: new Date(this.form.get('endDateSubmit')?.value).getTime(),
-      approvalFromDate: new Date(this.form.get('approvalFromDate')?.value).getTime(),
-      approvalToDate: new Date(this.form.get('approvalToDate')?.value).getTime(),
-      pageSize: this.paginate.size,
-      pageNo: this.paginate.page - 1
-    }
-    const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
-    let decoded: any
-    if (token) {
-      decoded = this.decodeToken(token)
-    }
-    this.searchSrv.search(decoded.sub, body).subscribe((res: any) => {
-      if (res && res.message === 'success') {
-        this.dataTable = res.data.content
-        this.total = res.data.totalElements
-        console.log(this.dataTable)
+    this.form.markAllAsTouched()
+    if (!this.form.invalid) {
+      const body = {
+        requestType: this.form.get('requestType')?.value?.join(';'),
+        requestStatus: this.form.get('requestStatus')?.value?.join(';'),
+        requestNo: this.form.get('requestNo')?.value,
+        startDateSubmit: this.form.get('startDateSubmit')?.value
+          ? new Date(this.form.get('startDateSubmit')?.value).getTime()
+          : null,
+        endDateSubmit: this.form.get('endDateSubmit')?.value
+          ? new Date(this.form.get('endDateSubmit')?.value).getTime()
+          : null,
+        approvalFromDate: this.form.get('approvalFromDate')?.value
+          ? new Date(this.form.get('approvalFromDate')?.value).getTime()
+          : null,
+        approvalToDate: this.form.get('approvalToDate')?.value
+          ? new Date(this.form.get('approvalToDate')?.value).getTime()
+          : null,
+        pageSize: this.paginate.size,
+        pageNo: this.paginate.page - 1
       }
-    })
+      const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
+      let decoded: any
+      if (token) {
+        decoded = this.decodeToken(token)
+      }
+      this.searchSrv.search(decoded.sub, body).subscribe((res: any) => {
+        if (res && res.message === 'success') {
+          this.dataTable = res.data.content
+          this.total = res.data.totalElements
+        }
+      })
+    } else {
+      console.log('Form is invalid!')
+    }
   }
 
   decodeToken(token: string): any {
@@ -358,9 +378,6 @@ export class SearchComponent {
         const subValue = decodedPayload.sub.split(';')[1] // Lấy phần đầu tiên trước dấu ";"
         decodedPayload.sub = subValue // Cập nhật lại giá trị "sub"
       }
-
-      // In payload ra console để kiểm tra
-      console.log(decodedPayload)
 
       return decodedPayload
     } catch (error) {

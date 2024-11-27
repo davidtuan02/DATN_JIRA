@@ -107,7 +107,7 @@ export class ChangePassComponent implements OnInit {
   ngOnInit(): void {}
   loadForm() {
     this.authService.taxCode$.subscribe((taxCode) => {
-      const taxCodeStorage = localStorage.getItem(STORAGE_KEYS.TAX_CODE)!
+      const taxCodeStorage = localStorage.getItem(STORAGE_KEYS.TAX_CODE) || taxCode
       this.loginForm = this.fb.group(
         {
           taxCode: [taxCodeStorage, [Validators.required]],
@@ -131,6 +131,15 @@ export class ChangePassComponent implements OnInit {
         { validators: this.passwordMatchValidator.bind(this) }
       )
 
+      this.loginForm.valueChanges.subscribe(() => {
+        Object.keys(this.loginForm.controls).forEach((controlName) => {
+          const control = this.loginForm.get(controlName)
+          if (control?.value && !control.touched) {
+            control.markAsTouched()
+          }
+        })
+      })
+
       this.loginForm.get('digitalSignatureType')?.valueChanges.subscribe((type) => {
         const taxCodeControl = this.loginForm.get('taxCode')
 
@@ -147,6 +156,15 @@ export class ChangePassComponent implements OnInit {
 
       this.getCTSForm = this.fb.group({
         msAcc: ['', [Validators.required]]
+      })
+
+      this.getCTSForm.valueChanges.subscribe(() => {
+        Object.keys(this.getCTSForm.controls).forEach((controlName) => {
+          const control = this.getCTSForm.get(controlName)
+          if (control?.value && !control.touched) {
+            control.markAsTouched()
+          }
+        })
       })
 
       this.getCTSForm.get('msAcc')?.valueChanges.subscribe((value) => {
@@ -300,7 +318,7 @@ export class ChangePassComponent implements OnInit {
 
   getPassError() {
     const control = this.loginForm.get('password')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu hiện tại không được để trống'
       }
@@ -309,7 +327,7 @@ export class ChangePassComponent implements OnInit {
   }
   getNewPassError() {
     const control = this.loginForm.get('newPassword')
-    if (control?.touched && control.invalid) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Mật khẩu mới không được để trống'
       }
@@ -322,7 +340,7 @@ export class ChangePassComponent implements OnInit {
   getConfirmPassError(): string | undefined {
     const control = this.loginForm.get('confirmPassword')
     console.log(control?.errors)
-    if (control?.touched) {
+    if ((control?.touched || control?.dirty) && control.invalid) {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu mới không được để trống'
       }

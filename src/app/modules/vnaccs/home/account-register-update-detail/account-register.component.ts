@@ -402,6 +402,7 @@ export class AccountRegisterComponent {
         formGroup.get(toDateField)?.setErrors({ dateRangeInvalid: true })
       } else {
         formGroup.get(fromDateField)?.setErrors(null)
+        formGroup.get(toDateField)?.setErrors(null)
       }
       return null
     }

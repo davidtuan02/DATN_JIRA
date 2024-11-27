@@ -250,7 +250,6 @@ export class SendCustomComponent {
     if (state && state.data) {
       id = state.data.id
     }
-    console.log(id)
     const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
     let decoded: any
     if (token) {
@@ -277,7 +276,8 @@ export class SendCustomComponent {
 
     this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
       if (res && res.success) {
-        this.isSigned = true
+        this.isSigned = true;
+        this.form.get('fullName')?.disable();
       }
     })
   }

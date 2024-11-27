@@ -209,10 +209,6 @@ export class SearchComponent {
     return undefined
   }
 
-  onDateChange(result: any): void {
-    console.log('Selected date:', result)
-  }
-
   handleNavigate(mode: 'detail' | 'custom' | 'edit' | 'delete', data: any) {
     switch (mode) {
       case 'detail': {

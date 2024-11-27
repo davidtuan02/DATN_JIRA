@@ -57,3 +57,30 @@ nz-range-picker {
   border-radius: 50%; /* Bo tròn các item */
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+
+::ng-deep .ant-pagination.ant-pagination-mini .ant-pagination-options-size-changer {
+  display: flex !important;
+  align-items: center !important;
+}
+
+::ng-deep .ant-picker-large {
+  top: 6px;
+  background: transparent !important;
+  border: none !important;
+}
+
+::ng-deep .ant-picker.ng-touched.ng-invalid, nz-date-picker.ng-dirty.ng-invalid {
+  border: none !important;
+}
+
+::ng-deep .ant-picker-status-error.ant-picker, .ant-picker-status-error.ant-picker:not(.ant-picker-disabled):hover {
+  background: transparent !important;
+}
+
+::ng-deep .ant-picker-status-error.ant-picker, .ant-picker-status-error.ant-picker[_ngcontent-ng-c2897177930]:not(.ant-picker-disabled):hover {
+  background: transparent !important;
+}
+
+
+
+

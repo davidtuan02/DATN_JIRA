@@ -98,7 +98,7 @@ export class SearchComponent {
 
   // table
   dataTable: any[] = []
-  total: number = 5
+  total: number = 0
   paginate = {
     page: INIT_PAGE, //1
     size: INIT_SIZE //10

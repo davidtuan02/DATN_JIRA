@@ -11,6 +11,8 @@ import { AccountInformationService } from '../account-information.service'
 import { RouterLink } from '@angular/router'
 import { debounceTime, Subject } from 'rxjs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { INIT_PAGE, INIT_SIZE } from '../../../../shared/components/common.const'
 
 @Component({
   selector: 'app-computer',
@@ -25,48 +27,96 @@ import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
     NzTableModule,
     NzDividerModule,
     RouterLink,
-    AutoTrimDirective
+    AutoTrimDirective,
+    NzPaginationModule
   ]
 })
 export class ComputerComponent {
-  searchKey!: any
-  total: number = 0
-  listOfData: any[] = []
   token = localStorage.getItem(STORAGE_KEYS.TOKEN)!
-  searchSubject: Subject<string> = new Subject<string>()
-  backuplistOfData: any[] = []
+  backuplistOfData: any[] = [] // Dữ liệu gốc từ API
+  filteredListOfData: any[] = [] // Dữ liệu sau khi lọc
+  listOfData: any[] = [] // Dữ liệu hiển thị trên giao diện
+  total: number = 0 // Tổng số dữ liệu (sau khi lọc)
+  searchSubject = new Subject<string>()
+  searchKey: string = '' // Chuỗi tìm kiếm
+  paginate = {
+    page: 1, // Trang hiện tại
+    size: 10 // Số bản ghi trên mỗi trang
+  }
 
   constructor(private accInfoSrv: AccountInformationService) {}
+
   ngOnInit() {
     this.accInfoSrv.getTerminalAccessKy(this.decodeToken(this.token).sub).subscribe((res: any) => {
       if (res && res.errorCode == 0) {
-        this.listOfData = res.data
-        this.total = this.listOfData.length
         this.backuplistOfData = res.data
+        this.filteredListOfData = [...this.backuplistOfData] // Ban đầu, dữ liệu lọc là toàn bộ
+        this.total = this.filteredListOfData.length // Tổng số bản ghi sau khi lọc
+        this.updatePaginatedData() // Cập nhật trang đầu tiên
       }
     })
 
-    this.searchSubject
-      .pipe(debounceTime(1000)) // Đợi 1 giây sau khi dừng nhập
-      .subscribe((searchText) => {
-        this.filterList(searchText) // Gọi hàm lọc khi hết thời gian chờ
-      })
+    this.searchSubject.pipe(debounceTime(1000)).subscribe((searchText) => {
+      this.filterList(searchText) // Gọi hàm lọc sau khi nhập xong
+    })
   }
-  onSearch(searchText: string) {
+
+  onSearch(searchText: string): void {
+    this.searchKey = searchText // Cập nhật chuỗi tìm kiếm
     this.searchSubject.next(searchText)
   }
 
-  filterList(searchText: string) {
+  // Hiển thị dữ liệu phù hợp với trang hiện tại
+  updatePaginatedData(): void {
+    const startIndex = (this.paginate.page - 1) * this.paginate.size
+    const endIndex = startIndex + this.paginate.size
+    this.listOfData = this.filteredListOfData.slice(startIndex, endIndex)
+  }
+
+  // Khi thay đổi trang
+  pageChange(newPage: number): void {
+    this.paginate.page = newPage // Cập nhật trang hiện tại
+    this.updatePaginatedData() // Cập nhật dữ liệu hiển thị
+  }
+
+  // Khi thay đổi số lượng mục trên mỗi trang
+  sizeChange(newSize: number): void {
+    this.paginate.size = newSize // Cập nhật số bản ghi trên mỗi trang
+    this.paginate.page = 1 // Reset về trang đầu tiên
+    this.updatePaginatedData() // Cập nhật dữ liệu hiển thị
+  }
+
+  // Lọc dữ liệu dựa trên chuỗi tìm kiếm
+  filterList(searchText: string): void {
     const trimmedSearchText = searchText.toLowerCase().trim()
+
     if (!trimmedSearchText) {
-      // Reset to the original list if search text is empty
-      this.listOfData = this.backuplistOfData
+      // Nếu không có chuỗi tìm kiếm, reset dữ liệu
+      this.filteredListOfData = [...this.backuplistOfData]
     } else {
       const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      this.listOfData = this.backuplistOfData.filter(
-        (data) => regex.test(data.terminalId.toLowerCase()) || regex.test(data.accessKey.toLowerCase())
+      this.filteredListOfData = this.backuplistOfData.filter(
+        (data) => regex.test(data.terminalId?.toLowerCase() || '') || regex.test(data.accessKey?.toLowerCase() || '')
       )
     }
+
+    // Cập nhật tổng số bản ghi
+    this.total = this.filteredListOfData.length
+
+    // Kiểm tra trang hiện tại
+    const maxPage = Math.ceil(this.total / this.paginate.size)
+    if (this.paginate.page > maxPage) {
+      this.paginate.page = 1 // Reset về trang đầu nếu trang hiện tại không hợp lệ
+    }
+
+    // Cập nhật dữ liệu hiển thị
+    this.updatePaginatedData()
+  }
+
+  getDisplayRange(): string {
+    const start = (this.paginate.page - 1) * this.paginate.size + 1
+    const end = Math.min(this.paginate.page * this.paginate.size, this.total)
+    return `${start}-${end}`
   }
 
   decodeToken(token: string): any {

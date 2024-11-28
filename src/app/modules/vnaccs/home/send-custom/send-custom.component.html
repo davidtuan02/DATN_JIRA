@@ -286,14 +286,6 @@
             >
               Hủy bỏ
             </button>
-            <!-- <button
-            *ngIf="isAbleBtnSign"
-            type="button"
-            class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
-            style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
-          >
-            Ký chữ ký số
-          </button> -->
             <button
               *ngIf="isSigned"
               type="button"
@@ -304,22 +296,15 @@
               Gửi Hải quan
             </button>
             <button
+              disabled
               *ngIf="!isSigned"
+              [disabled]="!form.getRawValue().nameCert && !form.getRawValue().digitalSignature"
               type="submit"
               class="text-white font-inter-600 flex items-center justify-center gap-[8px] common-button"
               style="height: 40px; width: 145px; background-color: #1944a7; font-size: 14px; border-radius: 8px"
             >
               Ký chữ ký số
             </button>
-            <!-- <button
-            *ngIf="!isAbleBtnSign"
-            disabled="true"
-            type="button"
-            class="text-white font-inter-600 flex items-center justify-center gap-[8px]"
-            style="height: 40px; width: 145px; background-color: #5e80d1; font-size: 14px; border-radius: 8px"
-          >
-            Ký chữ ký số
-          </button> -->
           </div>
         </nz-row>
       </form>

@@ -456,6 +456,7 @@
             color: #1944a7 !important;
             font-size: 14px;
             border-radius: 8px;
+            border: 1px solid #1944a7
           ">
           Quay lại
         </button>
@@ -522,12 +523,12 @@
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px" [nzSuffix]="nameClearTpl">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="fullNameClearTpl">
               <input autoTrim type="text" nz-input placeholder="Nhập họ tên" formControlName="fullName"
                 maxlength="50" />
             </nz-input-group>
-            <ng-template #nameClearTpl>
-              @if (formValidateUserId.get('fullName')?.value) {
+            <ng-template #fullNameClearTpl>
+              @if (formValidateUserId.get('fullName')?.value && formValidateUserId.get('fullName')?.enabled) {
               <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                 (click)="formValidateUserId.get('fullName')?.setValue(null)"></span>
               }
@@ -544,7 +545,7 @@
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
             <ng-template #emailClearTpl>
-              @if (formValidateUserId.get('email')?.value) {
+              @if (formValidateUserId.get('email')?.value && formValidateUserId.get('email')?.enabled) {
               <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                 (click)="formValidateUserId.get('email')?.setValue(null)"></span>
               }
@@ -567,12 +568,12 @@
           <!-- Ho ten  -->
           <nz-col nzSpan="12">
             <label for="" class="custom-label">Họ tên <span style="color: #ed5564">*</span></label>
-            <nz-input-group style="border-radius: 8px" [nzSuffix]="nameClearTpl">
+            <nz-input-group style="border-radius: 8px" [nzSuffix]="fullNameClearTpl">
               <input autoTrim type="text" nz-input placeholder="Nhập họ tên" formControlName="fullName"
                 maxlength="50" />
             </nz-input-group>
-            <ng-template #nameClearTpl>
-              @if (formValidateUserId.get('fullName')?.value) {
+            <ng-template #fullNameClearTpl>
+              @if (formValidateUserId.get('fullName')?.value && formValidateUserId.get('fullName')?.enabled) {
               <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                 (click)="formValidateUserId.get('fullName')?.setValue(null)"></span>
               }
@@ -609,7 +610,7 @@
               <input autoTrim type="text" nz-input placeholder="Nhập email" maxlength="150" formControlName="email" />
             </nz-input-group>
             <ng-template #emailClearTpl>
-              @if (formValidateUserId.get('email')?.value) {
+              @if (formValidateUserId.get('email')?.value && formValidateUserId.get('email')?.enabled) {
               <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                 (click)="formValidateUserId.get('email')?.setValue(null)"></span>
               }
@@ -647,12 +648,6 @@
           <p *ngIf="getIdTypeValidateError()" style="max-height: 0" class="text-danger fs-14">
             {{ getIdTypeValidateError() }}
           </p>
-
-          <!-- <nz-select nzAllowClear nzSize="large" formControlName="representativeIdType">
-            <nz-option *ngFor="let option of optionRepresent" [nzValue]="option.value" [nzLabel]="option.label"
-              style="background-color: #1944A7;">
-            </nz-option>
-          </nz-select> -->
         </nz-col>
         <!-- so cmnd/cccd  -->
         <nz-col nzSpan="12">
@@ -662,7 +657,7 @@
               formControlName="idNo" />
           </nz-input-group>
           <ng-template #idnoClearTpl>
-            @if (formValidateUserId.get('idNo')?.value) {
+            @if (formValidateUserId.get('idNo')?.value && formValidateUserId.get('idNo')?.enabled) {
             <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
               (click)="formValidateUserId.get('idNo')?.setValue(null)"></span>
             }

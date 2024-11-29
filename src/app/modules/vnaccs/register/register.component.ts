@@ -208,7 +208,6 @@ export class RegisterComponent implements OnInit {
     if (state) {
       if (state.data) {
         this.responseFromCustom = state.responseFromCustom
-        console.log(this.responseFromCustom)
         this.dataToEditOrView = state.data
         if (this.dataToEditOrView) {
           this.applyDataToEditOrView(this.dataToEditOrView)
@@ -216,8 +215,8 @@ export class RegisterComponent implements OnInit {
       } else {
         this.menuSrv.setSelectedMenu('editAdminAcc')
       }
-      if (state.requestStatus) {
-        this.requestStatus = state.requestStatus
+      if (this.responseFromCustom && this.responseFromCustom.requestStatus) {
+        this.requestStatus = this.responseFromCustom.requestStatus;
       }
     }
     switch (endpoint) {

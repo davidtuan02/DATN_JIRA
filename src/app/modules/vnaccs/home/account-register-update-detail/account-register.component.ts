@@ -33,6 +33,7 @@ import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { MenuService } from '../../../../shared/services/menu.service'
+import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -564,7 +565,7 @@ export class AccountRegisterComponent {
   }
 
   filterList(searchText: string) {
-    const trimmedSearchText = searchText.toLowerCase().trim()
+    const trimmedSearchText = convertVNStr(searchText.toLowerCase().trim())
     if (!trimmedSearchText) {
       this.dataTable = this.backupDataTable
     } else {
@@ -773,7 +774,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('credentialId')?.setValue(data?.credentialId)
     this.formValidateUserId.get('taxCodeCTS')?.setValue(data?.taxCodeCTS)
 
-    this.initialRadioValue$.next(this.form.value.representativeIdType)
+    this.initialRadioValue$.next(this.radioValue)
   }
 
   submitValidateUserId() {

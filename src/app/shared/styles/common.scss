@@ -1,3 +1,12 @@
+.ant-tabs-tab:hover {
+  color: #1944a7 !important;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active {
+  border-bottom: 2px solid #1944a7 !important;
+  z-index: 9999;
+}
+
 .ant-input-affix-wrapper {
   border-radius: 8px !important;
 }

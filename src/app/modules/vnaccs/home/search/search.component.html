@@ -74,13 +74,13 @@
             <nz-form-label class="custom-label" style="margin-bottom: -3px" [nzSpan]="24">Ngày gửi</nz-form-label>
             <nz-form-control class="mt-[-10px] flex flex-column gap-1">
               <div class="custom-range-picker">
-                <nz-input-group [nzPrefix]="submitFromDateClearTpl">
+                <nz-input-group>
                   <nz-date-picker
                     [nzFormat]="dateFormat"
                     [nzPlaceHolder]="'dd/mm/yyyy'"
                     [nzDisabledDate]="disabledDate"
                     [nzSuffixIcon]="suffixDate"
-                    nzAllowClear="false"
+                    nzAllowClear="true"
                     formControlName="startDateSubmit"
                     nzSize="large"
                     class="custom-date-picker"
@@ -109,13 +109,13 @@
                   </svg>
                 </div>
 
-                <nz-input-group [nzPrefix]="submitToDateClearTpl">
+                <nz-input-group>
                   <nz-date-picker
                     [nzFormat]="dateFormat"
                     [nzPlaceHolder]="'dd/mm/yyyy'"
                     [nzDisabledDate]="disabledDate"
                     [nzSuffixIcon]="suffixDate"
-                    nzAllowClear="false"
+                    nzAllowClear="true"
                     formControlName="endDateSubmit"
                     nzSize="large"
                     class="custom-date-picker"
@@ -148,13 +148,13 @@
             <nz-form-label class="custom-label" style="margin-bottom: -3px" [nzSpan]="24">Ngày phê duyệt</nz-form-label>
             <nz-form-control class="mt-[-10px] flex flex-column gap-1">
               <div class="custom-range-picker">
-                <nz-input-group [nzPrefix]="approvalFromDateClearTpl">
+                <nz-input-group>
                   <nz-date-picker
                     [nzFormat]="dateFormat"
                     [nzPlaceHolder]="'dd/mm/yyyy'"
                     [nzDisabledDate]="disabledDate"
                     [nzSuffixIcon]="suffixDate"
-                    nzAllowClear="false"
+                    nzAllowClear="true"
                     formControlName="approvalFromDate"
                     nzSize="large"
                     class="custom-date-picker"
@@ -186,13 +186,13 @@
                   </svg>
                 </div>
 
-                <nz-input-group [nzPrefix]="approvalToDateClearTpl">
+                <nz-input-group>
                   <nz-date-picker
                     [nzFormat]="dateFormat"
                     [nzPlaceHolder]="'dd/mm/yyyy'"
                     [nzDisabledDate]="disabledDate"
                     [nzSuffixIcon]="suffixDate"
-                    nzAllowClear="false"
+                    nzAllowClear="true"
                     formControlName="approvalToDate"
                     nzSize="large"
                     class="custom-date-picker"

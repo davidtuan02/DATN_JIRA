@@ -255,13 +255,13 @@
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Ngày hết hiệu lực User code</label>
-          <nz-input-group style="border-radius: 8px" [nzPrefix]="userCodeDateClearTpl">
+          <nz-input-group style="border-radius: 8px">
             <nz-date-picker
               nzDropdownStyle="{ position: 'relative', zIndex: 2000 }"
               nzSize="large"
               [nzFormat]="dateFormat"
               [nzPlaceHolder]="'dd/mm/yyyy'"
-              [nzAllowClear]="false"
+              [nzAllowClear]="true"
               [nzDisabledDate]="disabledDate"
               [nzSuffixIcon]="suffixDate"
               class="custom-date-picker"
@@ -1027,12 +1027,12 @@
           <label for="" class="custom-label"
             >Thời gian hiệu lực khai báo hải quan <span style="color: #ed5564">*</span></label
           >
-          <nz-input-group style="border-radius: 8px" [nzPrefix]="submitFromDateClearTpl">
+          <nz-input-group style="border-radius: 8px">
             <nz-date-picker
               nzSize="large"
               [nzFormat]="dateFormat"
               [nzPlaceHolder]="'dd/mm/yyyy'"
-              [nzAllowClear]="false"
+              [nzAllowClear]="true"
               [nzSuffixIcon]="suffixDate"
               class="custom-date-picker"
               style="width: 100%"
@@ -1062,12 +1062,12 @@
           <label for="" class="custom-label"
             >Thời gian hết hiệu lực khai báo hải quan <span style="color: #ed5564">*</span></label
           >
-          <nz-input-group style="border-radius: 8px" [nzPrefix]="submitToDateClearTpl">
+          <nz-input-group style="border-radius: 8px">
             <nz-date-picker
               nzSize="large"
               [nzFormat]="dateFormat"
               [nzPlaceHolder]="'dd/mm/yyyy'"
-              [nzAllowClear]="false"
+              [nzAllowClear]="true"
               [nzSuffixIcon]="suffixDate"
               class="custom-date-picker"
               style="width: 100%"

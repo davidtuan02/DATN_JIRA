@@ -816,6 +816,7 @@ export class AccountRegisterComponent {
   }
 
   submitValidateUserId() {
+    console.log(this.formValidateUserId.value)
     this.formValidateUserId.markAllAsTouched()
     const rawFormData = this.formValidateUserId.getRawValue()
     if (

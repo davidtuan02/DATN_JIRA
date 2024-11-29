@@ -67,23 +67,23 @@ nz-range-picker {
   align-items: center !important;
 }
 
-::ng-deep .ant-picker-large {
-  top: 6px;
-  background: transparent !important;
-  border: none !important;
-}
+// ::ng-deep .ant-picker-large {
+//   top: 6px;
+//   background: transparent !important;
+//   border: none !important;
+// }
 
-::ng-deep .ant-picker.ng-touched.ng-invalid,
-nz-date-picker.ng-dirty.ng-invalid {
-  border: none !important;
-}
+// ::ng-deep .ant-picker.ng-touched.ng-invalid,
+// nz-date-picker.ng-dirty.ng-invalid {
+//   border: none !important;
+// }
 
-::ng-deep .ant-picker-focused {
-  border: none !important;
-  box-shadow: none !important;
-}
+// ::ng-deep .ant-picker-focused {
+//   border: none !important;
+//   box-shadow: none !important;
+// }
 
-::ng-deep .ant-picker:hover {
-  border: none !important;
-  box-shadow: none !important;
-}
+// ::ng-deep .ant-picker:hover {
+//   border: none !important;
+//   box-shadow: none !important;
+// }

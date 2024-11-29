@@ -131,9 +131,9 @@ export class UpdateSignatureComponent implements OnInit {
         const taxCodeControl = this.loginForm.get('taxCode')
 
         if (type === '1') {
-          taxCodeControl?.setValidators([Validators.required, Validators.pattern(/^\d{10}(-\d{3})?$/)])
+          taxCodeControl?.setValidators([Validators.required, Validators.pattern(/^\d{0,13}-?\d{0,13}$/)])
         } else if (type === '2') {
-          taxCodeControl?.setValidators([Validators.required, Validators.pattern(/^\d{1,13}$/)])
+          taxCodeControl?.setValidators([Validators.required, Validators.pattern(/^\d{0,13}-?\d{0,13}$/)])
         } else {
           taxCodeControl?.setValidators([Validators.required])
         }
@@ -491,7 +491,7 @@ export class UpdateSignatureComponent implements OnInit {
   patchValueToForm(key: string, value: any) {
     if (value) {
       if (key === 'effectiveDate' || key === 'expiryDate') {
-        this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormat(value)))
+        this.loginForm.get(key)?.setValue(this.formatDateFromString(this.convertDateFormatv2(value)))
       } else this.loginForm.get(key)?.setValue(value)
     }
   }
@@ -513,9 +513,9 @@ export class UpdateSignatureComponent implements OnInit {
     }
   }
 
-  convertDateFormat(dateStr: string): string {
+  convertDateFormatv2(dateStr: string): string {
     // Parse the input date string in "dd/MM/yyyy HH:mm" format
-    const [day, month, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
+    const [month, day, year, hour, minute] = dateStr.match(/\d+/g)!.map(Number)
 
     // Create a Date object
     const date = new Date(year, month - 1, day, hour, minute)
@@ -530,8 +530,7 @@ export class UpdateSignatureComponent implements OnInit {
 
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
-
-    return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+    return `${yyyy}${MM}${dd}${HH}${mm}${ss}${timezoneOffset}`
   }
   checkEffectiveDate(input: string) {
     const date = new Date(input).setHours(0,0,0,0);

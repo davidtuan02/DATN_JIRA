@@ -1,5 +1,9 @@
 @import '../../../../shared/styles/variable';
 
+::ng-deep .ant-modal-content {
+  border-radius: 8px;
+}
+
 nz-select {
   width: 100%;
 }

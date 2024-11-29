@@ -66,6 +66,27 @@ nz-date-picker {
 
 textarea {
   height: 100% !important;
+  resize: vertical !important;
+}
+
+::ng-deep .ant-picker-large {
+  background: transparent !important;
+  border: none !important;
+}
+
+::ng-deep .ant-picker.ng-touched.ng-invalid,
+nz-date-picker.ng-dirty.ng-invalid {
+  border: none !important;
+}
+
+::ng-deep .ant-picker-focused {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ant-picker:hover {
+  border: none !important;
+  box-shadow: none !important;
 }
 
 // ::ng-deep .ant-input-affix-wrapper:not(textarea) {

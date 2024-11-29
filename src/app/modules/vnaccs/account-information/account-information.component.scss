@@ -1,1 +1,5 @@
-@import "../../../shared/styles/variable";
+@import '../../../shared/styles/variable';
+
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1944a7 !important;
+}

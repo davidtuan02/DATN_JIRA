@@ -32,6 +32,8 @@ import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../../shared/services/menu.service'
+import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -156,7 +158,8 @@ export class AccountInfoComponent {
     private dialogService: DialogService,
     private router: Router,
     private authSrv: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public menuSrv: MenuService
   ) {}
 
   ngOnInit(): void {
@@ -199,6 +202,7 @@ export class AccountInfoComponent {
     this.accReSrv.getListUserId(this.decodeToken(token).sub).subscribe((res: any) => {
       if (res && res.errorCode == 0) {
         this.dataTable = res.data
+        this.backupDataTable = res.data
       }
     })
     this.form.disable()
@@ -436,18 +440,19 @@ export class AccountInfoComponent {
   }
 
   filterList(searchText: string) {
-    const trimmedSearchText = searchText.toLowerCase().trim()
+    const trimmedSearchText = convertVNStr(searchText.toLowerCase().trim())
     if (!trimmedSearchText) {
       this.dataTable = this.backupDataTable
     } else {
       const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      this.dataTable = this.backupDataTable.filter(
-        (data) =>
-          regex.test(data.fullName.toLowerCase()) ||
-          regex.test(data.idNo.toLowerCase()) ||
-          regex.test(data.email.toLowerCase())
-      )
+      this.dataTable = this.backupDataTable.filter((data) => {
+        const normalizedFullName = convertVNStr(data.fullName.toLowerCase())
+        const normalizedIdNo = convertVNStr(data.idNo.toLowerCase())
+        const normalizedEmail = convertVNStr(data.email.toLowerCase())
+        return regex.test(normalizedFullName) || regex.test(normalizedIdNo) || regex.test(normalizedEmail)
+      })
     }
+    this.cdr.detectChanges()
   }
 
   calculateTotal(): void {

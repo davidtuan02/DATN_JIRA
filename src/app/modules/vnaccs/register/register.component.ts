@@ -216,7 +216,7 @@ export class RegisterComponent implements OnInit {
         this.menuSrv.setSelectedMenu('editAdminAcc')
       }
       if (this.responseFromCustom && this.responseFromCustom.requestStatus) {
-        this.requestStatus = this.responseFromCustom.requestStatus;
+        this.requestStatus = this.responseFromCustom.requestStatus
       }
     }
     switch (endpoint) {

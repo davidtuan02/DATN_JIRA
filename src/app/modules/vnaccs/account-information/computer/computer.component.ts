@@ -13,6 +13,9 @@ import { debounceTime, Subject } from 'rxjs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { INIT_PAGE, INIT_SIZE } from '../../../../shared/components/common.const'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../../shared/services/menu.service'
+import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
 
 @Component({
   selector: 'app-computer',
@@ -28,7 +31,8 @@ import { INIT_PAGE, INIT_SIZE } from '../../../../shared/components/common.const
     NzDividerModule,
     RouterLink,
     AutoTrimDirective,
-    NzPaginationModule
+    NzPaginationModule,
+    NzIconModule
   ]
 })
 export class ComputerComponent {
@@ -44,7 +48,7 @@ export class ComputerComponent {
     size: 10 // Số bản ghi trên mỗi trang
   }
 
-  constructor(private accInfoSrv: AccountInformationService) {}
+  constructor(private accInfoSrv: AccountInformationService, public menuSrv: MenuService) {}
 
   ngOnInit() {
     this.accInfoSrv.getTerminalAccessKy(this.decodeToken(this.token).sub).subscribe((res: any) => {
@@ -88,16 +92,27 @@ export class ComputerComponent {
 
   // Lọc dữ liệu dựa trên chuỗi tìm kiếm
   filterList(searchText: string): void {
-    const trimmedSearchText = searchText.toLowerCase().trim()
+    // Làm sạch chuỗi tìm kiếm
+    const trimmedSearchText = convertVNStr(
+      searchText
+        .toLowerCase()
+        .trim()
+        .replace(/[.*+?^${}()|[\]\\]/g, '')
+    )
 
     if (!trimmedSearchText) {
       // Nếu không có chuỗi tìm kiếm, reset dữ liệu
       this.filteredListOfData = [...this.backuplistOfData]
     } else {
-      const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      this.filteredListOfData = this.backuplistOfData.filter(
-        (data) => regex.test(data.terminalId?.toLowerCase() || '') || regex.test(data.accessKey?.toLowerCase() || '')
-      )
+      // Lọc danh sách với dữ liệu đã được làm sạch
+      this.filteredListOfData = this.backuplistOfData.filter((data) => {
+        // Làm sạch dữ liệu để so khớp
+        const cleanedTerminalId = convertVNStr(data.terminalId?.toLowerCase() || '').replace(/[.*+?^${}()|[\]\\]/g, '')
+        const cleanedAccessKey = convertVNStr(data.accessKey?.toLowerCase() || '').replace(/[.*+?^${}()|[\]\\]/g, '')
+
+        // So khớp chuỗi đã được làm sạch
+        return cleanedTerminalId.includes(trimmedSearchText) || cleanedAccessKey.includes(trimmedSearchText)
+      })
     }
 
     // Cập nhật tổng số bản ghi

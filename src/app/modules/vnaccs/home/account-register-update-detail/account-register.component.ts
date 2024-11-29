@@ -192,7 +192,6 @@ export class AccountRegisterComponent {
         }
         case 'account-update': {
           this.modeScreen = 'update'
-          this.menuSrv.setSelectedMenu('search')
           this.getDataToEditAcc()
           this.form.enable()
           this.form.get('numberComputer')?.disable()
@@ -231,7 +230,6 @@ export class AccountRegisterComponent {
         customsDepartmentNote: state.data.customsDepartmentNote,
         approvalTime: state.data.approvalTime
       }
-      // console.log(this.dataResponse)
     }
     if (state && state.data && state.data.id) {
       if (state.data.body) {
@@ -251,11 +249,12 @@ export class AccountRegisterComponent {
         this.form.get('userCodeExpiryDate')?.setValue(state.data.body.userCodeExpiryDate)
         this.calculateTotal()
         this.dataTable = state.data.body.userIdResponses
+        this.backupDataTable = state.data.body.userIdResponses
+        this.menuSrv.setSelectedMenu('editAcc')
       } else {
         this.accReSrv.viewDetailRequestRegister(state.data.id).subscribe((res: any) => {
           if (res && res.message === 'success') {
             this.responseFromCustom = state.data.requestStatus
-            // this.dataFromSearch = state.data
             this.dataFromSearch = res.data
             this.form.get('userCode')?.setValue(res?.data?.userCode)
             this.form.get('representativeName')?.setValue(res?.data?.representativeName)
@@ -270,6 +269,7 @@ export class AccountRegisterComponent {
             this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
             this.calculateTotal()
             this.dataTable = res?.data?.requestUserIds
+            this.menuSrv.setSelectedMenu('search')
           }
         })
       }
@@ -570,13 +570,14 @@ export class AccountRegisterComponent {
       this.dataTable = this.backupDataTable
     } else {
       const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      this.dataTable = this.backupDataTable.filter(
-        (data) =>
-          regex.test(data.fullName.toLowerCase()) ||
-          regex.test(data.idNo.toLowerCase()) ||
-          regex.test(data.email.toLowerCase())
-      )
+      this.dataTable = this.backupDataTable.filter((data) => {
+        const normalizedFullName = convertVNStr(data.fullName.toLowerCase())
+        const normalizedIdNo = convertVNStr(data.idNo.toLowerCase())
+        const normalizedEmail = convertVNStr(data.email.toLowerCase())
+        return regex.test(normalizedFullName) || regex.test(normalizedIdNo) || regex.test(normalizedEmail)
+      })
     }
+    this.cdr.detectChanges()
   }
 
   calculateTotal(): void {

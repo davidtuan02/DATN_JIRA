@@ -383,11 +383,11 @@ function getCertifcate(comp) {
         });
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqSNB = new XMLHttpRequest();
-        } else {// code for IE6, IE5
+          getCertValidDate(comp);
           getCertExpireDate(comp);
           getCertCommonName(comp);
           getCertDN(comp);
-          getCertValidDate(comp);
+        } else {// code for IE6, IE5
           ReqSNB = new ActiveXObject("Microsoft.XMLHTTP");
         }
         ReqSNB.onerror = () => {

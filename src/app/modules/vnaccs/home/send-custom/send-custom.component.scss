@@ -129,9 +129,9 @@ button {
   content: '1';
 }
 
-::ng-deep .anticon {
-  display: none;
-}
+//::ng-deep .anticon {
+//  display: none;
+//}
 
 ::ng-deep .ant-steps-item-finish .ant-steps-item-icon::before {
   content: '1' !important;

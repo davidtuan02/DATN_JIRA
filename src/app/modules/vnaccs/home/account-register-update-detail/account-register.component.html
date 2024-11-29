@@ -763,7 +763,7 @@
         <!-- Tên chứng thư số -->
         <ng-template #vtsign>
           <nz-col nzSpan="12">
-            <label for="" class="custom-label">Tên chứng thư số <span style="color: #ed5564">*</span></label>
+            <label for="" class="custom-label">Tên chứng thư số - {{formValidateUserId.get('digitalSignature')?.value}} <span style="color: #ed5564">*</span></label>
             <nz-input-group style="border-radius: 8px">
               <input text nz-input maxlength="13" formControlName="nameCert" />
             </nz-input-group>

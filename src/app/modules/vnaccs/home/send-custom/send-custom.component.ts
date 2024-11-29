@@ -19,6 +19,8 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import * as forge from 'node-forge'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import {finalize} from "rxjs";
+import {MySignService} from "../mySignService.service";
 
 declare function initPlugin(comp: any): void
 @Component({
@@ -87,7 +89,8 @@ export class SendCustomComponent {
     private loginSrv: LoginService,
     private fb: FormBuilder,
     private dialogSrv: DialogService,
-    private sendSrv: SendCustomService
+    private sendSrv: SendCustomService,
+    private msService: MySignService
   ) {}
 
   ngOnInit() {
@@ -232,7 +235,18 @@ export class SendCustomComponent {
           taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
         }
 
-        this.sendSrv.sendCustom(id, body).subscribe((res: any) => {
+        if (this.form.get("digitalSignatureType")?.value == 2) {
+          this.msService.show();
+        }
+        this.sendSrv.sendCustom(id, body)
+
+          .pipe(finalize(() => {
+              if (this.form.get("digitalSignatureType")?.value == 2) {
+                this.msService.hide()
+              }
+            }
+          ))
+          .subscribe((res: any) => {
           if (res && res.success) {
             // console.log(res)
             this.current += 1
@@ -273,8 +287,8 @@ export class SendCustomComponent {
       taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue(),
       taxCode: taxCode
     }
-
-    this.sendSrv.checkSenddCustom(id, body).subscribe((res: any) => {
+    this.sendSrv.checkSenddCustom(id, body)
+      .subscribe((res: any) => {
       if (res && res.success) {
         this.isSigned = true;
         this.form.get('fullName')?.disable();
@@ -528,5 +542,27 @@ export class SendCustomComponent {
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+  }
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0,0,0,0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23,59,59,999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
   }
 }

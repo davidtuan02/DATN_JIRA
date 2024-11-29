@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core'
-import { NzButtonModule } from 'ng-zorro-antd/button'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import {Component, CUSTOM_ELEMENTS_SCHEMA, OnInit} from '@angular/core'
+import {NzButtonModule} from 'ng-zorro-antd/button'
+import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {
   AbstractControl,
   FormControl,
@@ -11,33 +11,35 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms'
-import { BrowserModule } from '@angular/platform-browser'
-import { NzGridModule } from 'ng-zorro-antd/grid'
-import { CommonModule } from '@angular/common'
-import { NzFormModule } from 'ng-zorro-antd/form'
-import { NzInputModule } from 'ng-zorro-antd/input'
-import { HeaderVnaccsComponent } from '../../../layouts/header/header.component'
-import { FooterVnaccsComponent } from '../../../layouts/footer/footer.component'
-import { NzRadioModule } from 'ng-zorro-antd/radio'
-import { NzSelectModule } from 'ng-zorro-antd/select'
-import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
-import { NzTableModule } from 'ng-zorro-antd/table'
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouteReuseStrategy, RouterLink } from '@angular/router'
-import { NotificationService } from '../../../shared/services/notification.service'
-import { RegisterService } from './register.service'
-import { STORAGE_KEYS } from '../../../shared/constants/system.const'
-import { DialogService } from '../../../shared/services/dialog.service'
-import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component'
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import {BrowserModule} from '@angular/platform-browser'
+import {NzGridModule} from 'ng-zorro-antd/grid'
+import {CommonModule} from '@angular/common'
+import {NzFormModule} from 'ng-zorro-antd/form'
+import {NzInputModule} from 'ng-zorro-antd/input'
+import {HeaderVnaccsComponent} from '../../../layouts/header/header.component'
+import {FooterVnaccsComponent} from '../../../layouts/footer/footer.component'
+import {NzRadioModule} from 'ng-zorro-antd/radio'
+import {NzSelectModule} from 'ng-zorro-antd/select'
+import {NzModalComponent, NzModalModule} from 'ng-zorro-antd/modal'
+import {NzTableModule} from 'ng-zorro-antd/table'
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router, RouteReuseStrategy, RouterLink} from '@angular/router'
+import {NotificationService} from '../../../shared/services/notification.service'
+import {RegisterService} from './register.service'
+import {STORAGE_KEYS} from '../../../shared/constants/system.const'
+import {DialogService} from '../../../shared/services/dialog.service'
+import {ConfirmPopupComponent} from '../../../shared/components/confirm-popup/confirm-popup.component'
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
 import * as asn1js from 'asn1js'
-import { Certificate } from 'pkijs'
-import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import {Certificate} from 'pkijs'
+import {AutoTrimDirective} from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
-import { RouteStateService } from '../../../shared/services/clear-state.service'
-import { ClearInputDirective } from '../../../shared/directives/clear-value.directive'
-import { BehaviorSubject, skip } from 'rxjs'
-import { NzIconModule } from 'ng-zorro-antd/icon'
-import { MenuService } from '../../../shared/services/menu.service'
+import {RouteStateService} from '../../../shared/services/clear-state.service'
+import {ClearInputDirective} from '../../../shared/directives/clear-value.directive'
+import {BehaviorSubject, finalize, skip} from 'rxjs'
+import {NzIconModule} from 'ng-zorro-antd/icon'
+import {MenuService} from '../../../shared/services/menu.service'
+import {MySignService} from "../home/mySignService.service";
+
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -64,7 +66,7 @@ declare function initPlugin(comp: any): void
     AutoTrimDirective,
     NzIconModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: RouteStateService }],
+  providers: [{provide: RouteReuseStrategy, useClass: RouteStateService}],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RegisterComponent implements OnInit {
@@ -73,12 +75,12 @@ export class RegisterComponent implements OnInit {
   confirmPasswordVisible = false
   radioValue = '1'
   optionFileStatus = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
   optionFileStatuss = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
   modalTitle: string = 'Lấy chứng thư số'
   isVisible = false
@@ -104,7 +106,8 @@ export class RegisterComponent implements OnInit {
     private notification: NotificationService,
     private registerSrv: RegisterService,
     private dialogService: DialogService,
-    private menuSrv: MenuService
+    private menuSrv: MenuService,
+    private msService: MySignService
   ) {
     this.loadForm()
   }
@@ -136,7 +139,7 @@ export class RegisterComponent implements OnInit {
           ]
         ],
         confirmPassword: ['', [Validators.required]],
-        email: ['', [Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z]{2,})+$/), Validators.required]],
+        email: ['', [Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z0-9]{2,})+$/), Validators.required]],
         digitalSignatureType: [this.radioValue],
         digitalSignature: [''],
         serial: [''],
@@ -148,7 +151,7 @@ export class RegisterComponent implements OnInit {
         taxCodeCTS: [''],
         credentialId: ['']
       },
-      { validators: this.passwordMatchValidator.bind(this) }
+      {validators: this.passwordMatchValidator.bind(this)}
     )
 
     this.loginForm.valueChanges.subscribe(() => {
@@ -190,6 +193,7 @@ export class RegisterComponent implements OnInit {
   }
 
   responseFromCustom!: any
+
   getResultResponseFromCustom() {
     if (this.responseFromCustom.requestStatus === 2) {
       return 'Chờ phê duyệt'
@@ -243,7 +247,7 @@ export class RegisterComponent implements OnInit {
   fromDetailToUpdate(event: Event) {
     event.preventDefault()
     this.router.navigate(['/vnaccs/home/account-admin-update'], {
-      state: { data: this.dataToEditOrView }
+      state: {data: this.dataToEditOrView}
     })
   }
 
@@ -366,19 +370,38 @@ export class RegisterComponent implements OnInit {
             credentialId: this.loginForm.getRawValue().credentialId
           }
           if (this.dataToEditOrView.requestId) {
-            this.registerSrv.update(this.dataToEditOrView.requestId, body).subscribe((res: any) => {
+            if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+              this.msService.show();
+            }
+            this.registerSrv.update(this.dataToEditOrView.requestId, body)
+              .pipe(finalize(() => {
+                  if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+                    this.msService.hide()
+                  }
+                }
+              )).subscribe((res: any) => {
               if (res && res.success) {
                 this.router.navigate(['vnaccs/home/search-custom'])
                 this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
               }
             })
           } else {
-            this.registerSrv.updateFirst(this.dataToEditOrView.id, body).subscribe((res: any) => {
-              if (res && res.success) {
-                this.router.navigate(['vnaccs/home/search-custom'])
-                this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
-              }
-            })
+            if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+              this.msService.show();
+            }
+            this.registerSrv.updateFirst(this.dataToEditOrView.id, body)
+              .pipe(finalize(() => {
+                  if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+                    this.msService.hide()
+                  }
+                }
+              ))
+              .subscribe((res: any) => {
+                if (res && res.success) {
+                  this.router.navigate(['vnaccs/home/search-custom'])
+                  this.notification.success('Đăng ký thay đổi tài khoản quản trị thành công')
+                }
+              })
           }
         } else {
           //register
@@ -399,7 +422,16 @@ export class RegisterComponent implements OnInit {
             taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
             credentialId: this.loginForm.getRawValue().credentialId
           }
-          this.registerSrv.register(body).subscribe((res: any) => {
+          if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+            this.msService.show();
+          }
+          this.registerSrv.register(body)
+            .pipe(finalize(() => {
+                if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+                  this.msService.hide()
+                }
+              }
+            )).subscribe((res: any) => {
             if (res && res.message === 'success') {
               this.router.navigate(['vnaccs/login'])
               this.notification.success('Đăng ký tài khoản quản trị thành công')
@@ -409,11 +441,13 @@ export class RegisterComponent implements OnInit {
       }
     })
   }
+
   convertDateTimestamp(date: any) {
     const [d, m, y] = date.split(/-|\//)
     const dateNew = new Date(y, m - 1, d)
     return dateNew.getTime()
   }
+
   formatDateFromString = (dateString: string): string | null => {
     if (dateString.length < 8) {
       return null
@@ -462,7 +496,7 @@ export class RegisterComponent implements OnInit {
 
     const trimmedValue = control?.value?.trim()
     if (control && control.value !== trimmedValue) {
-      control.setValue(trimmedValue, { emitEvent: false })
+      control.setValue(trimmedValue, {emitEvent: false})
     }
 
     if ((control?.touched || control?.dirty) && control.invalid) {
@@ -481,7 +515,7 @@ export class RegisterComponent implements OnInit {
 
     const trimmedValue = control?.value?.trim()
     if (control && control.value !== trimmedValue) {
-      control.setValue(trimmedValue, { emitEvent: false })
+      control.setValue(trimmedValue, {emitEvent: false})
     }
 
     if ((control?.touched || control?.dirty) && control?.touched) {
@@ -499,7 +533,7 @@ export class RegisterComponent implements OnInit {
     const pass = group.get('adminPassword')?.value
     const confirmPass = group.get('confirmPassword')?.value
     if (confirmPass && pass !== confirmPass) {
-      return { notmatching: true }
+      return {notmatching: true}
     }
     return null
   }
@@ -513,6 +547,7 @@ export class RegisterComponent implements OnInit {
       this.notification.success('Đã sao chép đường dẫn')
     }
   }
+
   navigateToDownload(store: string): void {
     if (store === 'appstore') {
       window.open('https://apps.apple.com/vn/app/mysign/id1633019232', '_blank')
@@ -638,6 +673,7 @@ export class RegisterComponent implements OnInit {
       this.loginForm.get('taxCodeCTS')?.setValue(data.subjectDN)
     }
   }
+
   async getVTCAInfo() {
     initPlugin(this)
   }
@@ -696,5 +732,28 @@ export class RegisterComponent implements OnInit {
     const timezoneOffset = '+0700' // adjust if necessary
 
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+  }
+
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0, 0, 0, 0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23, 59, 59, 999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
   }
 }

@@ -21,7 +21,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { LoginService } from './login.service'
-import { Subject } from 'rxjs'
+import {finalize, Subject} from 'rxjs'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { Router, RouterLink } from '@angular/router'
 import { NotificationService } from '../../../shared/services/notification.service'
@@ -35,6 +35,7 @@ import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { MenuService } from '../../../shared/services/menu.service'
+import {MySignService} from "../home/mySignService.service";
 
 declare function initPlugin(comp: any): void
 
@@ -97,7 +98,8 @@ export class LoginComponent implements OnInit {
     private notification: NotificationService,
     private message: NzMessageService,
     private authService: AuthService,
-    private menuSrv: MenuService
+    private menuSrv: MenuService,
+    private msService: MySignService,
   ) {
     this.loadForm()
   }
@@ -250,7 +252,18 @@ export class LoginComponent implements OnInit {
       taxCodeCTS: this.loginForm.value.taxCodeCTS,
       credentialId: this.loginForm.value.credentialId
     }
-    this.loginSrv.login(body).subscribe((res: any) => {
+    if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+      this.msService.show();
+      console.log(this.msService.isWaitingMySign)
+    }
+    this.loginSrv.login(body)
+      .pipe(finalize(() => {
+          if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+            this.msService.hide()
+          }
+        }
+      ))
+      .subscribe((res: any) => {
       if (res && res.code === 200) {
         this.menuSrv.setSelectedMenu('')
         localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
@@ -468,5 +481,28 @@ export class LoginComponent implements OnInit {
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+  }
+
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0,0,0,0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23,59,59,999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
   }
 }

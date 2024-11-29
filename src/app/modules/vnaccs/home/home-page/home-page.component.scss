@@ -1,5 +1,9 @@
 @import '../../../../shared/styles/variable';
-
+:host ::ng-deep {
+  .carousel-item {
+    margin-right: 0;
+  }
+}
 .carousel-container {
   position: relative;
   width: 100%;

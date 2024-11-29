@@ -4,17 +4,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
 import { HomeService } from './home.service'
-import { filter, Subject, Subscription } from 'rxjs'
+import {BehaviorSubject, filter, Subject, Subscription} from 'rxjs'
 import { NzCarouselModule } from 'ng-zorro-antd/carousel'
 import { AuthService } from '../../../shared/services/auth.service'
 import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router, RouterModule } from '@angular/router'
 import { STORAGE_KEYS } from '../../../shared/constants/system.const'
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown'
-import { NzModalService } from 'ng-zorro-antd/modal'
+import {NzModalComponent, NzModalContentDirective, NzModalService} from 'ng-zorro-antd/modal'
 import { ProvideNewPasswordComponent } from './provide-new-password/provide-new-password.component'
 import { NotificationService } from '../../../shared/services/notification.service'
 import { CommonService } from '../../../shared/services/common.service'
 import { MenuService } from '../../../shared/services/menu.service'
+import {MySignService} from "./mySignService.service";
+import {NzIconModule} from "ng-zorro-antd/icon";
 
 @Component({
   selector: 'app-home',
@@ -28,14 +30,17 @@ import { MenuService } from '../../../shared/services/menu.service'
     NzCarouselModule,
     CommonModule,
     RouterModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzModalComponent,
+    NzModalContentDirective,
+    NzIconModule
   ]
 })
 export class HomeComponent implements OnInit {
   isLogin: boolean = false
   selectedItem: string | null = null
   tempSelectedItem: string | null = null
-  routerSubscription!: Subscription
+  routerSubscription!: Subscription;
 
   selectedMenu!: String
 
@@ -47,7 +52,8 @@ export class HomeComponent implements OnInit {
     private homeSrv: HomeService,
     private modalService: NzModalService,
     private notification: NotificationService,
-    private menuSrv: MenuService
+    private menuSrv: MenuService,
+    public mySignService: MySignService
   ) {}
 
   ngOnInit() {

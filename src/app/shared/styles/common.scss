@@ -40,7 +40,7 @@
 .ant-input.ng-invalid.ng-touched:not(.ant-input-affix-wrapper .ant-input),
 .ant-input.ng-invalid.ng-dirty:not(.ant-input-affix-wrapper .ant-input) {
   border: 1px solid #dc3545;
-  height: 40px !important;
+  min-height: 40px !important;
 }
 
 nz-date-picker.ng-touched.ng-invalid,
@@ -110,16 +110,16 @@ nz-date-picker {
 }
 
 .ant-input-group {
-  height: 40px !important;
+  min-height: 40px !important;
 }
 
 .ant-input {
   font-size: 14px !important;
-  height: 40px !important;
+  min-height: 40px !important;
 }
 
 .ant-input-affix-wrapper {
-  height: 40px !important;
+  min-height: 40px;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   align-items: center !important;
@@ -189,4 +189,16 @@ textarea {
   font-optical-sizing: auto;
   font-weight: 500 !important;
   font-style: normal;
+}
+
+.ant-input[disabled] {
+  color: #241d1e !important;
+}
+
+.ant-picker-clear {
+  right: 5%;
+}
+
+textarea {
+  resize: vertical;
 }

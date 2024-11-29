@@ -359,6 +359,9 @@ function getCertifcate(comp) {
   } else {// code for IE6, IE5
     ReqCert = new ActiveXObject("Microsoft.XMLHTTP");
   }
+  ReqCert.onerror = () => {
+    comp.showErrorVTCA();
+  }
   ReqCert.onreadystatechange = function () {
     if (ReqCert.readyState == 4 && ReqCert.status == 200) {
       cert_rawData = ReqCert.responseText;
@@ -367,6 +370,7 @@ function getCertifcate(comp) {
       // console.log(cert)
       //get info of certificate
       if (cert_rawData == "" || cert_rawData == undefined || cert_rawData == null) {
+        comp.showErrorVTCA();
       } else {
         //get serial number
         var ReqSNB;
@@ -377,14 +381,17 @@ function getCertifcate(comp) {
             comp.patchValueToForm("publicKey", btoa(publicKey))
           }
         });
-        getCertValidDate(comp);
-        getCertExpireDate(comp);
-        getCertCommonName(comp);
-        getCertDN(comp);
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqSNB = new XMLHttpRequest();
         } else {// code for IE6, IE5
+          getCertExpireDate(comp);
+          getCertCommonName(comp);
+          getCertDN(comp);
+          getCertValidDate(comp);
           ReqSNB = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        ReqSNB.onerror = () => {
+          comp.showErrorVTCA();
         }
         ReqSNB.onreadystatechange = function () {
           if (ReqSNB.readyState == 4 && ReqSNB.status == 200) {
@@ -415,8 +422,12 @@ function getCertValidDate(comp) {
   } else {// code for IE6, IE5
     ReqValidDate = new ActiveXObject("Microsoft.XMLHTTP");
   }
+  ReqValidDate.onerror = () => {
+    comp.showErrorVTCA();
+  }
   ReqValidDate.onreadystatechange = function () {
     if (ReqValidDate.responseText) {
+      comp.checkEffectiveDate(ReqValidDate.responseText);
       comp.patchValueToForm("effectiveDate", ReqValidDate.responseText)
     }
   }
@@ -432,8 +443,12 @@ function getCertExpireDate(comp) {
   } else {// code for IE6, IE5
     ReqExpireDate = new ActiveXObject("Microsoft.XMLHTTP");
   }
+  ReqExpireDate.onerror = () => {
+    comp.showErrorVTCA();
+  }
   ReqExpireDate.onreadystatechange = function () {
     if (ReqExpireDate.responseText) {
+      comp.checkExpiryDate(ReqExpireDate.responseText)
       comp.patchValueToForm("expiryDate", ReqExpireDate.responseText)
     }
   }
@@ -449,11 +464,14 @@ function getCertCommonName(comp) {
   } else {// code for IE6, IE5
     ReqCommonName = new ActiveXObject("Microsoft.XMLHTTP");
   }
+  ReqCommonName.onerror = () => {
+    comp.showErrorVTCA();
+  }
   ReqCommonName.onreadystatechange = function () {
     let cks = "";
     if (ReqCommonName.responseText) {
-    console.log(ReqCommonName.responseText)
-      cks = ReqCommonName.responseText.split("MST")[1].substring(1,15)
+      console.log(ReqCommonName.responseText)
+      cks = ReqCommonName.responseText.split("MST")[1].substring(1, 15)
       comp.patchValueToForm("digitalSignature", cks)
     }
   }
@@ -468,6 +486,9 @@ function getCertDN(comp) {
     ReqDN = new XMLHttpRequest();
   } else {// code for IE6, IE5
     ReqDN = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  ReqDN.onerror = () => {
+    comp.showErrorVTCA();
   }
   ReqDN.onreadystatechange = function () {
     if (ReqDN.responseText) {

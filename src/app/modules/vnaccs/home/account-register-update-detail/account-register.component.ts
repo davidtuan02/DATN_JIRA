@@ -26,13 +26,14 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { BehaviorSubject, debounceTime, Subject } from 'rxjs'
+import {BehaviorSubject, debounceTime, finalize, Subject} from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { MenuService } from '../../../../shared/services/menu.service'
+import {MySignService} from "../mySignService.service";
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -157,7 +158,8 @@ export class AccountRegisterComponent {
     private router: Router,
     private authSrv: AuthService,
     private cdr: ChangeDetectorRef,
-    private menuSrv: MenuService
+    private menuSrv: MenuService,
+    private msService: MySignService
   ) {}
 
   ngOnInit(): void {
@@ -356,7 +358,7 @@ export class AccountRegisterComponent {
       {
         fullName: ['', [Validators.required]],
         userId: [''],
-        email: ['', [Validators.required, Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z]{2,})+$/)]],
+        email: ['', [Validators.required, Validators.pattern(/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+(\.[a-z0-9]{2,})+$/)]],
         fieldOfActivity: [null, [Validators.required]],
         idType: [null, [Validators.required]],
         idNo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]*$')]],
@@ -388,24 +390,74 @@ export class AccountRegisterComponent {
     })
   }
 
+  // dateRangeValidator(fromDateField: string, toDateField: string) {
+  //   return (formGroup: AbstractControl) => {
+  //     const fromDate = formGroup.get(fromDateField)?.value
+  //     const toDate = formGroup.get(toDateField)?.value
+  //     if (!fromDate || !toDate) {
+  //       return null
+  //     }
+  //
+  //     if (new Date(fromDate) > new Date(toDate)) {
+  //       formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
+  //       formGroup.get(toDateField)?.setErrors({ dateRangeInvalid: true })
+  //     } else {
+  //       formGroup.get(fromDateField)?.setErrors(null)
+  //       formGroup.get(toDateField)?.setErrors(null)
+  //     }
+  //     return null
+  //   }
+  // }
   dateRangeValidator(fromDateField: string, toDateField: string) {
     return (formGroup: AbstractControl) => {
-      const fromDate = formGroup.get(fromDateField)?.value
-      const toDate = formGroup.get(toDateField)?.value
+      const fromDateControl = formGroup.get(fromDateField);
+      const toDateControl = formGroup.get(toDateField);
 
+      const fromDate = fromDateControl?.value;
+      const toDate = toDateControl?.value;
+
+      // If either date is missing, clear only the `dateRangeInvalid` error and return
       if (!fromDate || !toDate) {
-        return null
+        if (fromDateControl?.errors) {
+          const errors = { ...fromDateControl.errors };
+          delete errors['dateRangeInvalid'];
+          fromDateControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
+
+        if (toDateControl?.errors) {
+          const errors = { ...toDateControl.errors };
+          delete errors['dateRangeInvalid'];
+          toDateControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
+        return null;
       }
 
+      // Validate the date range
       if (new Date(fromDate) > new Date(toDate)) {
-        formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
-        formGroup.get(toDateField)?.setErrors({ dateRangeInvalid: true })
+        fromDateControl?.setErrors({
+          ...fromDateControl.errors,
+          dateRangeInvalid: true,
+        });
+        toDateControl?.setErrors({
+          ...toDateControl.errors,
+          dateRangeInvalid: true,
+        });
       } else {
-        formGroup.get(fromDateField)?.setErrors(null)
-        formGroup.get(toDateField)?.setErrors(null)
+        // Remove only `dateRangeInvalid` if dates are valid
+        if (fromDateControl?.errors) {
+          const errors = { ...fromDateControl.errors };
+          delete errors['dateRangeInvalid'];
+          fromDateControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
+
+        if (toDateControl?.errors) {
+          const errors = { ...toDateControl.errors };
+          delete errors['dateRangeInvalid'];
+          toDateControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
       }
-      return null
-    }
+      return null;
+    };
   }
 
   getFromDateError(): string | undefined {
@@ -825,6 +877,7 @@ export class AccountRegisterComponent {
   }
 
   onRadioChange(value: any) {
+    return;
     const initialValue = this.initialRadioValue$.getValue()
     if (initialValue != value) {
       this.formValidateUserId.get('digitalSignature')?.reset()
@@ -863,7 +916,17 @@ export class AccountRegisterComponent {
       credentialId: this.formValidateUserId.getRawValue().credentialId,
       taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS
     }
-    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
+    if (this.form.get("digitalSignatureType")?.value == 2) {
+      this.msService.show();
+    }
+    this.accReSrv.checkRegisterUserId(body)
+      .pipe(finalize(() => {
+          if (this.form.get("digitalSignatureType")?.value == 2) {
+            this.msService.hide()
+          }
+        }
+      ))
+      .subscribe((res: any) => {
       if (res) {
         console.log(res)
         this.dataTable = this.dataTable.map((ele: any, index: any) => {
@@ -903,8 +966,15 @@ export class AccountRegisterComponent {
       taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS,
       credentialId: this.formValidateUserId.getRawValue().credentialId
     }
-
-    this.accReSrv.checkRegisterUserId(body).subscribe((res: any) => {
+    if (this.form.get("digitalSignatureType")?.value == 2) {
+      this.msService.show();
+    }
+    this.accReSrv.checkRegisterUserId(body).pipe(finalize(() => {
+        if (this.form.get("digitalSignatureType")?.value == 2) {
+          this.msService.hide()
+        }
+      }
+    )).subscribe((res: any) => {
       if (res) {
         if (res.success) {
           this.isVisible = false
@@ -1289,5 +1359,28 @@ export class AccountRegisterComponent {
     const timezoneOffset = '+0700' // adjust if necessary
 
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+  }
+
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0,0,0,0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23,59,59,999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
   }
 }

@@ -33,6 +33,8 @@ import { clearStore } from '../../../shared/utilities/system.utils'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
+import {finalize} from "rxjs";
+import {MySignService} from "../home/mySignService.service";
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -95,7 +97,8 @@ export class ForgotPasswordComponent implements OnInit {
     private forgotSrv: ForgotPasswordService,
     private dialogService: DialogService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private msService: MySignService
   ) {
     this.loadForm()
   }
@@ -224,7 +227,15 @@ export class ForgotPasswordComponent implements OnInit {
           credentialId: this.loginForm.getRawValue().credentialId,
           taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS
         }
-        this.forgotSrv.forgotPassword(body).subscribe((res: any) => {
+        if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+          this.msService.show();
+        }
+        this.forgotSrv.forgotPassword(body).pipe(finalize(() => {
+            if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+              this.msService.hide()
+            }
+          }
+        )).subscribe((res: any) => {
           if (res && res.success) {
             clearStore()
             this.authService.setLoginStatus(false)
@@ -485,5 +496,27 @@ export class ForgotPasswordComponent implements OnInit {
     // Append the timezone offset in the "+0700" format
     const timezoneOffset = '+0700' // adjust if necessary
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
+  }
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0,0,0,0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23,59,59,999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
   }
 }

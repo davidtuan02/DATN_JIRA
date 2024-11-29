@@ -857,3 +857,9 @@
     }
   }
 }
+
+:host ::ng-deep {
+  .my-sign-popup {
+    width: 10vw;
+  }
+}

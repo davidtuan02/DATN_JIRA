@@ -127,10 +127,11 @@ export class SearchComponent {
     private cdr: ChangeDetectorRef,
     private notification: NotificationService,
     private i18n: NzI18nService
-  ) {}
+  ) {
+    this.loadForm()
+  }
 
   ngOnInit() {
-    this.loadForm()
     this.search()
 
     // const customPaginationLang = {
@@ -180,6 +181,9 @@ export class SearchComponent {
         this.form.get('startDateSubmit')?.setErrors(null)
       }
     }
+    else {
+      group.get('startDateSubmit')?.setErrors(null)
+    }
 
     if (approvalFromDate && approvalToDate) {
       if (new Date(approvalFromDate).getTime() > new Date(approvalToDate).getTime()) {
@@ -188,6 +192,8 @@ export class SearchComponent {
       } else {
         this.form.get('approvalFromDate')?.setErrors(null)
       }
+    } else {
+      group.get('approvalFromDate')?.setErrors(null)
     }
 
     return Object.keys(errors).length ? errors : null
@@ -324,16 +330,15 @@ export class SearchComponent {
         requestStatus: this.form.get('requestStatus')?.value?.join(';'),
         requestNo: this.form.get('requestNo')?.value,
         startDateSubmit: this.form.get('startDateSubmit')?.value
-          ? new Date(this.form.get('startDateSubmit')?.value).getTime()
+          ? new Date(this.form.get('startDateSubmit')?.value).setHours(0,0,0,0)
           : null,
         endDateSubmit: this.form.get('endDateSubmit')?.value
-          ? new Date(this.form.get('endDateSubmit')?.value).getTime()
-          : null,
+          ? new Date(this.form.get('endDateSubmit')?.value).setHours(23,59,59, 99) : null,
         approvalFromDate: this.form.get('approvalFromDate')?.value
-          ? new Date(this.form.get('approvalFromDate')?.value).getTime()
+          ? new Date(this.form.get('approvalFromDate')?.value).setHours(0,0,0,0)
           : null,
         approvalToDate: this.form.get('approvalToDate')?.value
-          ? new Date(this.form.get('approvalToDate')?.value).getTime()
+          ? new Date(this.form.get('approvalToDate')?.value).setHours(23,59,59, 99)
           : null,
         pageSize: this.paginate.size,
         pageNo: this.paginate.page - 1

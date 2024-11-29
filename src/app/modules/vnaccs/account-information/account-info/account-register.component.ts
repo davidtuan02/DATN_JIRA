@@ -949,4 +949,26 @@ export class AccountInfoComponent {
 
     return `${yyyy}${dd}${MM}${HH}${mm}${ss}${timezoneOffset}`
   }
+  checkEffectiveDate(input: string) {
+    const date = new Date(input).setHours(0,0,0,0);
+    const today = new Date().getTime();
+    if (date > today) {
+      this.notification.error("Chữ ký số chưa có hiệu lực");
+      return;
+    }
+  }
+
+  checkExpiryDate(input: string) {
+    const date = new Date(input).setHours(23,59,59,999);
+    const today = new Date().getTime();
+    if (date < today) {
+      this.notification.error("Chữ ký số đã hết hiệu lực");
+      return;
+    }
+  }
+
+  showErrorVTCA() {
+    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
+    return;
+  }
 }

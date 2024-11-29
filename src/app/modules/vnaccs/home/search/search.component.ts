@@ -165,6 +165,12 @@ export class SearchComponent {
     })
   }
 
+  normalizeDate = (date: string | Date) => {
+    const normalized = new Date(date)
+    normalized.setHours(0, 0, 0, 0) // Loại bỏ giờ, phút, giây
+    return normalized
+  }
+
   validateDate: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
     const startDateSubmit = group.get('startDateSubmit')?.value
     const endDateSubmit = group.get('endDateSubmit')?.value
@@ -174,19 +180,18 @@ export class SearchComponent {
     const errors: ValidationErrors = {}
 
     if (startDateSubmit && endDateSubmit) {
-      if (new Date(startDateSubmit).getTime() > new Date(endDateSubmit).getTime()) {
+      if (this.normalizeDate(new Date(startDateSubmit)) > this.normalizeDate(new Date(endDateSubmit))) {
         // errors['submitInvalidDateRange'] = true;
         this.form.get('startDateSubmit')?.setErrors({ submitInvalidDateRange: true })
       } else {
         this.form.get('startDateSubmit')?.setErrors(null)
       }
-    }
-    else {
+    } else {
       group.get('startDateSubmit')?.setErrors(null)
     }
 
     if (approvalFromDate && approvalToDate) {
-      if (new Date(approvalFromDate).getTime() > new Date(approvalToDate).getTime()) {
+      if (this.normalizeDate(new Date(approvalFromDate)) > this.normalizeDate(new Date(approvalToDate))) {
         // errors['submitInvalidDateRange'] = true;
         this.form.get('approvalFromDate')?.setErrors({ approvalInvalidDateRange: true })
       } else {
@@ -330,15 +335,16 @@ export class SearchComponent {
         requestStatus: this.form.get('requestStatus')?.value?.join(';'),
         requestNo: this.form.get('requestNo')?.value,
         startDateSubmit: this.form.get('startDateSubmit')?.value
-          ? new Date(this.form.get('startDateSubmit')?.value).setHours(0,0,0,0)
+          ? new Date(this.form.get('startDateSubmit')?.value).setHours(0, 0, 0, 0)
           : null,
         endDateSubmit: this.form.get('endDateSubmit')?.value
-          ? new Date(this.form.get('endDateSubmit')?.value).setHours(23,59,59, 99) : null,
+          ? new Date(this.form.get('endDateSubmit')?.value).setHours(23, 59, 59, 99)
+          : null,
         approvalFromDate: this.form.get('approvalFromDate')?.value
-          ? new Date(this.form.get('approvalFromDate')?.value).setHours(0,0,0,0)
+          ? new Date(this.form.get('approvalFromDate')?.value).setHours(0, 0, 0, 0)
           : null,
         approvalToDate: this.form.get('approvalToDate')?.value
-          ? new Date(this.form.get('approvalToDate')?.value).setHours(23,59,59, 99)
+          ? new Date(this.form.get('approvalToDate')?.value).setHours(23, 59, 59, 99)
           : null,
         pageSize: this.paginate.size,
         pageNo: this.paginate.page - 1

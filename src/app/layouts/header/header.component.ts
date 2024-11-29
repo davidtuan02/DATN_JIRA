@@ -76,6 +76,10 @@ export class HeaderVnaccsComponent implements OnInit {
     this.cdr.detectChanges()
   }
 
+  reload() {
+    window.location.reload()
+  }
+
   getUserInfo(taxCode: string) {
     this.headerSrv.getUserInfo(taxCode).subscribe((res: any) => {
       if (res && res.message === 'success') {

@@ -391,24 +391,12 @@ export class AccountRegisterComponent {
     })
   }
 
-  // dateRangeValidator(fromDateField: string, toDateField: string) {
-  //   return (formGroup: AbstractControl) => {
-  //     const fromDate = formGroup.get(fromDateField)?.value
-  //     const toDate = formGroup.get(toDateField)?.value
-  //     if (!fromDate || !toDate) {
-  //       return null
-  //     }
-  //
-  //     if (new Date(fromDate) > new Date(toDate)) {
-  //       formGroup.get(fromDateField)?.setErrors({ dateRangeInvalid: true })
-  //       formGroup.get(toDateField)?.setErrors({ dateRangeInvalid: true })
-  //     } else {
-  //       formGroup.get(fromDateField)?.setErrors(null)
-  //       formGroup.get(toDateField)?.setErrors(null)
-  //     }
-  //     return null
-  //   }
-  // }
+  normalizeDate = (date: string | Date) => {
+    const normalized = new Date(date)
+    normalized.setHours(0, 0, 0, 0) // Loại bỏ giờ, phút, giây
+    return normalized
+  }
+
   dateRangeValidator(fromDateField: string, toDateField: string) {
     return (formGroup: AbstractControl) => {
       const fromDateControl = formGroup.get(fromDateField)
@@ -417,7 +405,6 @@ export class AccountRegisterComponent {
       const fromDate = fromDateControl?.value
       const toDate = toDateControl?.value
 
-      // If either date is missing, clear only the `dateRangeInvalid` error and return
       if (!fromDate || !toDate) {
         if (fromDateControl?.errors) {
           const errors = { ...fromDateControl.errors }
@@ -433,8 +420,7 @@ export class AccountRegisterComponent {
         return null
       }
 
-      // Validate the date range
-      if (new Date(fromDate) > new Date(toDate)) {
+      if (this.normalizeDate(new Date(fromDate)) > this.normalizeDate(new Date(toDate))) {
         fromDateControl?.setErrors({
           ...fromDateControl.errors,
           dateRangeInvalid: true
@@ -444,7 +430,6 @@ export class AccountRegisterComponent {
           dateRangeInvalid: true
         })
       } else {
-        // Remove only `dateRangeInvalid` if dates are valid
         if (fromDateControl?.errors) {
           const errors = { ...fromDateControl.errors }
           delete errors['dateRangeInvalid']

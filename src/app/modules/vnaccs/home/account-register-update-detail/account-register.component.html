@@ -255,13 +255,13 @@
         </nz-col>
         <nz-col nzSpan="8">
           <label for="" class="custom-label">Ngày hết hiệu lực User code</label>
-          <nz-input-group style="border-radius: 8px">
+          <nz-input-group style="border-radius: 8px" [nzPrefix]="userCodeDateClearTpl">
             <nz-date-picker
               nzDropdownStyle="{ position: 'relative', zIndex: 2000 }"
               nzSize="large"
               [nzFormat]="dateFormat"
               [nzPlaceHolder]="'dd/mm/yyyy'"
-              [nzAllowClear]="true"
+              [nzAllowClear]="false"
               [nzDisabledDate]="disabledDate"
               [nzSuffixIcon]="suffixDate"
               class="custom-date-picker"
@@ -270,6 +270,17 @@
             >
             </nz-date-picker>
           </nz-input-group>
+          <ng-template #userCodeDateClearTpl>
+            @if (form.get('userCodeExpiryDate')?.value && form.get('userCodeExpiryDate')?.enabled) {
+            <span
+              nz-icon
+              class="ant-input-clear-icon"
+              nzTheme="fill"
+              nzType="close-circle"
+              (click)="form.get('userCodeExpiryDate')?.setValue(null)"
+            ></span>
+            }
+          </ng-template>
         </nz-col>
       </nz-row>
     </div>

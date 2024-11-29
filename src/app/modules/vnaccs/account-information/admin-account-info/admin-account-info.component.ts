@@ -9,6 +9,7 @@ import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { Router, RouterLink } from '@angular/router'
 import { AccountInformationService } from '../account-information.service'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import { MenuService } from '../../../../shared/services/menu.service'
 @Component({
   selector: 'app-admin-account-info',
   standalone: true,
@@ -39,7 +40,8 @@ export class AdminAccountInfoComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private accountInfoService: AccountInformationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public menuSrv: MenuService
   ) {
     this.form = this.fb.group({
       taxCode: [null],

@@ -26,14 +26,15 @@ import { DialogService } from '../../../../shared/services/dialog.service'
 import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
 import { AuthService } from '../../../../shared/services/auth.service'
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import {BehaviorSubject, debounceTime, finalize, Subject} from 'rxjs'
+import { BehaviorSubject, debounceTime, finalize, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
 import { Certificate } from 'pkijs'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { MenuService } from '../../../../shared/services/menu.service'
-import {MySignService} from "../mySignService.service";
+import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
+import { MySignService } from '../mySignService.service'
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -193,7 +194,6 @@ export class AccountRegisterComponent {
         }
         case 'account-update': {
           this.modeScreen = 'update'
-          this.menuSrv.setSelectedMenu('search')
           this.getDataToEditAcc()
           this.form.enable()
           this.form.get('numberComputer')?.disable()
@@ -232,7 +232,6 @@ export class AccountRegisterComponent {
         customsDepartmentNote: state.data.customsDepartmentNote,
         approvalTime: state.data.approvalTime
       }
-      // console.log(this.dataResponse)
     }
     if (state && state.data && state.data.id) {
       if (state.data.body) {
@@ -252,11 +251,12 @@ export class AccountRegisterComponent {
         this.form.get('userCodeExpiryDate')?.setValue(state.data.body.userCodeExpiryDate)
         this.calculateTotal()
         this.dataTable = state.data.body.userIdResponses
+        this.backupDataTable = state.data.body.userIdResponses
+        this.menuSrv.setSelectedMenu('editAcc')
       } else {
         this.accReSrv.viewDetailRequestRegister(state.data.id).subscribe((res: any) => {
           if (res && res.message === 'success') {
             this.responseFromCustom = state.data.requestStatus
-            // this.dataFromSearch = state.data
             this.dataFromSearch = res.data
             this.form.get('userCode')?.setValue(res?.data?.userCode)
             this.form.get('representativeName')?.setValue(res?.data?.representativeName)
@@ -271,6 +271,7 @@ export class AccountRegisterComponent {
             this.form.get('userCodeExpiryDate')?.setValue(res?.data?.userCodeExpiryDate)
             this.calculateTotal()
             this.dataTable = res?.data?.requestUserIds
+            this.menuSrv.setSelectedMenu('search')
           }
         })
       }
@@ -410,54 +411,54 @@ export class AccountRegisterComponent {
   // }
   dateRangeValidator(fromDateField: string, toDateField: string) {
     return (formGroup: AbstractControl) => {
-      const fromDateControl = formGroup.get(fromDateField);
-      const toDateControl = formGroup.get(toDateField);
+      const fromDateControl = formGroup.get(fromDateField)
+      const toDateControl = formGroup.get(toDateField)
 
-      const fromDate = fromDateControl?.value;
-      const toDate = toDateControl?.value;
+      const fromDate = fromDateControl?.value
+      const toDate = toDateControl?.value
 
       // If either date is missing, clear only the `dateRangeInvalid` error and return
       if (!fromDate || !toDate) {
         if (fromDateControl?.errors) {
-          const errors = { ...fromDateControl.errors };
-          delete errors['dateRangeInvalid'];
-          fromDateControl.setErrors(Object.keys(errors).length ? errors : null);
+          const errors = { ...fromDateControl.errors }
+          delete errors['dateRangeInvalid']
+          fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = { ...toDateControl.errors };
-          delete errors['dateRangeInvalid'];
-          toDateControl.setErrors(Object.keys(errors).length ? errors : null);
+          const errors = { ...toDateControl.errors }
+          delete errors['dateRangeInvalid']
+          toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
-        return null;
+        return null
       }
 
       // Validate the date range
       if (new Date(fromDate) > new Date(toDate)) {
         fromDateControl?.setErrors({
           ...fromDateControl.errors,
-          dateRangeInvalid: true,
-        });
+          dateRangeInvalid: true
+        })
         toDateControl?.setErrors({
           ...toDateControl.errors,
-          dateRangeInvalid: true,
-        });
+          dateRangeInvalid: true
+        })
       } else {
         // Remove only `dateRangeInvalid` if dates are valid
         if (fromDateControl?.errors) {
-          const errors = { ...fromDateControl.errors };
-          delete errors['dateRangeInvalid'];
-          fromDateControl.setErrors(Object.keys(errors).length ? errors : null);
+          const errors = { ...fromDateControl.errors }
+          delete errors['dateRangeInvalid']
+          fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = { ...toDateControl.errors };
-          delete errors['dateRangeInvalid'];
-          toDateControl.setErrors(Object.keys(errors).length ? errors : null);
+          const errors = { ...toDateControl.errors }
+          delete errors['dateRangeInvalid']
+          toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
       }
-      return null;
-    };
+      return null
+    }
   }
 
   getFromDateError(): string | undefined {
@@ -616,18 +617,19 @@ export class AccountRegisterComponent {
   }
 
   filterList(searchText: string) {
-    const trimmedSearchText = searchText.toLowerCase().trim()
+    const trimmedSearchText = convertVNStr(searchText.toLowerCase().trim())
     if (!trimmedSearchText) {
       this.dataTable = this.backupDataTable
     } else {
       const regex = new RegExp(trimmedSearchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      this.dataTable = this.backupDataTable.filter(
-        (data) =>
-          regex.test(data.fullName.toLowerCase()) ||
-          regex.test(data.idNo.toLowerCase()) ||
-          regex.test(data.email.toLowerCase())
-      )
+      this.dataTable = this.backupDataTable.filter((data) => {
+        const normalizedFullName = convertVNStr(data.fullName.toLowerCase())
+        const normalizedIdNo = convertVNStr(data.idNo.toLowerCase())
+        const normalizedEmail = convertVNStr(data.email.toLowerCase())
+        return regex.test(normalizedFullName) || regex.test(normalizedIdNo) || regex.test(normalizedEmail)
+      })
     }
+    this.cdr.detectChanges()
   }
 
   calculateTotal(): void {
@@ -825,7 +827,7 @@ export class AccountRegisterComponent {
     this.formValidateUserId.get('credentialId')?.setValue(data?.credentialId)
     this.formValidateUserId.get('taxCodeCTS')?.setValue(data?.taxCodeCTS)
 
-    this.initialRadioValue$.next(this.form.value.representativeIdType)
+    this.initialRadioValue$.next(this.radioValue)
   }
 
   submitValidateUserId() {
@@ -877,7 +879,7 @@ export class AccountRegisterComponent {
   }
 
   onRadioChange(value: any) {
-    return;
+    return
     const initialValue = this.initialRadioValue$.getValue()
     if (initialValue != value) {
       this.formValidateUserId.get('digitalSignature')?.reset()
@@ -916,31 +918,33 @@ export class AccountRegisterComponent {
       credentialId: this.formValidateUserId.getRawValue().credentialId,
       taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS
     }
-    if (this.form.get("digitalSignatureType")?.value == 2) {
-      this.msService.show();
+    if (this.form.get('digitalSignatureType')?.value == 2) {
+      this.msService.show()
     }
-    this.accReSrv.checkRegisterUserId(body)
-      .pipe(finalize(() => {
-          if (this.form.get("digitalSignatureType")?.value == 2) {
+    this.accReSrv
+      .checkRegisterUserId(body)
+      .pipe(
+        finalize(() => {
+          if (this.form.get('digitalSignatureType')?.value == 2) {
             this.msService.hide()
           }
-        }
-      ))
-      .subscribe((res: any) => {
-      if (res) {
-        console.log(res)
-        this.dataTable = this.dataTable.map((ele: any, index: any) => {
-          if (index !== this.indexToEdit) {
-            return ele
-          } else {
-            return body
-          }
         })
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          console.log(res)
+          this.dataTable = this.dataTable.map((ele: any, index: any) => {
+            if (index !== this.indexToEdit) {
+              return ele
+            } else {
+              return body
+            }
+          })
 
-        this.isVisible = false
-        this.cdr.detectChanges()
-      }
-    })
+          this.isVisible = false
+          this.cdr.detectChanges()
+        }
+      })
   }
 
   validateUserId() {
@@ -966,26 +970,30 @@ export class AccountRegisterComponent {
       taxCodeCTS: this.formValidateUserId.getRawValue().taxCodeCTS,
       credentialId: this.formValidateUserId.getRawValue().credentialId
     }
-    if (this.form.get("digitalSignatureType")?.value == 2) {
-      this.msService.show();
+    if (this.form.get('digitalSignatureType')?.value == 2) {
+      this.msService.show()
     }
-    this.accReSrv.checkRegisterUserId(body).pipe(finalize(() => {
-        if (this.form.get("digitalSignatureType")?.value == 2) {
-          this.msService.hide()
+    this.accReSrv
+      .checkRegisterUserId(body)
+      .pipe(
+        finalize(() => {
+          if (this.form.get('digitalSignatureType')?.value == 2) {
+            this.msService.hide()
+          }
+        })
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          if (res.success) {
+            this.isVisible = false
+            //add data to table
+            this.dataTable = [...this.dataTable, body]
+            console.log(this.dataTable)
+            this.backupDataTable = this.dataTable
+            this.cdr.detectChanges()
+          }
         }
-      }
-    )).subscribe((res: any) => {
-      if (res) {
-        if (res.success) {
-          this.isVisible = false
-          //add data to table
-          this.dataTable = [...this.dataTable, body]
-          console.log(this.dataTable)
-          this.backupDataTable = this.dataTable
-          this.cdr.detectChanges()
-        }
-      }
-    })
+      })
   }
 
   getMsAccError(): string | undefined {
@@ -1362,25 +1370,25 @@ export class AccountRegisterComponent {
   }
 
   checkEffectiveDate(input: string) {
-    const date = new Date(input).setHours(0,0,0,0);
-    const today = new Date().getTime();
+    const date = new Date(input).setHours(0, 0, 0, 0)
+    const today = new Date().getTime()
     if (date > today) {
-      this.notification.error("Chữ ký số chưa có hiệu lực");
-      return;
+      this.notification.error('Chữ ký số chưa có hiệu lực')
+      return
     }
   }
 
   checkExpiryDate(input: string) {
-    const date = new Date(input).setHours(23,59,59,999);
-    const today = new Date().getTime();
+    const date = new Date(input).setHours(23, 59, 59, 999)
+    const today = new Date().getTime()
     if (date < today) {
-      this.notification.error("Chữ ký số đã hết hiệu lực");
-      return;
+      this.notification.error('Chữ ký số đã hết hiệu lực')
+      return
     }
   }
 
   showErrorVTCA() {
-    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
-    return;
+    this.notification.error('Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại')
+    return
   }
 }

@@ -290,8 +290,9 @@ export class SendCustomComponent {
     this.sendSrv.checkSenddCustom(id, body)
       .subscribe((res: any) => {
       if (res && res.success) {
-        this.isSigned = true;
-        this.form.get('fullName')?.disable();
+        this.isSigned = true
+        this.form.get('fullName')?.disable()
+        this.form.get('digitalSignatureType')?.disable()
       }
     })
   }

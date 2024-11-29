@@ -31,7 +31,7 @@ import { ConfirmPopupComponent } from '../../../../shared/components/confirm-pop
 import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
 import { NotificationService } from '../../../../shared/services/notification.service'
 import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
-import { NzI18nService, zh_CN } from 'ng-zorro-antd/i18n'
+import { NzI18nService, vi_VN, zh_CN } from 'ng-zorro-antd/i18n'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 
 @Component({
@@ -98,7 +98,7 @@ export class SearchComponent {
 
   // table
   dataTable: any[] = []
-  total: number = 5
+  total: number = 0
   paginate = {
     page: INIT_PAGE, //1
     size: INIT_SIZE //10
@@ -134,15 +134,15 @@ export class SearchComponent {
   ngOnInit() {
     this.search()
 
-    // const customPaginationLang = {
-    //   ...zh_CN.Pagination,
-    //   items_per_page: '/ Trang'
-    // }
+    const customPaginationLang = {
+      ...vi_VN.Pagination,
+      items_per_page: '/ Trang'
+    }
 
-    // this.i18n.setLocale({
-    //   ...zh_CN,
-    //   Pagination: customPaginationLang
-    // })
+    this.i18n.setLocale({
+      ...vi_VN,
+      Pagination: customPaginationLang
+    })
   }
 
   loadForm() {

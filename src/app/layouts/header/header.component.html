@@ -17,59 +17,32 @@
 
   <ng-container *ngIf="!isLogin; else login">
     <div class="header-right-no-login">
-      <span class="font-inter-400 hyper-link" href="" [routerLink]="['/vnaccs/register']" [routerLinkActive]="'active'"
-        >Đăng ký</span
-      >
-      <span
-        href=""
-        [routerLink]="['/vnaccs/update-signature']"
-        [routerLinkActive]="'active'"
-        class="custom-span hyper-link"
-        >Cập nhật thông tin chữ ký số</span
-      >
-      <span class="font-inter-400 hyper-link" href="" [routerLink]="['/vnaccs/login']" [routerLinkActive]="'active'"
-        >Đăng nhập</span
-      >
+      <span class="font-inter-400 hyper-link" href="" [routerLink]="['/vnaccs/register']"
+        [routerLinkActive]="'active'">Đăng ký</span>
+      <span href="" [routerLink]="['/vnaccs/update-signature']" [routerLinkActive]="'active'"
+        class="custom-span hyper-link">Cập nhật thông tin chữ ký số</span>
+      <span class="font-inter-400 hyper-link" href="" [routerLink]="['/vnaccs/login']"
+        [routerLinkActive]="'active'">Đăng nhập</span>
     </div>
   </ng-container>
   <ng-template #login>
-    <div
-      class="header-right-login"
-      nz-button
-      nz-dropdown
-      nzTrigger="click"
-      [nzDropdownMenu]="menu"
-      [nzPlacement]="'bottomRight'"
-    >
+    <div class="header-right-login" nz-button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu"
+      [nzPlacement]="'bottomRight'">
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse
-          cx="14.4725"
-          cy="9.09754"
-          rx="5.97254"
-          ry="5.97254"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+        <ellipse cx="14.4725" cy="9.09754" rx="5.97254" ry="5.97254" stroke="white" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <path fill-rule="evenodd" clip-rule="evenodd"
           d="M5.00002 23.3767C4.99842 22.9568 5.09232 22.5421 5.27462 22.1639C5.8467 21.0197 7.45997 20.4133 8.79865 20.1387C9.7641 19.9327 10.7429 19.795 11.7277 19.7268C13.551 19.5666 15.3849 19.5666 17.2083 19.7268C18.193 19.7958 19.1717 19.9335 20.1373 20.1387C21.476 20.4133 23.0893 20.9625 23.6613 22.1639C24.028 22.9349 24.028 23.83 23.6613 24.601C23.0893 25.8023 21.476 26.3515 20.1373 26.6147C19.173 26.8292 18.1939 26.9708 17.2083 27.038C15.7242 27.1638 14.2332 27.1868 12.746 27.1067C12.4028 27.1067 12.071 27.1067 11.7277 27.038C10.7458 26.9716 9.7704 26.8301 8.81009 26.6147C7.45997 26.3515 5.85814 25.8023 5.27462 24.601C5.09325 24.2183 4.99944 23.8001 5.00002 23.3767Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
+          stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      <span style="width: 135px; font-size: 16px; text-align: center" class="font-inter-400"
-        >Chào mừng {{ taxCode }}</span
-      >
+      <div style="width: fit-content; font-size: 16px; text-align: center" class="font-inter-400 flex flex-col">
+        <span>Chào mừng</span>
+        <span>{{ taxCode }}</span>
+      </div>
       <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M4.869 9.63078C4.811 9.57428 4.563 9.36094 4.359 9.1622C3.076 7.99708 0.976 4.95762 0.335 3.36678C0.232 3.12518 0.014 2.51437 0 2.18802C0 1.8753 0.072 1.5772 0.218 1.29274C0.422 0.938139 0.743 0.653678 1.122 0.497808C1.385 0.397467 2.172 0.241598 2.186 0.241598C3.047 0.0857282 4.446 0 5.992 0C7.465 0 8.807 0.0857282 9.681 0.213346C9.695 0.227959 10.673 0.383829 11.008 0.554311C11.62 0.867024 12 1.47784 12 2.13151V2.18802C11.985 2.61374 11.605 3.50901 11.591 3.50901C10.949 5.01413 8.952 7.98344 7.625 9.17681C7.625 9.17681 7.284 9.51291 7.071 9.65904C6.765 9.88699 6.386 10 6.007 10C5.584 10 5.19 9.87238 4.869 9.63078Z"
-          fill="white"
-        />
+          fill="white" />
       </svg>
     </div>
   </ng-template>
@@ -80,33 +53,13 @@
     <li nz-menu-item (click)="handleClick('changepass')" [class.ant-dropdown-menu-item-selected]="false">
       <div class="flex items-center justify-between">
         <span>
-          <svg
-            style="width: 40px"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+          <svg style="width: 40px" width="20" height="20" viewBox="0 0 20 20" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
               d="M17.3372 6.35305L16.8185 5.45298C16.3797 4.69138 15.4073 4.42864 14.6446 4.86564V4.86564C14.2816 5.07949 13.8484 5.14017 13.4406 5.03428C13.0328 4.92839 12.6838 4.66464 12.4707 4.30118C12.3336 4.07016 12.2599 3.80704 12.2571 3.53841V3.53841C12.2695 3.10773 12.107 2.69038 11.8067 2.38143C11.5064 2.07249 11.0938 1.89826 10.6629 1.89844H9.61792C9.1958 1.89843 8.79109 2.06664 8.49333 2.36583C8.19557 2.66502 8.02931 3.07053 8.03134 3.49264V3.49264C8.01883 4.36415 7.30873 5.06405 6.43714 5.06396C6.16851 5.06117 5.90538 4.98749 5.67436 4.85038V4.85038C4.91172 4.41339 3.93926 4.67612 3.50045 5.43772L2.94362 6.35305C2.50534 7.1137 2.7645 8.08555 3.52333 8.52697V8.52697C4.01658 8.81174 4.32044 9.33803 4.32044 9.90759C4.32044 10.4771 4.01658 11.0034 3.52333 11.2882V11.2882C2.76546 11.7267 2.50602 12.6961 2.94362 13.4545V13.4545L3.46994 14.3622C3.67554 14.7332 4.0205 15.007 4.42849 15.1229C4.83648 15.2389 5.27386 15.1875 5.64385 14.9801V14.9801C6.00757 14.7678 6.44099 14.7097 6.84778 14.8185C7.25457 14.9274 7.60103 15.1942 7.81013 15.5598C7.94725 15.7908 8.02092 16.0539 8.02371 16.3225V16.3225C8.02371 17.203 8.73746 17.9167 9.61792 17.9167H10.6629C11.5404 17.9168 12.2529 17.2076 12.2571 16.3302V16.3302C12.2551 15.9067 12.4224 15.5001 12.7218 15.2006C13.0212 14.9012 13.4279 14.7339 13.8513 14.736C14.1193 14.7431 14.3814 14.8165 14.6141 14.9495V14.9495C15.3748 15.3878 16.3466 15.1287 16.788 14.3698V14.3698L17.3372 13.4545C17.5498 13.0896 17.6081 12.655 17.4993 12.247C17.3905 11.839 17.1235 11.4912 16.7575 11.2806V11.2806C16.3915 11.07 16.1245 10.7222 16.0157 10.3142C15.9069 9.90613 15.9652 9.47156 16.1778 9.10668C16.316 8.86532 16.5161 8.66521 16.7575 8.52697V8.52697C17.5118 8.08579 17.7703 7.11962 17.3372 6.36068V6.36068V6.35305Z"
-              stroke="#200E32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <ellipse
-              cx="10.146"
-              cy="9.90749"
-              rx="2.1968"
-              ry="2.1968"
-              stroke="#200E32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+              stroke="#200E32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <ellipse cx="10.146" cy="9.90749" rx="2.1968" ry="2.1968" stroke="#200E32" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
         <span style="font-size: 14px"> Đổi mật khẩu </span>
@@ -115,35 +68,15 @@
     <li nz-menu-item (click)="handleClick('logout')" [class.ant-dropdown-menu-item-selected]="false">
       <div class="flex items-center justify-between">
         <span>
-          <svg
-            style="width: 40px"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg style="width: 40px" width="18" height="18" viewBox="0 0 18 18" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.5119 5.1579V4.3804C11.5119 2.68457 10.1369 1.30957 8.44109 1.30957H4.37859C2.68359 1.30957 1.30859 2.68457 1.30859 4.3804V13.6554C1.30859 15.3512 2.68359 16.7262 4.37859 16.7262H8.44943C10.1403 16.7262 11.5119 15.3554 11.5119 13.6646V12.8787"
-              stroke="#200E32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M17.1748 9.01774H7.14062"
-              stroke="#200E32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M14.7344 6.58862L17.1744 9.01779L14.7344 11.4478"
-              stroke="#200E32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+              stroke="#200E32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M17.1748 9.01774H7.14062" stroke="#200E32" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M14.7344 6.58862L17.1744 9.01779L14.7344 11.4478" stroke="#200E32" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
         <span style="font-size: 14px"> Đăng xuất </span>

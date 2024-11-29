@@ -67,10 +67,19 @@ export class ProvideNewPasswordComponent implements OnInit {
       {
         userid: [null, Validators.required],
         password: [null, Validators.compose([Validators.required, Validators.pattern(PASSWORD_REGEX)])],
-        rePassword: [null, Validators.compose([Validators.required])]
+        rePassword: [null, [Validators.required]]
       },
       { validators: this.passwordMatchValidator }
     )
+
+    this.form.valueChanges.subscribe(() => {
+      Object.keys(this.form.controls).forEach((controlName) => {
+        const control = this.form.get(controlName)
+        if (control?.value && !control.touched) {
+          control.markAsTouched()
+        }
+      })
+    })
   }
 
   get password(): FormControl {
@@ -81,10 +90,32 @@ export class ProvideNewPasswordComponent implements OnInit {
     return this.form.get('rePassword') as FormControl
   }
 
+  getConfirmPassError(): string | undefined {
+    const control = this.form.get('rePassword')
+
+    const trimmedValue = control?.value?.trim()
+    if (control && control.value !== trimmedValue) {
+      control.setValue(trimmedValue, { emitEvent: false })
+    }
+
+    if ((control?.touched || control?.dirty) && control?.touched) {
+      if (control.errors?.['required']) {
+        return 'Xác nhận lại mật khẩu không được để trống'
+      }
+      if (control.errors?.['passwordMismatch']) {
+        return 'Xác nhận lại mật khẩu phải giống mật khẩu đã nhập'
+      }
+    }
+    return undefined
+  }
+
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value
     const rePassword = control.get('rePassword')?.value
 
+    if (rePassword && password !== rePassword) {
+      control.get('rePassword')?.setErrors({ passwordMismatch: true })
+    }
     // Return error if passwords do not match
     return rePassword && password !== rePassword ? { passwordMismatch: true } : null
   }

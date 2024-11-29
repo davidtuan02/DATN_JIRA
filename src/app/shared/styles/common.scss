@@ -1,3 +1,13 @@
+.ant-tabs-tab:hover {
+  color: #1944a7 !important;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active {
+  color: #1944a7 !important;
+  border-bottom: 2px solid #1944a7 !important;
+  z-index: 9999;
+}
+
 .ant-input-affix-wrapper {
   border-radius: 8px !important;
 }
@@ -109,10 +119,13 @@ nz-date-picker {
   font-style: normal;
 }
 
+<<<<<<< HEAD
 .ant-input-group {
   min-height: 40px !important;
 }
 
+=======
+>>>>>>> feature/tuannv
 .ant-input {
   font-size: 14px !important;
   min-height: 40px !important;

@@ -1,5 +1,9 @@
 @import '../../../../shared/styles/variable';
 
+::ng-deep .ant-modal-content {
+  border-radius: 8px;
+}
+
 nz-select {
   width: 100%;
 }
@@ -69,18 +73,17 @@ nz-range-picker {
   border: none !important;
 }
 
-::ng-deep .ant-picker.ng-touched.ng-invalid, nz-date-picker.ng-dirty.ng-invalid {
+::ng-deep .ant-picker.ng-touched.ng-invalid,
+nz-date-picker.ng-dirty.ng-invalid {
   border: none !important;
 }
 
-::ng-deep .ant-picker-status-error.ant-picker, .ant-picker-status-error.ant-picker:not(.ant-picker-disabled):hover {
-  background: transparent !important;
+::ng-deep .ant-picker-focused {
+  border: none !important;
+  box-shadow: none !important;
 }
 
-::ng-deep .ant-picker-status-error.ant-picker, .ant-picker-status-error.ant-picker[_ngcontent-ng-c2897177930]:not(.ant-picker-disabled):hover {
-  background: transparent !important;
+::ng-deep .ant-picker:hover {
+  border: none !important;
+  box-shadow: none !important;
 }
-
-
-
-

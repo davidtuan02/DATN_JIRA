@@ -1,3 +1,8 @@
+.ant-input-clear-icon,
+.anticon.ant-input-clear-icon {
+  margin-right: 5px !important;
+}
+
 .ant-tabs-tab:hover {
   color: #1944a7 !important;
 }
@@ -64,6 +69,13 @@ nz-date-picker {
 
 .ant-input-affix-wrapper:has(.ng-invalid.ng-touched) {
   border: 1px solid #dc3545;
+}
+
+.ant-input-affix-wrapper:has(.ng-invalid.ng-touched:disabled) {
+  border: 1px solid #dc3545 !important; /* Vẫn giữ viền đỏ khi disabled */
+  background-color: #f8d7da; /* Tùy chỉnh màu nền (không bắt buộc) */
+  color: #6c757d; /* Tùy chỉnh màu chữ (không bắt buộc) */
+  pointer-events: none; /* Vẫn không cho tương tác */
 }
 
 .ant-select.ng-invalid.ng-touched,
@@ -211,4 +223,9 @@ textarea {
 
 textarea {
   resize: vertical;
+}
+
+.ant-input-group .ant-picker-disabled,
+.ant-input-group .ant-select-disabled {
+  opacity: 1 !important; /* Hoặc giá trị opacity mong muốn */
 }

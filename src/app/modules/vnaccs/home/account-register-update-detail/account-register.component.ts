@@ -1,9 +1,18 @@
-import {ChangeDetectorRef, Component} from '@angular/core'
-import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
-import {NzGridModule} from 'ng-zorro-antd/grid'
-import {NzInputModule} from 'ng-zorro-antd/input'
-import {NzSelectModule} from 'ng-zorro-antd/select'
-import {NzDatePickerModule} from 'ng-zorro-antd/date-picker'
+import { ChangeDetectorRef, Component } from '@angular/core'
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms'
+import { NzGridModule } from 'ng-zorro-antd/grid'
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzSelectModule } from 'ng-zorro-antd/select'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import {
   CUSTOMER_TABLE_SIZE,
   DATE_FORMAT,
@@ -12,29 +21,29 @@ import {
   INIT_PAGE,
   INIT_SIZE
 } from '../../../../shared/components/common.const'
-import {NzButtonComponent, NzButtonModule, NzButtonSize} from 'ng-zorro-antd/button'
-import {NzTableModule} from 'ng-zorro-antd/table'
-import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
-import {CommonModule, DatePipe} from '@angular/common'
-import {AccountRegisterService} from './account-register.service'
-import {NzSelectSizeType} from 'ng-zorro-antd/select'
-import {NzModalModule} from 'ng-zorro-antd/modal'
-import {ActivatedRoute, Router, RouterLink} from '@angular/router'
-import {NzRadioModule} from 'ng-zorro-antd/radio'
-import {NotificationService} from '../../../../shared/services/notification.service'
-import {DialogService} from '../../../../shared/services/dialog.service'
-import {ConfirmPopupComponent} from '../../../../shared/components/confirm-popup/confirm-popup.component'
-import {AuthService} from '../../../../shared/services/auth.service'
-import {STORAGE_KEYS} from '../../../../shared/constants/system.const'
-import {BehaviorSubject, debounceTime, finalize, Subject} from 'rxjs'
+import { NzButtonComponent, NzButtonModule, NzButtonSize } from 'ng-zorro-antd/button'
+import { NzTableModule } from 'ng-zorro-antd/table'
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
+import { CommonModule, DatePipe } from '@angular/common'
+import { AccountRegisterService } from './account-register.service'
+import { NzSelectSizeType } from 'ng-zorro-antd/select'
+import { NzModalModule } from 'ng-zorro-antd/modal'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
+import { NzRadioModule } from 'ng-zorro-antd/radio'
+import { NotificationService } from '../../../../shared/services/notification.service'
+import { DialogService } from '../../../../shared/services/dialog.service'
+import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import { AuthService } from '../../../../shared/services/auth.service'
+import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
+import { BehaviorSubject, debounceTime, finalize, Subject } from 'rxjs'
 import * as asn1js from 'asn1js'
-import {Certificate} from 'pkijs'
-import {AutoTrimDirective} from '../../../../shared/directives/trim.directive'
+import { Certificate } from 'pkijs'
+import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
-import {NzIconModule} from 'ng-zorro-antd/icon'
-import {MenuService} from '../../../../shared/services/menu.service'
-import {convertVNStr} from '../../../../shared/utilities/convertVNStr'
-import {MySignService} from '../mySignService.service'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { MenuService } from '../../../../shared/services/menu.service'
+import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
+import { MySignService } from '../mySignService.service'
 
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
@@ -125,14 +134,14 @@ export class AccountRegisterComponent {
 
   radioValue = '1'
   optionFileStatuss = [
-    {value: 1, label: 'Đang hiển thị'},
-    {value: 0, label: 'Đang tắt'}
+    { value: 1, label: 'Đang hiển thị' },
+    { value: 0, label: 'Đang tắt' }
   ]
 
   optionPaper = [
-    {value: 1, label: 'CMND'},
-    {value: 2, label: 'CCCD'},
-    {value: 3, label: 'Hộ chiếu'}
+    { value: 1, label: 'CMND' },
+    { value: 2, label: 'CCCD' },
+    { value: 3, label: 'Hộ chiếu' }
   ]
   msAcc: string = ''
   listOfData: any = []
@@ -162,8 +171,7 @@ export class AccountRegisterComponent {
     private cdr: ChangeDetectorRef,
     private menuSrv: MenuService,
     private msService: MySignService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadForm()
@@ -318,7 +326,7 @@ export class AccountRegisterComponent {
       freeSoftware: ['0', [Validators.required]],
       ediSoftware: ['0'],
       numberComputer: [0],
-      userCodeExpiryDate: ['']
+      userCodeExpiryDate: ['', [this.dateGreaterThanOrEqualTodayValidator()]]
     })
 
     this.form.valueChanges.subscribe(() => {
@@ -339,6 +347,41 @@ export class AccountRegisterComponent {
     this.form.get('ediSoftware')?.valueChanges.subscribe(() => {
       this.calculateTotal()
     })
+  }
+
+  getUserCodeError(): string | undefined {
+    const control = this.form.get('userCodeExpiryDate')
+    if ((control?.touched || control?.dirty) && control.invalid) {
+      if (control.errors?.['dateInvalid']) {
+        return 'Ngày hết hiệu lực User code phải lớn hơn hoặc bằng ngày hiện tại'
+      }
+    }
+
+    return undefined
+  }
+
+  dateGreaterThanOrEqualTodayValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const inputDate = control.value ? new Date(control.value) : null
+      const today = new Date()
+
+      if (!inputDate || isNaN(inputDate.getTime())) {
+        return null // Nếu giá trị không hợp lệ, không set lỗi gì
+      }
+
+      // So sánh với ngày hiện tại, bỏ phần giờ phút giây
+      today.setHours(0, 0, 0, 0)
+      inputDate.setHours(0, 0, 0, 0)
+
+      if (inputDate < today) {
+        control.setErrors({ dateInvalid: true }) // Set lỗi nếu ngày nhỏ hơn ngày hiện tại
+        return { dateInvalid: true }
+      } else {
+        // Nếu không có lỗi, xóa lỗi khỏi control
+        control.setErrors(null)
+        return null
+      }
+    }
   }
 
   getStatusItemTable(data: any): string {
@@ -409,13 +452,13 @@ export class AccountRegisterComponent {
 
       if (!fromDate || !toDate) {
         if (fromDateControl?.errors) {
-          const errors = {...fromDateControl.errors}
+          const errors = { ...fromDateControl.errors }
           delete errors['dateRangeInvalid']
           fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = {...toDateControl.errors}
+          const errors = { ...toDateControl.errors }
           delete errors['dateRangeInvalid']
           toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
@@ -433,13 +476,13 @@ export class AccountRegisterComponent {
         })
       } else {
         if (fromDateControl?.errors) {
-          const errors = {...fromDateControl.errors}
+          const errors = { ...fromDateControl.errors }
           delete errors['dateRangeInvalid']
           fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = {...toDateControl.errors}
+          const errors = { ...toDateControl.errors }
           delete errors['dateRangeInvalid']
           toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
@@ -596,7 +639,7 @@ export class AccountRegisterComponent {
       this.registerOrUpdate()
     } else {
       console.log('Form invalid')
-      return;
+      return
     }
   }
 
@@ -868,7 +911,6 @@ export class AccountRegisterComponent {
   }
 
   onRadioChange(value: any) {
-    return
     const initialValue = this.initialRadioValue$.getValue()
     if (initialValue != value) {
       this.formValidateUserId.get('digitalSignature')?.reset()
@@ -1199,6 +1241,11 @@ export class AccountRegisterComponent {
     })
   }
 
+  handleBack() {
+    this.router.navigate(['/vnaccs/home/search-custom'])
+    this.menuSrv.setSelectedMenu('search')
+  }
+
   registerOrUpdate() {
     const dataDialog = {
       title:
@@ -1228,7 +1275,9 @@ export class AccountRegisterComponent {
           freeSoftware: this.form.getRawValue().freeSoftware,
           ediSoftware: this.form.getRawValue().ediSoftware,
           edifactSoftware: this.form.getRawValue().ediSoftware,
-          userCodeExpiryDate: new Date(this.form.getRawValue().userCodeExpiryDate).getTime(),
+          userCodeExpiryDate: this.form.getRawValue().userCodeExpiryDate
+            ? new Date(this.form.getRawValue().userCodeExpiryDate).getTime()
+            : null,
           userIdRequestList: this.dataTable
         }
 
@@ -1238,76 +1287,85 @@ export class AccountRegisterComponent {
           const decoded = this.decodeToken(token)
           if (decoded && decoded.sub) {
             if (this.modeScreen === 'register') {
-              let showMsPopup: any;
-              if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+              let showMsPopup: any
+              if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                 showMsPopup = setTimeout(() => {
-                  this.msService.show();
+                  this.msService.show()
                 }, 1000)
               }
-              this.accReSrv.register(decoded.sub, body).pipe(
-                finalize(() => {
-                    if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+              this.accReSrv
+                .register(decoded.sub, body)
+                .pipe(
+                  finalize(() => {
+                    if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                       this.msService.hide()
                       clearTimeout(showMsPopup)
                     }
+                  })
+                )
+                .subscribe((res: any) => {
+                  if (res) {
+                    if (res.success) {
+                      this.notification.success(res.message)
+                      this.router.navigate(['/vnaccs/home/search-custom'])
+                      this.menuSrv.setSelectedMenu('search')
+                    }
                   }
-                )).subscribe((res: any) => {
-                if (res) {
-                  if (res.success) {
-                    this.notification.success(res.message)
-                    this.router.navigate(['/vnaccs/home/search-custom'])
-                    this.menuSrv.setSelectedMenu('search')
-                  }
-                }
-              })
+                })
             } else if (this.modeScreen === 'update') {
               if (this.dataFromSearch.requestId) {
-                let showMsPopup: any;
-                if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                let showMsPopup: any
+                if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                   showMsPopup = setTimeout(() => {
-                    this.msService.show();
+                    this.msService.show()
                   }, 1000)
                 }
-                this.accReSrv.update(this.dataFromSearch.requestId, body).pipe(
-                  finalize(() => {
-                      if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                this.accReSrv
+                  .update(this.dataFromSearch.requestId, body)
+                  .pipe(
+                    finalize(() => {
+                      if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                         this.msService.hide()
                         clearTimeout(showMsPopup)
                       }
+                    })
+                  )
+                  .subscribe((res: any) => {
+                    if (res) {
+                      if (res.success) {
+                        this.notification.success(res.message)
+                        this.router.navigate(['/vnaccs/home/search-custom'])
+                        this.menuSrv.setSelectedMenu('search')
+                      }
                     }
-                  )).subscribe((res: any) => {
-                  if (res) {
-                    if (res.success) {
-                      this.notification.success(res.message)
-                      this.router.navigate(['/vnaccs/home/search-custom'])
-                      this.menuSrv.setSelectedMenu('search')
-                    }
-                  }
-                })
+                  })
               } else {
                 //update first
-                let showMsPopup: any;
-                if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                let showMsPopup: any
+                if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                   showMsPopup = setTimeout(() => {
-                    this.msService.show();
+                    this.msService.show()
                   }, 1000)
                 }
-                this.accReSrv.edit(decoded.sub, body).pipe(
-                  finalize(() => {
-                      if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                this.accReSrv
+                  .edit(decoded.sub, body)
+                  .pipe(
+                    finalize(() => {
+                      if (this.formValidateUserId.get('digitalSignatureType')?.value == 2) {
                         this.msService.hide()
                         clearTimeout(showMsPopup)
                       }
+                    })
+                  )
+                  .subscribe((res: any) => {
+                    if (res) {
+                      if (res.success) {
+                        this.notification.success(res.message)
+                        this.router.navigate(['/vnaccs/home/search-custom'])
+                        this.menuSrv.setSelectedMenu('search')
+                      }
                     }
-                  )).subscribe((res: any) => {
-                  if (res) {
-                    if (res.success) {
-                      this.notification.success(res.message)
-                      this.router.navigate(['/vnaccs/home/search-custom'])
-                      this.menuSrv.setSelectedMenu('search')
-                    }
-                  }
-                })
+                  })
               }
             }
           }

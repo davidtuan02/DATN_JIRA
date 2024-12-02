@@ -271,6 +271,9 @@
             >
             </nz-date-picker>
           </nz-input-group>
+          <p *ngIf="getUserCodeError()" style="max-height: 0" class="text-danger fs-14">
+            {{ getUserCodeError() }}
+          </p>
           <ng-template #userCodeDateClearTpl>
             @if (form.get('userCodeExpiryDate')?.value && form.get('userCodeExpiryDate')?.enabled) {
             <span
@@ -714,7 +717,7 @@
         </button>
         <button
           *ngIf="modeScreen === 'detail' || modeScreen === 'update'"
-          [routerLink]="['/vnaccs/home/search-custom']"
+          (click)="handleBack()"
           type="button"
           class="font-inter-600 flex items-center justify-center gap-[8px] common-button"
           style="

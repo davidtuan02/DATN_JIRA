@@ -347,7 +347,16 @@ export class SearchComponent {
           ? new Date(this.form.get('approvalToDate')?.value).setHours(23, 59, 59, 99)
           : null,
         pageSize: this.paginate.size,
-        pageNo: this.paginate.page - 1
+        pageNo:
+          this.form.get('requestType')?.value ||
+          this.form.get('requestStatus')?.value ||
+          this.form.get('requestNo')?.value ||
+          this.form.get('startDateSubmit')?.value ||
+          this.form.get('endDateSubmit')?.value ||
+          this.form.get('approvalFromDate')?.value ||
+          this.form.get('approvalToDate')?.value
+            ? 0
+            : this.paginate.page - 1
       }
       const token: any = localStorage?.getItem(STORAGE_KEYS.TOKEN) || sessionStorage?.getItem(STORAGE_KEYS.TOKEN)
       let decoded: any

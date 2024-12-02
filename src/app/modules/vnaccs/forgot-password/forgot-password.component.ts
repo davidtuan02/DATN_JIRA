@@ -33,8 +33,8 @@ import { clearStore } from '../../../shared/utilities/system.utils'
 import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
 import { NzIconModule } from 'ng-zorro-antd/icon'
-import {finalize} from "rxjs";
-import {MySignService} from "../home/mySignService.service";
+import { finalize } from 'rxjs'
+import { MySignService } from '../home/mySignService.service'
 declare function initPlugin(comp: any): void
 
 @Component({
@@ -227,26 +227,30 @@ export class ForgotPasswordComponent implements OnInit {
           credentialId: this.loginForm.getRawValue().credentialId,
           taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS
         }
-        let showMsPopup: any;
-        if (this.loginForm.get("digitalSignatureType")?.value == 2) {
+        let showMsPopup: any
+        if (this.loginForm.get('digitalSignatureType')?.value == 2) {
           showMsPopup = setTimeout(() => {
-            this.msService.show();
+            this.msService.show()
           }, 1000)
         }
-        this.forgotSrv.forgotPassword(body).pipe(finalize(() => {
-            if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-              this.msService.hide();
-              clearTimeout(showMsPopup)
+        this.forgotSrv
+          .forgotPassword(body)
+          .pipe(
+            finalize(() => {
+              if (this.loginForm.get('digitalSignatureType')?.value == 2) {
+                this.msService.hide()
+                clearTimeout(showMsPopup)
+              }
+            })
+          )
+          .subscribe((res: any) => {
+            if (res && res.success) {
+              clearStore()
+              this.authService.setLoginStatus(false)
+              this.router.navigate(['vnaccs/login'])
+              this.notification.success('Lấy lại mật khẩu thành công')
             }
-          }
-        )).subscribe((res: any) => {
-          if (res && res.success) {
-            clearStore()
-            this.authService.setLoginStatus(false)
-            this.router.navigate(['vnaccs/login'])
-            this.notification.success('Lấy lại mật khẩu thành công')
-          }
-        })
+          })
       }
     })
   }
@@ -303,7 +307,7 @@ export class ForgotPasswordComponent implements OnInit {
       if (control.errors?.['required']) {
         return 'Xác nhận lại mật khẩu mới không được để trống'
       }
-      if (this.loginForm.errors?.['notmatching']) {
+      if (control.errors?.['notmatching']) {
         return 'Xác nhận lại mật khẩu mới phải giống mật khẩu mới đã nhập'
       }
     }
@@ -313,7 +317,8 @@ export class ForgotPasswordComponent implements OnInit {
     const pass = group.get('newPassword')?.value
     const confirmPass = group.get('confirmPassword')?.value
     if (confirmPass && pass !== confirmPass) {
-      return { notmatching: true }
+      group.get('confirmPassword')?.setErrors({ notmatching: true })
+      return null
     }
     return null
   }
@@ -521,25 +526,25 @@ export class ForgotPasswordComponent implements OnInit {
     return `${yyyy}${MM}${dd}${HH}${mm}${ss}${timezoneOffset}`
   }
   checkEffectiveDate(input: string) {
-    const date = new Date(input).setHours(0,0,0,0);
-    const today = new Date().getTime();
+    const date = new Date(input).setHours(0, 0, 0, 0)
+    const today = new Date().getTime()
     if (date > today) {
-      this.notification.error("Chữ ký số chưa có hiệu lực");
-      return;
+      this.notification.error('Chữ ký số chưa có hiệu lực')
+      return
     }
   }
 
   checkExpiryDate(input: string) {
-    const date = new Date(input).setHours(23,59,59,999);
-    const today = new Date().getTime();
+    const date = new Date(input).setHours(23, 59, 59, 999)
+    const today = new Date().getTime()
     if (date < today) {
-      this.notification.error("Chữ ký số đã hết hiệu lực");
-      return;
+      this.notification.error('Chữ ký số đã hết hiệu lực')
+      return
     }
   }
 
   showErrorVTCA() {
-    this.notification.error("Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại");
-    return;
+    this.notification.error('Có lỗi xảy ra khi nhận diện chữ ký số. Vui lòng thử lại')
+    return
   }
 }

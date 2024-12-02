@@ -77,7 +77,7 @@ export class HeaderVnaccsComponent implements OnInit {
   }
 
   reload() {
-    window.location.reload()
+    // window.location.reload()
   }
 
   getUserInfo(taxCode: string) {

@@ -285,7 +285,8 @@
       <!-- Khóa công khai -->
       <nz-row nzSpan="24">
         <label for="" class="custom-label">Khóa công khai <span style="color: #ed5564">*</span></label>
-        <textarea style="min-height: 100px; border-radius: 8px" formControlName="publicKey" nz-input rows="5"> </textarea>
+        <textarea style="min-height: 100px; border-radius: 8px" formControlName="publicKey" nz-input rows="5">
+        </textarea>
         <p style="max-height: 10px" class="text-danger fs-14"></p>
       </nz-row>
 
@@ -915,6 +916,15 @@
 </ng-template>
 
 <ng-template #suffixPassword>
+  <span
+    *ngIf="loginForm.get('password')?.value"
+    nz-icon
+    class="ant-input-clear-icon"
+    nzTheme="fill"
+    nzType="close-circle"
+    (click)="loginForm.get('password')?.setValue(null)"
+  ></span>
+
   <svg
     *ngIf="!passwordVisible"
     (click)="passwordVisible = !passwordVisible"

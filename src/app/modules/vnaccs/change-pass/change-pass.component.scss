@@ -1,5 +1,11 @@
 @import '../../../shared/styles/variable';
 
+:host ::ng-deep {
+  .ant-picker-clear {
+    right: 10% !important;
+  }
+}
+
 .custom-label {
   font-size: 14px;
 }

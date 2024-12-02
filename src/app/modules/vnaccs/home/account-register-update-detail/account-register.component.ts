@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component } from '@angular/core'
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
-import { NzGridModule } from 'ng-zorro-antd/grid'
-import { NzInputModule } from 'ng-zorro-antd/input'
-import { NzSelectModule } from 'ng-zorro-antd/select'
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import {ChangeDetectorRef, Component} from '@angular/core'
+import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
+import {NzGridModule} from 'ng-zorro-antd/grid'
+import {NzInputModule} from 'ng-zorro-antd/input'
+import {NzSelectModule} from 'ng-zorro-antd/select'
+import {NzDatePickerModule} from 'ng-zorro-antd/date-picker'
 import {
   CUSTOMER_TABLE_SIZE,
   DATE_FORMAT,
@@ -12,29 +12,30 @@ import {
   INIT_PAGE,
   INIT_SIZE
 } from '../../../../shared/components/common.const'
-import { NzButtonComponent, NzButtonModule, NzButtonSize } from 'ng-zorro-antd/button'
-import { NzTableModule } from 'ng-zorro-antd/table'
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
-import { CommonModule, DatePipe } from '@angular/common'
-import { AccountRegisterService } from './account-register.service'
-import { NzSelectSizeType } from 'ng-zorro-antd/select'
-import { NzModalModule } from 'ng-zorro-antd/modal'
-import { ActivatedRoute, Router, RouterLink } from '@angular/router'
-import { NzRadioModule } from 'ng-zorro-antd/radio'
-import { NotificationService } from '../../../../shared/services/notification.service'
-import { DialogService } from '../../../../shared/services/dialog.service'
-import { ConfirmPopupComponent } from '../../../../shared/components/confirm-popup/confirm-popup.component'
-import { AuthService } from '../../../../shared/services/auth.service'
-import { STORAGE_KEYS } from '../../../../shared/constants/system.const'
-import { BehaviorSubject, debounceTime, finalize, Subject } from 'rxjs'
+import {NzButtonComponent, NzButtonModule, NzButtonSize} from 'ng-zorro-antd/button'
+import {NzTableModule} from 'ng-zorro-antd/table'
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
+import {CommonModule, DatePipe} from '@angular/common'
+import {AccountRegisterService} from './account-register.service'
+import {NzSelectSizeType} from 'ng-zorro-antd/select'
+import {NzModalModule} from 'ng-zorro-antd/modal'
+import {ActivatedRoute, Router, RouterLink} from '@angular/router'
+import {NzRadioModule} from 'ng-zorro-antd/radio'
+import {NotificationService} from '../../../../shared/services/notification.service'
+import {DialogService} from '../../../../shared/services/dialog.service'
+import {ConfirmPopupComponent} from '../../../../shared/components/confirm-popup/confirm-popup.component'
+import {AuthService} from '../../../../shared/services/auth.service'
+import {STORAGE_KEYS} from '../../../../shared/constants/system.const'
+import {BehaviorSubject, debounceTime, finalize, Subject} from 'rxjs'
 import * as asn1js from 'asn1js'
-import { Certificate } from 'pkijs'
-import { AutoTrimDirective } from '../../../../shared/directives/trim.directive'
+import {Certificate} from 'pkijs'
+import {AutoTrimDirective} from '../../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
-import { NzIconModule } from 'ng-zorro-antd/icon'
-import { MenuService } from '../../../../shared/services/menu.service'
-import { convertVNStr } from '../../../../shared/utilities/convertVNStr'
-import { MySignService } from '../mySignService.service'
+import {NzIconModule} from 'ng-zorro-antd/icon'
+import {MenuService} from '../../../../shared/services/menu.service'
+import {convertVNStr} from '../../../../shared/utilities/convertVNStr'
+import {MySignService} from '../mySignService.service'
+
 // import jwt_decode from 'jwt-decode';
 declare function initPlugin(comp: any): void
 
@@ -124,14 +125,14 @@ export class AccountRegisterComponent {
 
   radioValue = '1'
   optionFileStatuss = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
 
   optionPaper = [
-    { value: 1, label: 'CMND' },
-    { value: 2, label: 'CCCD' },
-    { value: 3, label: 'Hộ chiếu' }
+    {value: 1, label: 'CMND'},
+    {value: 2, label: 'CCCD'},
+    {value: 3, label: 'Hộ chiếu'}
   ]
   msAcc: string = ''
   listOfData: any = []
@@ -161,7 +162,8 @@ export class AccountRegisterComponent {
     private cdr: ChangeDetectorRef,
     private menuSrv: MenuService,
     private msService: MySignService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadForm()
@@ -407,13 +409,13 @@ export class AccountRegisterComponent {
 
       if (!fromDate || !toDate) {
         if (fromDateControl?.errors) {
-          const errors = { ...fromDateControl.errors }
+          const errors = {...fromDateControl.errors}
           delete errors['dateRangeInvalid']
           fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = { ...toDateControl.errors }
+          const errors = {...toDateControl.errors}
           delete errors['dateRangeInvalid']
           toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
@@ -431,13 +433,13 @@ export class AccountRegisterComponent {
         })
       } else {
         if (fromDateControl?.errors) {
-          const errors = { ...fromDateControl.errors }
+          const errors = {...fromDateControl.errors}
           delete errors['dateRangeInvalid']
           fromDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
 
         if (toDateControl?.errors) {
-          const errors = { ...toDateControl.errors }
+          const errors = {...toDateControl.errors}
           delete errors['dateRangeInvalid']
           toDateControl.setErrors(Object.keys(errors).length ? errors : null)
         }
@@ -594,6 +596,7 @@ export class AccountRegisterComponent {
       this.registerOrUpdate()
     } else {
       console.log('Form invalid')
+      return;
     }
   }
 
@@ -1235,7 +1238,20 @@ export class AccountRegisterComponent {
           const decoded = this.decodeToken(token)
           if (decoded && decoded.sub) {
             if (this.modeScreen === 'register') {
-              this.accReSrv.register(decoded.sub, body).subscribe((res: any) => {
+              let showMsPopup: any;
+              if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                showMsPopup = setTimeout(() => {
+                  this.msService.show();
+                }, 1000)
+              }
+              this.accReSrv.register(decoded.sub, body).pipe(
+                finalize(() => {
+                    if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                      this.msService.hide()
+                      clearTimeout(showMsPopup)
+                    }
+                  }
+                )).subscribe((res: any) => {
                 if (res) {
                   if (res.success) {
                     this.notification.success(res.message)
@@ -1246,7 +1262,20 @@ export class AccountRegisterComponent {
               })
             } else if (this.modeScreen === 'update') {
               if (this.dataFromSearch.requestId) {
-                this.accReSrv.update(this.dataFromSearch.requestId, body).subscribe((res: any) => {
+                let showMsPopup: any;
+                if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                  showMsPopup = setTimeout(() => {
+                    this.msService.show();
+                  }, 1000)
+                }
+                this.accReSrv.update(this.dataFromSearch.requestId, body).pipe(
+                  finalize(() => {
+                      if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                        this.msService.hide()
+                        clearTimeout(showMsPopup)
+                      }
+                    }
+                  )).subscribe((res: any) => {
                   if (res) {
                     if (res.success) {
                       this.notification.success(res.message)
@@ -1257,7 +1286,20 @@ export class AccountRegisterComponent {
                 })
               } else {
                 //update first
-                this.accReSrv.edit(decoded.sub, body).subscribe((res: any) => {
+                let showMsPopup: any;
+                if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                  showMsPopup = setTimeout(() => {
+                    this.msService.show();
+                  }, 1000)
+                }
+                this.accReSrv.edit(decoded.sub, body).pipe(
+                  finalize(() => {
+                      if (this.formValidateUserId.get("digitalSignatureType")?.value == 2) {
+                        this.msService.hide()
+                        clearTimeout(showMsPopup)
+                      }
+                    }
+                  )).subscribe((res: any) => {
                   if (res) {
                     if (res.success) {
                       this.notification.success(res.message)

@@ -123,7 +123,7 @@ nz-date-picker {
   min-height: 40px !important;
 }
 
-.ant-input {
+.ant-input:not(textarea) {
   font-size: 14px !important;
   min-height: 40px !important;
 }

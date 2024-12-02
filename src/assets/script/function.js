@@ -374,19 +374,10 @@ function getCertifcate(comp) {
       } else {
         //get serial number
         var ReqSNB;
-        console.log(cert_rawData)
-        comp.getPublicKeyFromCertificate(cert_rawData).then(publicKey => {
-          if (publicKey) {
-            console.log(publicKey)
-            comp.patchValueToForm("publicKey", btoa(publicKey))
-          }
-        });
+
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
           ReqSNB = new XMLHttpRequest();
-          getCertValidDate(comp);
-          getCertExpireDate(comp);
-          getCertCommonName(comp);
-          getCertDN(comp);
+
         } else {// code for IE6, IE5
           ReqSNB = new ActiveXObject("Microsoft.XMLHTTP");
         }
@@ -396,11 +387,8 @@ function getCertifcate(comp) {
         ReqSNB.onreadystatechange = function () {
           if (ReqSNB.readyState == 4 && ReqSNB.status == 200) {
             cert_SNB = ReqSNB.responseText;
-            if (cert_SNB) {
-              comp.patchValueToForm("serial", cert_SNB)
-            }
-            // signData();
-            signHash();
+            signHash(comp);
+            // signData(comp);
           }
         }
         ReqSNB.open("POST", domain + "getCertSNB", true);
@@ -554,7 +542,7 @@ function convertBase64ToHexa(stringBase64) {
   return hexText;
 }
 
-function signHash() {
+function signHash(comp) {
   var xmlhttp;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
@@ -565,23 +553,24 @@ function signHash() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       sign_Signature = xmlhttp.responseText;
       if (sign_Signature == "" || sign_Signature == undefined || sign_Signature == null) {
-        //get infomation error
-        var ReqLastErr;
-        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-          ReqLastErr = new XMLHttpRequest();
-        } else {// code for IE6, IE5
-          ReqLastErr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        ReqLastErr.onreadystatechange = function () {
-          if (ReqLastErr.readyState == 4 && ReqLastErr.status == 200) {
-            // //alert("Error code = " +ReqLastErr.responseText);
-            showErrMsg_CMS(ReqLastErr.responseText);
-          }
-        }
-        ReqLastErr.open("POST", domain + "getLastErr", true);
-        ReqLastErr.send();
+        comp.showErrorVTCA();
       } else {
         // // alert("Test Plugin ký thành công");
+
+        if (cert_SNB) {
+          comp.patchValueToForm("serial", cert_SNB)
+        }
+        getCertValidDate(comp);
+        getCertExpireDate(comp);
+        getCertCommonName(comp);
+        getCertDN(comp);
+        comp.getPublicKeyFromCertificate(cert_rawData).then(publicKey => {
+          if (publicKey) {
+            console.log(publicKey)
+            comp.patchValueToForm("publicKey", btoa(publicKey))
+          }
+        });
+
       }
     }
   }
@@ -590,7 +579,7 @@ function signHash() {
   xmlhttp.send("sessionID=" + hSession + "&HashVal=" + hash_Data + "&HashOpt=0");
 }
 
-function signData() {
+function signData(comp) {
 
   var text = sign_Data;
   text = Base64.encode(text);
@@ -621,7 +610,7 @@ function signData() {
         ReqLastErr.open("POST", domain + "getLastErr", true);
         ReqLastErr.send();
       } else {
-        verifySignature();
+        verifySignature(comp);
       }
     }
   }
@@ -630,7 +619,7 @@ function signData() {
   xmlhttp.send("sessionID=" + hSession + "&inData=" + text);
 }
 
-function verifySignature() {
+function verifySignature(comp) {
   var msg = sign_Data;
   var signature = sign_Signature;
   if (signature == "") {

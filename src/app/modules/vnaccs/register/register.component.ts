@@ -369,13 +369,17 @@ export class RegisterComponent implements OnInit {
             credentialId: this.loginForm.getRawValue().credentialId
           }
           if (this.dataToEditOrView.requestId) {
+            let showMsPopup: any;
             if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-              this.msService.show();
+              showMsPopup = setTimeout(() => {
+                this.msService.show();
+              }, 1000)
             }
             this.registerSrv.update(this.dataToEditOrView.requestId, body)
               .pipe(finalize(() => {
                   if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-                    this.msService.hide()
+                    this.msService.hide();
+                    clearTimeout(showMsPopup)
                   }
                 }
               )).subscribe((res: any) => {
@@ -385,13 +389,17 @@ export class RegisterComponent implements OnInit {
               }
             })
           } else {
+            let showMsPopup: any;
             if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-              this.msService.show();
+              showMsPopup = setTimeout(() => {
+                this.msService.show();
+              }, 1000)
             }
             this.registerSrv.updateFirst(this.dataToEditOrView.id, body)
               .pipe(finalize(() => {
                   if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-                    this.msService.hide()
+                    this.msService.hide();
+                    clearTimeout(showMsPopup)
                   }
                 }
               ))
@@ -421,13 +429,17 @@ export class RegisterComponent implements OnInit {
             taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS,
             credentialId: this.loginForm.getRawValue().credentialId
           }
+          let showMsPopup: any;
           if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-            this.msService.show();
+            showMsPopup = setTimeout(() => {
+              this.msService.show();
+            }, 1000)
           }
           this.registerSrv.register(body)
             .pipe(finalize(() => {
                 if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-                  this.msService.hide()
+                  this.msService.hide();
+                  clearTimeout(showMsPopup)
                 }
               }
             )).subscribe((res: any) => {

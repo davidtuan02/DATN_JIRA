@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core'
-import { NzButtonModule } from 'ng-zorro-antd/button'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import {Component, CUSTOM_ELEMENTS_SCHEMA, OnInit} from '@angular/core'
+import {NzButtonModule} from 'ng-zorro-antd/button'
+import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {
   FormControl,
   FormGroup,
@@ -9,32 +9,32 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms'
-import { BrowserModule } from '@angular/platform-browser'
-import { NzGridModule } from 'ng-zorro-antd/grid'
-import { CommonModule } from '@angular/common'
-import { NzFormModule } from 'ng-zorro-antd/form'
-import { NzInputModule } from 'ng-zorro-antd/input'
-import { HeaderVnaccsComponent } from '../../../layouts/header/header.component'
-import { FooterVnaccsComponent } from '../../../layouts/footer/footer.component'
-import { NzRadioModule } from 'ng-zorro-antd/radio'
-import { NzSelectModule } from 'ng-zorro-antd/select'
-import { NzModalComponent, NzModalModule } from 'ng-zorro-antd/modal'
-import { NzTableModule } from 'ng-zorro-antd/table'
-import { LoginService } from './login.service'
-import {finalize, Subject} from 'rxjs'
-import { STORAGE_KEYS } from '../../../shared/constants/system.const'
-import { Router, RouterLink } from '@angular/router'
-import { NotificationService } from '../../../shared/services/notification.service'
-import { PasswordMaskDirective } from './mask-password.directive'
-import { NzMessageService } from 'ng-zorro-antd/message'
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip'
-import { AuthService } from '../../../shared/services/auth.service'
+import {BrowserModule} from '@angular/platform-browser'
+import {NzGridModule} from 'ng-zorro-antd/grid'
+import {CommonModule} from '@angular/common'
+import {NzFormModule} from 'ng-zorro-antd/form'
+import {NzInputModule} from 'ng-zorro-antd/input'
+import {HeaderVnaccsComponent} from '../../../layouts/header/header.component'
+import {FooterVnaccsComponent} from '../../../layouts/footer/footer.component'
+import {NzRadioModule} from 'ng-zorro-antd/radio'
+import {NzSelectModule} from 'ng-zorro-antd/select'
+import {NzModalComponent, NzModalModule} from 'ng-zorro-antd/modal'
+import {NzTableModule} from 'ng-zorro-antd/table'
+import {LoginService} from './login.service'
+import {debounceTime, finalize, Subject} from 'rxjs'
+import {STORAGE_KEYS} from '../../../shared/constants/system.const'
+import {Router, RouterLink} from '@angular/router'
+import {NotificationService} from '../../../shared/services/notification.service'
+import {PasswordMaskDirective} from './mask-password.directive'
+import {NzMessageService} from 'ng-zorro-antd/message'
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip'
+import {AuthService} from '../../../shared/services/auth.service'
 import * as asn1js from 'asn1js'
-import { Certificate } from 'pkijs'
-import { AutoTrimDirective } from '../../../shared/directives/trim.directive'
+import {Certificate} from 'pkijs'
+import {AutoTrimDirective} from '../../../shared/directives/trim.directive'
 import * as forge from 'node-forge'
-import { NzIconModule } from 'ng-zorro-antd/icon'
-import { MenuService } from '../../../shared/services/menu.service'
+import {NzIconModule} from 'ng-zorro-antd/icon'
+import {MenuService} from '../../../shared/services/menu.service'
 import {MySignService} from "../home/mySignService.service";
 
 declare function initPlugin(comp: any): void
@@ -71,12 +71,12 @@ export class LoginComponent implements OnInit {
   passwordVisible = false
   radioValue = '1'
   optionFileStatus = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
   optionFileStatuss = [
-    { value: 1, label: 'Đang hiển thị' },
-    { value: 0, label: 'Đang tắt' }
+    {value: 1, label: 'Đang hiển thị'},
+    {value: 0, label: 'Đang tắt'}
   ]
   modalTitle: string = 'Lấy chứng thư số'
   isVisible = false
@@ -104,7 +104,8 @@ export class LoginComponent implements OnInit {
     this.loadForm()
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   loadForm() {
     this.loginForm = this.fb.group({
@@ -252,29 +253,33 @@ export class LoginComponent implements OnInit {
       taxCodeCTS: this.loginForm.value.taxCodeCTS,
       credentialId: this.loginForm.value.credentialId
     }
+    let showMsPopup: any;
     if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-      this.msService.show();
-      console.log(this.msService.isWaitingMySign)
+      showMsPopup = setTimeout(() => {
+        this.msService.show();
+      }, 1000)
     }
     this.loginSrv.login(body)
-      .pipe(finalize(() => {
+      .pipe(
+        finalize(() => {
           if (this.loginForm.get("digitalSignatureType")?.value == 2) {
             this.msService.hide()
+            clearTimeout(showMsPopup)
           }
         }
       ))
       .subscribe((res: any) => {
-      if (res && res.code === 200) {
-        this.menuSrv.setSelectedMenu('')
-        localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
-        this.router.navigate(['vnaccs'])
-        localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
-        sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
-        this.authService.setLoginStatus(true)
-        this.authService.setTaxCode(this.loginForm.value.taxCode)
-      }
-    })
+        if (res && res.code === 200) {
+          this.menuSrv.setSelectedMenu('')
+          localStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+          sessionStorage.setItem(STORAGE_KEYS.TOKEN, res.result.token)
+          this.router.navigate(['vnaccs'])
+          localStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+          sessionStorage.setItem(STORAGE_KEYS.TAX_CODE, this.loginForm.value.taxCode)
+          this.authService.setLoginStatus(true)
+          this.authService.setTaxCode(this.loginForm.value.taxCode)
+        }
+      })
   }
 
   onRadioChange(value: any) {
@@ -324,7 +329,7 @@ export class LoginComponent implements OnInit {
 
     const trimmedValue = control?.value?.trim()
     if (control && control.value !== trimmedValue) {
-      control.setValue(trimmedValue, { emitEvent: false })
+      control.setValue(trimmedValue, {emitEvent: false})
     }
 
     if ((control?.touched || control?.dirty) && control.invalid) {
@@ -505,7 +510,7 @@ export class LoginComponent implements OnInit {
   }
 
   checkEffectiveDate(input: string) {
-    const date = new Date(input).setHours(0,0,0,0);
+    const date = new Date(input).setHours(0, 0, 0, 0);
     const today = new Date().getTime();
     if (date > today) {
       this.notification.error("Chữ ký số chưa có hiệu lực");
@@ -514,7 +519,7 @@ export class LoginComponent implements OnInit {
   }
 
   checkExpiryDate(input: string) {
-    const date = new Date(input).setHours(23,59,59,999);
+    const date = new Date(input).setHours(23, 59, 59, 999);
     const today = new Date().getTime();
     if (date < today) {
       this.notification.error("Chữ ký số đã hết hiệu lực");

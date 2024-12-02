@@ -235,14 +235,18 @@ export class SendCustomComponent {
           taxCodeCTS: this.form.get('taxCodeCTS')?.getRawValue()
         }
 
+        let showMsPopup: any;
         if (this.form.get("digitalSignatureType")?.value == 2) {
-          this.msService.show();
+          showMsPopup = setTimeout(() => {
+            this.msService.show();
+          }, 1000)
         }
         this.sendSrv.sendCustom(id, body)
 
           .pipe(finalize(() => {
               if (this.form.get("digitalSignatureType")?.value == 2) {
                 this.msService.hide()
+                clearTimeout(showMsPopup)
               }
             }
           ))

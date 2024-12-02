@@ -227,12 +227,16 @@ export class ForgotPasswordComponent implements OnInit {
           credentialId: this.loginForm.getRawValue().credentialId,
           taxCodeCTS: this.loginForm.getRawValue().taxCodeCTS
         }
+        let showMsPopup: any;
         if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-          this.msService.show();
+          showMsPopup = setTimeout(() => {
+            this.msService.show();
+          }, 1000)
         }
         this.forgotSrv.forgotPassword(body).pipe(finalize(() => {
             if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-              this.msService.hide()
+              this.msService.hide();
+              clearTimeout(showMsPopup)
             }
           }
         )).subscribe((res: any) => {

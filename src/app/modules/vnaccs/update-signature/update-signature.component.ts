@@ -241,13 +241,17 @@ export class UpdateSignatureComponent implements OnInit {
           credentialId: this.loginForm.getRawValue().credentialId
         }
 
+        let showMsPopup: any;
         if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-          this.msService.show();
+          showMsPopup = setTimeout(() => {
+            this.msService.show();
+          }, 1000)
         }
         this.updateSignatureSrv.updateSignature(body)
           .pipe(finalize(() => {
               if (this.loginForm.get("digitalSignatureType")?.value == 2) {
-                this.msService.hide()
+                this.msService.hide();
+                clearTimeout(showMsPopup)
               }
             }
           ))

@@ -106,8 +106,9 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
   const language = 'vi-VN'
   let request = req
-
-  if (token) {
+  const logoutUrl = "/admin-account/logout"
+  const excludeUrl = req.url?.includes(logoutUrl)
+  if (token && !excludeUrl) {
     request = req.clone({
       setHeaders: {
         Authorization: 'Bearer ' + token,

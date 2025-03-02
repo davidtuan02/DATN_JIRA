@@ -1,0 +1,51 @@
+<div class="kanban-board">
+  <div class="header">
+    <h2>Projects / test</h2>
+    <p>SCRUM Sprint 1</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" />
+    </div>
+  </div>
+
+  <div class="columns" cdkDropListGroup>
+    <!-- Column 1: TO DO -->
+    <div class="column" cdkDropList (cdkDropListDropped)="drop($event)">
+      <h3>TO DO</h3>
+      <div class="task" *ngFor="let task of todoTasks" cdkDrag>
+        {{ task }}
+      </div>
+      <button class="add-task-button">+ Create issue</button>
+    </div>
+
+    <!-- Column 2: IN PROGRESS -->
+    <div class="column" cdkDropList (cdkDropListDropped)="drop($event)">
+      <h3>IN PROGRESS</h3>
+      <div class="task" *ngFor="let task of inProgressTasks" cdkDrag>
+        {{ task }}
+      </div>
+    </div>
+
+    <!-- Column 3: DONE -->
+    <div class="column" cdkDropList (cdkDropListDropped)="drop($event)">
+      <h3>DONE</h3>
+      <div class="task" *ngFor="let task of doneTasks" cdkDrag>
+        {{ task }}
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>6 days</p>
+    <button class="complete-sprint-button">Complete sprint</button>
+    <div class="group-by">
+      <span>GROUP BY</span>
+      <select>
+        <option>None</option>
+      </select>
+    </div>
+    <div class="insights">
+      <span>Insights</span>
+      <span>Help</span>
+    </div>
+  </div>
+</div>

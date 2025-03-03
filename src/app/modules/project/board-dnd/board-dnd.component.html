@@ -1,0 +1,9 @@
+<div class="flex container mt-7"
+     cdkDropListGroup>
+    <board-dnd-list class="board-dnd-list"
+         *ngFor="let status of issueStatuses"
+         [status]="status"
+         [currentUserId]="authQuery.userId$ | async"
+         [issues$]="projectQuery.issueByStatusSorted$(status)">
+    </board-dnd-list>
+</div>

@@ -9,7 +9,6 @@ import { TranslateService } from '@ngx-translate/core'
 import { NzI18nService, vi_VN, zh_CN } from 'ng-zorro-antd/i18n'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { DragDropModule } from '@angular/cdk/drag-drop'
-import { KanbanBoardComponent } from './modules/home/kanban-board/kanban-board.component'
 
 @Component({
   selector: 'app-root',
@@ -23,7 +22,6 @@ import { KanbanBoardComponent } from './modules/home/kanban-board/kanban-board.c
     NgxSpinnerModule,
     NzModalModule,
     DragDropModule,
-    KanbanBoardComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

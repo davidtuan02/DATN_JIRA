@@ -1,12 +1,12 @@
-import { JUser } from './user';
+import { JUser } from "../enum/user";
 
 export class JComment {
   id: string;
-  body: string;
+  body?: string;
   createdAt: string;
   updatedAt: string;
   issueId: string;
-  userId: string;
+  userId?: string;
   // mapped to display by userId
   user: JUser;
 

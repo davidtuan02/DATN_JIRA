@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core'
 import { NzI18nService, vi_VN, zh_CN } from 'ng-zorro-antd/i18n'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { DragDropModule } from '@angular/cdk/drag-drop'
+import { BoardDndComponent } from './modules/project/board-dnd/board-dnd.component'
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop'
     NgxSpinnerModule,
     NzModalModule,
     DragDropModule,
+    BoardDndComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

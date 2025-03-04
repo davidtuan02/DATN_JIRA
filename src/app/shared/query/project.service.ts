@@ -2,8 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { ProjectStore } from './project.store';
 import { JProject } from '../enum/project';
+import { environment } from '../../../environments/environment.prod';
+import { arrayRemove, arrayUpsert, setLoading } from '@datorama/akita';
+import { JIssue } from '../enum/issue.enum';
+import { DateUtil } from '../utils/date';
+import { JComment } from '../interface/comment';
+import { ProjectStore } from '../store/project/project.store';
 
 @Injectable({
   providedIn: 'root'

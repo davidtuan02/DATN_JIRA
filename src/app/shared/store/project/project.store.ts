@@ -1,6 +1,6 @@
-import { JProject } from '@trungk18/interface/project';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { JProject } from '../../enum/project';
 
 export type ProjectState = JProject;
 
@@ -8,7 +8,7 @@ function createInitialState(): ProjectState {
   return {
     issues: [],
     users: []
-  } as ProjectState;
+  } as unknown as ProjectState;
 }
 
 @Injectable({

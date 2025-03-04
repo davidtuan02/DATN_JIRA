@@ -1,0 +1,6 @@
+<div *ngIf="avatarUrl" [ngClass]="['avatar-container', className]" nz-dropdown [nzDropdownMenu]="menu"
+  [nzPlacement]="'topRight'" [nzTrigger]="'click'" [ngStyle]="style">
+</div>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <j-action-avatar></j-action-avatar>
+</nz-dropdown-menu>

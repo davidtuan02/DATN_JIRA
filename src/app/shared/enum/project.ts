@@ -1,4 +1,4 @@
-import { JIssue } from './issue';
+import { JIssue } from './issue.enum';
 import { JUser } from './user';
 
 export interface JProject {

@@ -1,4 +1,4 @@
-import { IssuePriority, IssuePriorityColors } from './issue';
+import { IssuePriority, IssuePriorityColors } from "../enum/issue.enum";
 
 export class IssuePriorityIcon {
   icon: string;

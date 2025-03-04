@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { IssueStatus } from '../../../shared/enum/issue.enum';
 import { BoardDndListComponent } from '../board-dnd-list/board-dnd-list.component';
+import { ProjectQuery } from '../../../shared/query/project.query';
+import { AuthQuery } from '../../../shared/query/auth.query';
+import { CommonModule } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -10,7 +13,8 @@ import { BoardDndListComponent } from '../board-dnd-list/board-dnd-list.componen
   styleUrls: ['./board-dnd.component.scss'],
   standalone: true,
   imports: [
-    BoardDndListComponent
+    BoardDndListComponent,
+    CommonModule
   ]
 })
 export class BoardDndComponent {
@@ -21,6 +25,6 @@ export class BoardDndComponent {
     IssueStatus.DONE
   ];
 
-  // constructor(public projectQuery: ProjectQuery, public authQuery: AuthQuery) {}
-  constructor() {}
+  constructor(public projectQuery: ProjectQuery, public authQuery: AuthQuery) {}
+  // constructor() {}
 }

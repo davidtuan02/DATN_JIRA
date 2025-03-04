@@ -3,11 +3,11 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { Observable, combineLatest } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as dateFns from 'date-fns';
-import { IssueStatus, IssueStatusDisplay, JIssue } from '@trungk18/interface/issue';
-import { FilterQuery } from '@trungk18/project/state/filter/filter.query';
-import { ProjectService } from '@trungk18/project/state/project/project.service';
-import { FilterState } from '@trungk18/project/state/filter/filter.store';
-import { IssueUtil } from '@trungk18/project/utils/issue';
+import { IssueStatus, IssueStatusDisplay, JIssue } from '../../../shared/enum/issue.enum';
+import { ProjectService } from '../../../shared/query/project.service';
+import { FilterQuery } from '../../../shared/store/filter/filter.query';
+import { IssueUtil } from '../../../shared/utils/issue';
+import { FilterState } from '../../../shared/store/filter/filter.store';
 
 @UntilDestroy()
 @Component({
@@ -17,8 +17,8 @@ import { IssueUtil } from '@trungk18/project/utils/issue';
   standalone: true
 })
 export class BoardDndListComponent implements OnInit {
-  @Input() status: IssueStatus;
-  @Input() currentUserId!: string;
+  @Input() status!: IssueStatus;
+  @Input() currentUserId!: any;
   @Input() issues$!: Observable<JIssue[]>;
 
   IssueStatusDisplay = IssueStatusDisplay;
@@ -63,7 +63,7 @@ export class BoardDndListComponent implements OnInit {
       const isMatchTerm = searchTerm ? IssueUtil.searchString(issue.title, searchTerm) : true;
 
       const isIncludeUsers = userIds.length
-        ? issue.userIds.some((userId) => userIds.includes(userId))
+        ? issue.userIds.some((userId: any) => userIds.includes(userId))
         : true;
 
       const isMyIssue = onlyMyIssue
